@@ -3,9 +3,11 @@ namespace Grav\Plugin\Console;
 
 use Grav\Common\Grav;
 use Grav\Console\ConsoleCommand;
+use Grav\Plugin\TNTSearch\GravConnector;
 use Grav\Plugin\TNTSearch\GravIndexer;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
+use TeamTNT\TNTSearch\TNTSearch;
 
 /**
  * Class IndexerCommand
@@ -69,14 +71,14 @@ class IndexerCommand extends ConsoleCommand
             mkdir($data_path);
         }
 
-        $indexer = new GravIndexer;
-        $config = [
-            "storage"   => $data_path,
-            "driver"    => 'grav'
-        ];
+        $tnt = new TNTSearch;
 
-        $indexer->loadConfig($config);
-        $indexer->createIndex('grav');
+        $tnt->loadConfig([
+            'driver'  => 'sqlite',
+            'storage' => $data_path
+        ]);
+        $tnt->setDatabaseHandle(new GravConnector);
+        $indexer = $tnt->createIndex('grav.index');
         $indexer->run();
 
     }

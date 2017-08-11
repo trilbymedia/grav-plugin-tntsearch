@@ -76,10 +76,10 @@ class QueryCommand extends ConsoleCommand
 
         $this->tnt->loadConfig([
             "storage"   => $data_path,
-            "driver"    => 'grav',
+            "driver"    => 'sqlite',
         ]);
 
-        $this->tnt->selectIndex('grav');
+        $this->tnt->selectIndex('grav.index');
         $this->tnt->asYouType = true;
 
         $query = $this->input->getArgument('query');
