@@ -112,7 +112,7 @@ class QueryCommand extends ConsoleCommand
                 $relevant = $this->tnt->snippet($query, strip_tags($file));
 
                 $data['hits'][] = [
-                    'link' => $result['path'],
+                    'link' => $path,
                     '_highlightResult' => [
                         'h1' => [
                             'value' => $this->tnt->highlight($title, $query),
