@@ -76,10 +76,10 @@ class QueryCommand extends ConsoleCommand
 
         $this->tnt->loadConfig([
             "storage"   => $data_path,
-            "driver"    => 'grav',
+            "driver"    => 'sqlite',
         ]);
 
-        $this->tnt->selectIndex('grav');
+        $this->tnt->selectIndex('grav.index');
         $this->tnt->asYouType = true;
 
         $query = $this->input->getArgument('query');
@@ -92,7 +92,7 @@ class QueryCommand extends ConsoleCommand
 
     protected function processResults($res, $query)
     {
-        $data = ['hits' => [], 'nbHits' => count($res)];
+        $data = ['hits' => [], 'nbHits' => $res['hits'], 'executionTime' => $res['execution_time']];
 
         $grav = Grav::instance();
         $grav['debugger']->enabled(false);
@@ -102,8 +102,8 @@ class QueryCommand extends ConsoleCommand
         $pages = Grav::instance()['pages'];
         $pages->init();
 
-        foreach ($res as $result) {
-            $page = $pages->dispatch($result['path']);
+        foreach ($res['ids'] as $path) {
+            $page = $pages->dispatch($path);
 
             if ($page) {
                 $file = strip_tags($page->content());
@@ -112,7 +112,7 @@ class QueryCommand extends ConsoleCommand
                 $relevant = $this->tnt->snippet($query, strip_tags($file));
 
                 $data['hits'][] = [
-                    'link' => $result['path'],
+                    'link' => $path,
                     '_highlightResult' => [
                         'h1' => [
                             'value' => $this->tnt->highlight($title, $query),
