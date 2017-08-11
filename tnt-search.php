@@ -32,7 +32,7 @@ class TNTSearchPlugin extends Plugin
      */
     public function onPluginsInitialized()
     {
-        include __DIR__ . 'vendor/autoload.php';
+        include __DIR__ . '/vendor/autoload.php';
 
         // Enable the main event we are interested in
 //        $this->enable([
