@@ -1,6 +1,8 @@
 <?php
 namespace Grav\Plugin\TNTSearch;
 
+use Grav\Common\Grav;
+
 class GravConnector extends \PDO
 {
     public function __construct()
@@ -17,7 +19,6 @@ class GravConnector extends \PDO
         $collection = $pages->all();
         //Drop unpublished and unroutable pages
         $collection->published()->routable();
-        $counter = 0;
 
         $results = [];
         foreach ($collection as $page) {
@@ -29,8 +30,9 @@ class GravConnector extends \PDO
                     'name'    => $page->title(),
                     'content' => strip_tags($page->content())
                 ];
+                echo("Added $counter $route\n");
             } catch (\Exception $e) {
-                $this->info("Skipped $counter $route");
+                echo("Skipped $counter $route\n");
                 continue;
             }
         }
@@ -38,3 +40,4 @@ class GravConnector extends \PDO
         return new GravResultObject($results);
     }
 }
+

@@ -4,9 +4,6 @@ namespace Grav\Plugin\Console;
 use Grav\Common\Grav;
 use Grav\Console\ConsoleCommand;
 use Grav\Plugin\TNTSearch\GravConnector;
-use Grav\Plugin\TNTSearch\GravIndexer;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputOption;
 use TeamTNT\TNTSearch\TNTSearch;
 
 /**
@@ -42,8 +39,7 @@ class IndexerCommand extends ConsoleCommand
         $this
             ->setName("index")
             ->setDescription("TNTSearch Indexer")
-            ->setHelp('The <info>index command</info> re-indexes the search engine')
-        ;
+            ->setHelp('The <info>index command</info> re-indexes the search engine');
     }
 
     /**
@@ -62,10 +58,10 @@ class IndexerCommand extends ConsoleCommand
 
     private function doIndex()
     {
-        include __DIR__ . '/../vendor/autoload.php';
-        error_reporting(0);
+        include __DIR__.'/../vendor/autoload.php';
+        error_reporting(1);
 
-        $data_path = Grav::instance()['locator']->findResource('user://data', true) . '/tnt-search';
+        $data_path = Grav::instance()['locator']->findResource('user://data', true).'/tnt-search';
 
         if (!file_exists($data_path)) {
             mkdir($data_path);

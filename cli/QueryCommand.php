@@ -92,7 +92,7 @@ class QueryCommand extends ConsoleCommand
 
     protected function processResults($res, $query)
     {
-        $data = ['hits' => [], 'nbHits' => count($res)];
+        $data = ['hits' => [], 'nbHits' => $res['hits'], 'executionTime' => $res['execution_time']];
 
         $grav = Grav::instance();
         $grav['debugger']->enabled(false);
@@ -102,8 +102,8 @@ class QueryCommand extends ConsoleCommand
         $pages = Grav::instance()['pages'];
         $pages->init();
 
-        foreach ($res as $result) {
-            $page = $pages->dispatch($result['path']);
+        foreach ($res['ids'] as $path) {
+            $page = $pages->dispatch($path);
 
             if ($page) {
                 $file = strip_tags($page->content());
