@@ -27,17 +27,33 @@ class TNTSearchPlugin extends Plugin
         ];
     }
 
-    /**
-     * Initialize the plugin
-     */
     public function onPluginsInitialized()
     {
-        include __DIR__ . '/vendor/autoload.php';
+        if ($this->isAdmin()) {
+            return;
+        }
 
-        // Enable the main event we are interested in
-//        $this->enable([
-//            'onPageContentRaw' => ['onPageContentRaw', 0]
-//        ]);
+        $this->enable([
+            'onPagesInitialized' => ['onPagesInitialized', 0],
+            'onTwigSiteVariables' => ['onTwigSiteVariables', 0]
+        ]);
+    }
+    
+    
+
+    public function onPagesInitialized()
+    {
+        $page = $this->grav['page'];
+
+        // If a page exists merge the configs
+        if ($page) {
+            $this->config->set('plugins.tnt-search', $this->mergeConfig($page));
+        }
+    }
+    
+    public function onTwigSiteVariables()
+    {
+        
     }
 
 
