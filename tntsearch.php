@@ -47,7 +47,7 @@ class TNTSearchPlugin extends Plugin
 
         // If a page exists merge the configs
         if ($page) {
-            $this->config->set('plugins.tnt-search', $this->mergeConfig($page));
+            $this->config->set('plugins.tntsearch', $this->mergeConfig($page));
         }
     }
     
