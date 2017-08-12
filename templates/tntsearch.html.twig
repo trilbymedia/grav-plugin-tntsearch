@@ -1,3 +1,8 @@
-<h1>TNT Results</h1>
+{% extends 'partials/base.html.twig' %}
 
-{{ vardump(tntsearch_results) }}
+{% block content %}
+    <div class="body-content">
+        {{ vardump(tntsearch_results) }}
+    </div>
+{% endblock %}
+

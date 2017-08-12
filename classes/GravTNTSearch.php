@@ -55,7 +55,6 @@ class GravTNTSearch
         $data = ['hits' => [], 'nbHits' => $res['hits'], 'executionTime' => $res['execution_time']];
 
         $grav = Grav::instance();
-        $grav['debugger']->enabled(false);
         $grav['twig']->init();
 
         /** @var Pages $pages */
