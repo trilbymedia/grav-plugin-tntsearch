@@ -63,18 +63,12 @@ class GravTNTSearch
                 $file = strip_tags($page->content());
                 $title = $page->title();
 
-                $relevant = $this->tnt->snippet($query, strip_tags($file));
+                $relevant = $this->tnt->snippet($query, $file);
 
                 $data['hits'][] = [
                     'link' => $path,
-                    '_highlightResult' => [
-                        'h1' => [
-                            'value' => $this->tnt->highlight($title, $query),
-                        ],
-                        'content' => [
-                            'value' => $this->tnt->highlight($relevant, $query),
-                        ]
-                    ]
+                    'title' =>  $this->tnt->highlight($title, $query, 'em', ['wholeWord' => false]),
+                    'content' =>  $this->tnt->highlight($relevant, $query, 'em', ['wholeWord' => false]),
                 ];
             }
 

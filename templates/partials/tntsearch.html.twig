@@ -1,0 +1,28 @@
+{% set base_url = base_url|rtrim('/') %}
+<form role="form">
+    <div class="form-group">
+        <input type="text" class="form-control input-lg" id="search" placeholder="Search...">
+    </div>
+</form>
+
+<div id="results"></div>
+
+<script>
+    $(window).load(function(){
+        $('#search').keyup(function(){
+            var searchField = $('#search').val();
+            var output = '<div class="row">';
+            var count = 1;
+            $.getJSON('{{ base_url }}/s?q='+searchField, function(data) {
+                $.each(data.hits, function(key, val) {
+                    output += '<h5><a href="{{ base_url }}' + val.link + '">' + val.title + '</a></h5>';
+                    output += '<p>' + val.content + '</p>'
+                    count++;
+
+                });
+                output += '</div>';
+                $('#results').html(output);
+            });
+        });
+    });
+</script>

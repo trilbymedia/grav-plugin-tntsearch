@@ -60,7 +60,7 @@ class TNTSearchPlugin extends Plugin
         $this->current_route = $uri->path();
         $this->query_route = $this->config->get('plugins.tntsearch.query_route');
         $this->search_route = $this->config->get('plugins.tntsearch.search_route');
-        $this->query = $uri->param('query') ?: $uri->query('query');
+        $this->query = $uri->param('q') ?: $uri->query('q');
 
         $pages = $this->grav['pages'];
         $page = $pages->dispatch($this->current_route);
@@ -97,6 +97,8 @@ class TNTSearchPlugin extends Plugin
             $twig->twig_vars['query'] = $this->query;
             $twig->twig_vars['tntsearch_results'] = $this->results;
         }
+
+        $this->grav['assets']->addJs('plugin://tntsearch/assets/typeahead.bundle.min.js');
     }
 
 
