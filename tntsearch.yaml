@@ -1,2 +1,3 @@
 enabled: true
-route: '/search'
+search_route: '/search'
+query_route: '/s'

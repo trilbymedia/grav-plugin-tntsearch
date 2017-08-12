@@ -54,12 +54,7 @@ class GravTNTSearch
     {
         $data = ['hits' => [], 'nbHits' => $res['hits'], 'executionTime' => $res['execution_time']];
 
-        $grav = Grav::instance();
-        $grav['twig']->init();
-
-        /** @var Pages $pages */
         $pages = Grav::instance()['pages'];
-        $pages->init();
 
         foreach ($res['ids'] as $path) {
             $page = $pages->dispatch($path);

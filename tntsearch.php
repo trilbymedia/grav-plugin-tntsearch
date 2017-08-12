@@ -15,6 +15,10 @@ class TNTSearchPlugin extends Plugin
     protected $results = [];
     protected $query;
 
+    protected $query_route;
+    protected $search_route;
+    protected $current_route;
+
     /**
      * @return array
      *
@@ -41,7 +45,7 @@ class TNTSearchPlugin extends Plugin
         }
 
         $this->enable([
-            'onPagesInitialized' => ['onPagesInitialized', 0],
+            'onPagesInitialized' => ['onPagesInitialized', 1000],
             'onTwigSiteVariables' => ['onTwigSiteVariables', 0],
             'onTwigLoader' => ['onTwigLoader', 0],
         ]);
@@ -50,26 +54,31 @@ class TNTSearchPlugin extends Plugin
 
     public function onPagesInitialized()
     {
-        $page = $this->grav['page'];
+        /** @var Uri $uri */
+        $uri = $this->grav['uri'];
 
-        if (!$page || $page->name() == 'notfound.md') {
+        $this->current_route = $uri->path();
+        $this->query_route = $this->config->get('plugins.tntsearch.query_route');
+        $this->search_route = $this->config->get('plugins.tntsearch.search_route');
+        $this->query = $uri->param('query') ?: $uri->query('query');
+
+        $pages = $this->grav['pages'];
+        $page = $pages->dispatch($this->current_route);
+
+        if (!$page) {
             $page = new Page;
-            $page->init(new \SplFileInfo(__DIR__ . '/pages/tntsearch.md'));
-            unset($this->grav['page']);
-            $this->grav['page'] = $page;
+
+            if ($this->query_route == $this->current_route) {
+                $page->init(new \SplFileInfo(__DIR__ . "/pages/tntquery.md"));
+            } elseif ($this->search_route == $this->current_route) {
+                $page->init(new \SplFileInfo(__DIR__ . "/pages/search.md"));
+            }
+
+            $page->slug(basename($this->current_route));
+            $pages->addPage($page, $this->current_route);
         }
 
         $this->config->set('plugins.tntsearch', $this->mergeConfig($page));
-
-        /** @var Uri $uri */
-        $uri = $this->grav['uri'];
-        $this->query = $uri->param('query') ?: $uri->query('query');
-        $route = $this->config->get('plugins.tntsearch.route');
-
-        // performance check for route
-        if (!($route && $route == $uri->path())) {
-            return;
-        }
 
         $tnt = new GravTNTSearch(['json' => false]);
         $this->results = $tnt->search($this->query);
