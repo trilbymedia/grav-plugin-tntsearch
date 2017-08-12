@@ -6,17 +6,14 @@ use Grav\Common\Grav;
 class GravConnector extends \PDO
 {
     public function __construct()
-    {}
+    {
+
+    }
 
     public function query($query)
     {
-        $grav = Grav::instance();
-        $grav['debugger']->enabled(false);
-        $grav['twig']->init();
-        /** @var Pages $pages */
-        $pages = Grav::instance()['pages'];
-        $pages->init();
-        $collection = $pages->all();
+        $counter = 0;
+        $collection = Grav::instance()['pages']->all();
         //Drop unpublished and unroutable pages
         $collection->published()->routable();
 

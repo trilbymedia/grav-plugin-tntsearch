@@ -1,7 +1,9 @@
 <?php
 namespace Grav\Plugin;
 
+use Grav\Common\Page\Page;
 use Grav\Common\Plugin;
+use Grav\Plugin\TNTSearch\GravTNTSearch;
 use RocketTheme\Toolbox\Event\Event;
 
 /**
@@ -10,6 +12,9 @@ use RocketTheme\Toolbox\Event\Event;
  */
 class TNTSearchPlugin extends Plugin
 {
+    protected $results = [];
+    protected $query;
+
     /**
      * @return array
      *
@@ -29,31 +34,60 @@ class TNTSearchPlugin extends Plugin
 
     public function onPluginsInitialized()
     {
+        include __DIR__.'/vendor/autoload.php';
+
         if ($this->isAdmin()) {
             return;
         }
 
         $this->enable([
             'onPagesInitialized' => ['onPagesInitialized', 0],
-            'onTwigSiteVariables' => ['onTwigSiteVariables', 0]
+            'onTwigSiteVariables' => ['onTwigSiteVariables', 0],
+            'onTwigLoader' => ['onTwigLoader', 0],
         ]);
     }
-    
-    
+
 
     public function onPagesInitialized()
     {
         $page = $this->grav['page'];
 
-        // If a page exists merge the configs
-        if ($page) {
-            $this->config->set('plugins.tntsearch', $this->mergeConfig($page));
+        if (!$page || $page->name() == 'notfound.md') {
+            $page = new Page;
+            $page->init(new \SplFileInfo(__DIR__ . '/pages/tntsearch.md'));
+            unset($this->grav['page']);
+            $this->grav['page'] = $page;
         }
+
+        $this->config->set('plugins.tntsearch', $this->mergeConfig($page));
+
+        /** @var Uri $uri */
+        $uri = $this->grav['uri'];
+        $this->query = $uri->param('query') ?: $uri->query('query');
+        $route = $this->config->get('plugins.tntsearch.route');
+
+        // performance check for route
+        if (!($route && $route == $uri->path())) {
+            return;
+        }
+
+        $tnt = new GravTNTSearch(['json' => false]);
+        $this->results = $tnt->search($this->query);
+    }
+
+    public function onTwigLoader()
+    {
+        $this->grav['twig']->addPath(__DIR__ . '/templates');
     }
     
     public function onTwigSiteVariables()
     {
-        
+        $twig = $this->grav['twig'];
+
+        if ($this->query) {
+            $twig->twig_vars['query'] = $this->query;
+            $twig->twig_vars['tntsearch_results'] = $this->results;
+        }
     }
 
 

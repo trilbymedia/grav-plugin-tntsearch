@@ -3,8 +3,7 @@ namespace Grav\Plugin\Console;
 
 use Grav\Common\Grav;
 use Grav\Console\ConsoleCommand;
-use Grav\Plugin\TNTSearch\GravConnector;
-use TeamTNT\TNTSearch\TNTSearch;
+use Grav\Plugin\TNTSearch\GravTNTSearch;
 
 /**
  * Class IndexerCommand
@@ -61,21 +60,13 @@ class IndexerCommand extends ConsoleCommand
         include __DIR__.'/../vendor/autoload.php';
         error_reporting(1);
 
-        $data_path = Grav::instance()['locator']->findResource('user://data', true).'/tnt-search';
+        $grav = Grav::instance();
+        $grav['debugger']->enabled(false);
+        $grav['twig']->init();
+        $grav['pages']->init();
 
-        if (!file_exists($data_path)) {
-            mkdir($data_path);
-        }
-
-        $tnt = new TNTSearch;
-
-        $tnt->loadConfig([
-            'driver'  => 'sqlite',
-            'storage' => $data_path
-        ]);
-        $tnt->setDatabaseHandle(new GravConnector);
-        $indexer = $tnt->createIndex('grav.index');
-        $indexer->run();
+        $tnt = new GravTNTSearch();
+        $tnt->indexGravPages();
 
     }
 }

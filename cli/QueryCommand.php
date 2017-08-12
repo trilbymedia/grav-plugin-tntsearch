@@ -4,6 +4,7 @@ namespace Grav\Plugin\Console;
 use Grav\Common\Grav;
 use Grav\Console\ConsoleCommand;
 use Grav\Plugin\TNTSearch\GravIndexer;
+use Grav\Plugin\TNTSearch\GravTNTSearch;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use TeamTNT\TNTSearch\TNTSearch;
@@ -59,75 +60,21 @@ class QueryCommand extends ConsoleCommand
     protected function serve()
     {
         $this->doQuery();
-        $this->output->writeln('Done.');
+        $this->output->writeln('');
     }
 
     private function doQuery()
     {
         include __DIR__ . '/../vendor/autoload.php';
 
-        $data_path = Grav::instance()['locator']->findResource('user://data', true) . '/tnt-search';
-
-        if (!file_exists($data_path)) {
-            echo "Must index first...";
-        }
-
-        $this->tnt = new TNTSearch();
-
-        $this->tnt->loadConfig([
-            "storage"   => $data_path,
-            "driver"    => 'sqlite',
-        ]);
-
-        $this->tnt->selectIndex('grav.index');
-        $this->tnt->asYouType = true;
-
-        $query = $this->input->getArgument('query');
-
-        $results = $this->tnt->search($query, 10);
-
-        print_r($this->processResults($results, $query));
-
-    }
-
-    protected function processResults($res, $query)
-    {
-        $data = ['hits' => [], 'nbHits' => $res['hits'], 'executionTime' => $res['execution_time']];
-
         $grav = Grav::instance();
         $grav['debugger']->enabled(false);
         $grav['twig']->init();
+        $grav['pages']->init();
 
-        /** @var Pages $pages */
-        $pages = Grav::instance()['pages'];
-        $pages->init();
-
-        foreach ($res['ids'] as $path) {
-            $page = $pages->dispatch($path);
-
-            if ($page) {
-                $file = strip_tags($page->content());
-                $title = $page->title();
-
-                $relevant = $this->tnt->snippet($query, strip_tags($file));
-
-                $data['hits'][] = [
-                    'link' => $path,
-                    '_highlightResult' => [
-                        'h1' => [
-                            'value' => $this->tnt->highlight($title, $query),
-                        ],
-                        'content' => [
-                            'value' => $this->tnt->highlight($relevant, $query),
-                        ]
-                    ]
-                ];
-            }
-
-
-        }
-
-        return json_encode($data, JSON_PRETTY_PRINT);
+        $tnt = new GravTNTSearch();
+        print_r($tnt->search($this->input->getArgument('query')));
     }
+
 }
 
