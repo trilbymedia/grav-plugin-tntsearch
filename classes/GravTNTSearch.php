@@ -60,10 +60,14 @@ class GravTNTSearch
             $page = $pages->dispatch($path);
 
             if ($page) {
-                $file = strip_tags($page->content());
+                $content = $this->getCleanContent($page);
                 $title = $page->title();
 
-                $relevant = $this->tnt->snippet($query, $file);
+                $relevant = $this->tnt->snippet($query, $content);
+
+                if (strlen($relevant) <= 6) {
+                    $relevant = substr($content, 0, 300);
+                }
 
                 $data['hits'][] = [
                     'link' => $path,
@@ -79,6 +83,23 @@ class GravTNTSearch
         } else {
             return $data;
         }
+    }
+
+    public static function getCleanContent($page)
+    {
+        $twig = Grav::instance()['twig'];
+        $header = $page->header();
+
+        if (isset($header->tntsearch['template'])) {
+            $processed_page = $twig->processTemplate($header->tntsearch['template'] . '.html.twig', ['page' => $page]);
+            $content =$processed_page;
+        } else {
+            $content = $page->content();
+        }
+
+        $content = preg_replace('/[ \t]+/', ' ', preg_replace('/\s*$^\s*/m', "\n", strip_tags($content)));
+
+        return $content;
     }
 
     public function indexGravPages()
