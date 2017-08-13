@@ -12,7 +12,9 @@ class GravTNTSearch
 
     public function __construct($options = null)
     {
-        $defaults = ['json' => true, 'fuzzy' => false];
+        $search_type = Grav::instance()['config']->get('plugins.tntsearch.search_type');
+
+        $defaults = ['json' => true, 'search_type' => $search_type, 'limit' => 20, 'as_you_type' => true];
         
         $this->tnt = new TNTSearch();
 
@@ -36,14 +38,19 @@ class GravTNTSearch
 
     }
 
-    public function search($query, $limit = 10) {
+    public function search($query) {
 
         $this->tnt->selectIndex('grav.index');
-        $this->tnt->asYouType = true;
+        $this->tnt->asYouType = $this->options['as_you_type'];
 
-        if ($this->options['fuzzy']) {
-            $results = $this->tnt->fuzzySearch($query, $limit);
+        $limit = intval($this->options['limit']);
+
+        if ($this->options['search_type'] == 'boolean') {
+            $results = $this->tnt->searchBoolean($query, $limit);
         } else {
+            if ($this->options['search_type'] == 'fuzzy') {
+                $this->tnt->fuzziness = true;
+            }
             $results = $this->tnt->search($query, $limit);
         }
 
@@ -52,7 +59,7 @@ class GravTNTSearch
 
     protected function processResults($res, $query)
     {
-        $data = ['hits' => [], 'nbHits' => $res['hits'], 'executionTime' => $res['execution_time']];
+        $data = ['hits' => [], 'number_of_hits' => $res['hits'], 'execution_time' => $res['execution_time']];
 
         $pages = Grav::instance()['pages'];
 

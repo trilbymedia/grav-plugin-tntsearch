@@ -5,23 +5,35 @@
     </div>
 </form>
 
-<div id="results"></div>
+<div id="tnt-results"></div>
 
 <script>
     $(window).load(function(){
         $('#search').keyup(function(){
             var searchField = $('#search').val();
-            var output = '<div class="row">';
             var count = 1;
-            $.getJSON('{{ base_url }}/s?q='+searchField, function(data) {
-                $.each(data.hits, function(key, val) {
-                    output += '<h5><a href="{{ base_url }}' + val.link + '">' + val.title + '</a></h5>';
-                    output += '<p>' + val.content + '</p>'
-                    count++;
 
+            $.getJSON('{{ base_url }}/s?q='+searchField, function(data) {
+                var output = '<div class="row"><p class="info">';
+                {% if config.get('plugins.tntsearch.display_hits') %}
+                output += '<span class="hits">Found ' + data.number_of_hits + ' results</span> ';
+                {% endif %}
+                {% if config.get('plugins.tntsearch.display_time') %}
+                output += '<span class="time">in  (<span>' + data.execution_time + ')</span></span>';
+                {% endif %}
+                output += '</p>'
+
+                $.each(data.hits, function(key, val) {
+                    output += '<h5 class="title"><a href="{{ base_url }}' + val.link + '">' + val.title + '</a></h5>';
+                    {% if config.get('plugins.tntsearch.display_route') %}
+                    output += '<h6 class="route">' + val.link + '</h6>';
+                    {% endif %}
+                    output += '<p>' + val.content + '</p>';
+                    count++;
                 });
+
                 output += '</div>';
-                $('#results').html(output);
+                $('#tnt-results').html(output);
             });
         });
     });
