@@ -12,6 +12,7 @@ class GravConnector extends \PDO
 
     }
 
+
     public function query($query)
     {
         $counter = 0;
@@ -47,11 +48,12 @@ class GravConnector extends \PDO
             }
 
             try {
-                $results[] = [
+                $mapping_fields = [
                     'id'      => $route,
                     'name'    => $page->title(),
                     'content' => GravTNTSearch::getCleanContent($page)
                 ];
+                $results[] = $mapping_fields;
                 echo("Added $counter $route\n");
             } catch (\Exception $e) {
                 echo("Skipped $counter $route\n");
