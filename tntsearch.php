@@ -97,8 +97,8 @@ class TNTSearchPlugin extends Plugin
             $twig->twig_vars['query'] = $this->query;
             $twig->twig_vars['tntsearch_results'] = $this->results;
         }
-
-        $this->grav['assets']->addJs('plugin://tntsearch/assets/typeahead.bundle.min.js');
+        $this->grav['assets']->addCss('plugin://tntsearch/assets/tntsearch.css');
+        $this->grav['assets']->addJs('plugin://tntsearch/assets/tntsearch.js');
     }
 
 

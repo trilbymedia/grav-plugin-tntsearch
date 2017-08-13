@@ -2,7 +2,7 @@ enabled: true
 search_route: '/search'
 query_route: '/s'
 search_type: fuzzy
-display_route: true
+display_route: false
 display_hits: true
 display_time: true
 index_page_by_default: true
