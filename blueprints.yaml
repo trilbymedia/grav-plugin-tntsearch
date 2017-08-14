@@ -27,16 +27,27 @@ form:
     index_status:
       type: indexstatus
       label: Search Index Status
+    built_in_search_page:
+      type: toggle
+      label: Built-in Search Page
+      highlight: 1
+      default: 0
+      options:
+        1: Enabled
+        0: Disabled
+      validate:
+        type: bool
+    search_route:
+      type: text
+      size: medium
+      label: Search Page Route
+      help: The route for the built-in search page, leave empty if you wish to not have a dedicated search page.
     query_route:
       type: text
       size: medium
       label: Query Route
       help: The route used to retrieve search results.
-    search_route:
-      type: text
-      size: medium
-      label: Search Route
-      help: The route for the dedicated search page, leave empty if you wish to not have a dedicated search page.
+
     search_type:
       type: select
       size: small

@@ -16,6 +16,7 @@ class TNTSearchPlugin extends Plugin
     protected $results = [];
     protected $query;
 
+    protected $built_in_search_page;
     protected $query_route;
     protected $search_route;
     protected $current_route;
@@ -64,8 +65,11 @@ class TNTSearchPlugin extends Plugin
         $options = [];
 
         $this->current_route = $uri->path();
-        $this->query_route = $this->config->get('plugins.tntsearch.query_route');
+
+        $this->built_in_search_page = $this->config->get('plugins.built_in_search_page');
         $this->search_route = $this->config->get('plugins.tntsearch.search_route');
+        $this->query_route = $this->config->get('plugins.tntsearch.query_route');
+
         $this->query = $uri->param('q') ?: $uri->query('q');
 
         $snippet = $this->getFormValue('sl');
@@ -85,18 +89,19 @@ class TNTSearchPlugin extends Plugin
             if ($this->query_route && $this->query_route == $this->current_route) {
                 $page = new Page;
                 $page->init(new \SplFileInfo(__DIR__ . "/pages/tntquery.md"));
-            } elseif ($this->search_route && $this->search_route == $this->current_route) {
+                $page->slug(basename($this->current_route));
+                $pages->addPage($page, $this->current_route);
+            } elseif ($this->built_in_search_page && $this->search_route == $this->current_route) {
                 $page = new Page;
                 $page->init(new \SplFileInfo(__DIR__ . "/pages/search.md"));
-            }
-            if ($page) {
                 $page->slug(basename($this->current_route));
                 $pages->addPage($page, $this->current_route);
             }
-
         }
 
-        $this->config->set('plugins.tntsearch', $this->mergeConfig($page));
+        if ($page) {
+            $this->config->set('plugins.tntsearch', $this->mergeConfig($page));
+        }
 
         $gtnt = new GravTNTSearch($options);
         $this->results = $gtnt->search($this->query);
