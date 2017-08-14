@@ -66,7 +66,7 @@ class TNTSearchPlugin extends Plugin
 
         $this->current_route = $uri->path();
 
-        $this->built_in_search_page = $this->config->get('plugins.built_in_search_page');
+        $this->built_in_search_page = $this->config->get('plugins.tntsearch.built_in_search_page');
         $this->search_route = $this->config->get('plugins.tntsearch.search_route');
         $this->query_route = $this->config->get('plugins.tntsearch.query_route');
 
