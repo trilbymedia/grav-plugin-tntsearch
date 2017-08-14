@@ -45,7 +45,9 @@ class TNTSearchPlugin extends Plugin
 
         if ($this->isAdmin()) {
             $this->enable([
+                'onAdminTaskExecute' => ['onAdminTaskExecute', 0],
                 'onTwigSiteVariables' => ['onTwigAdminVariables', 0],
+                'onTwigLoader' => ['addAdminTwigTemplates', 0],
             ]);
             return;
         }
@@ -111,6 +113,11 @@ class TNTSearchPlugin extends Plugin
     {
         $this->grav['twig']->addPath(__DIR__ . '/templates');
     }
+
+    public function addAdminTwigTemplates()
+    {
+        $this->grav['twig']->addPath($this->grav['locator']->findResource('theme://templates'));
+    }
     
     public function onTwigSiteVariables()
     {
@@ -122,6 +129,43 @@ class TNTSearchPlugin extends Plugin
         }
         $this->grav['assets']->addCss('plugin://tntsearch/assets/tntsearch.css');
         $this->grav['assets']->addJs('plugin://tntsearch/assets/tntsearch.js');
+    }
+
+    public function onAdminTaskExecute(Event $e)
+    {
+        if ($e['method'] == 'taskReindexTNTSearch') {
+
+            $controller = $e['controller'];
+
+            header('Content-type: text/json');
+
+            if (!$controller->authorizeTask('taskReindexTNTSearch', ['admin.configuration', 'admin.super'])) {
+                $json_response = [
+                    'status'  => 'error',
+                    'message' => 'Insufficient permissions to reindex the search engine database.'
+                ];
+                echo json_encode($json_response);
+                exit;
+            }
+
+            // disable warnings
+            error_reporting(1);
+
+            $gtnt = new GravTNTSearch();
+
+            // capture content
+            ob_start();
+            $gtnt->indexGravPages();
+            $output = ob_get_clean();
+
+            $json_response = [
+                'status'  => 'success',
+                'message' => $output
+            ];
+            echo json_encode($json_response);
+            exit;
+        }
+
     }
 
     public function onTwigAdminVariables()
