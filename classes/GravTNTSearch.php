@@ -7,14 +7,14 @@ use TeamTNT\TNTSearch\TNTSearch;
 
 class GravTNTSearch
 {
-    protected $tnt;
+    public $tnt;
     protected $options;
 
     public function __construct($options = null)
     {
         $search_type = Grav::instance()['config']->get('plugins.tntsearch.search_type');
 
-        $defaults = ['json' => true, 'search_type' => $search_type, 'limit' => 20, 'as_you_type' => true];
+        $defaults = ['json' => false, 'search_type' => $search_type, 'limit' => 20, 'as_you_type' => true];
         
         $this->tnt = new TNTSearch();
 

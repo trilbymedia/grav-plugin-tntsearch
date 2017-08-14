@@ -72,8 +72,8 @@ class QueryCommand extends ConsoleCommand
         $grav['twig']->init();
         $grav['pages']->init();
 
-        $tnt = new GravTNTSearch();
-        print_r($tnt->search($this->input->getArgument('query')));
+        $gtnt = new GravTNTSearch(['json' => true]);
+        print_r($gtnt->search($this->input->getArgument('query')));
     }
 
 }

@@ -24,6 +24,9 @@ form:
         0: Disabled
       validate:
         type: bool
+    index_status:
+      type: indexstatus
+      label: Search Index Status
     query_route:
       type: text
       size: medium

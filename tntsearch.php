@@ -5,6 +5,7 @@ use Grav\Common\Page\Page;
 use Grav\Common\Plugin;
 use Grav\Plugin\TNTSearch\GravTNTSearch;
 use RocketTheme\Toolbox\Event\Event;
+use TeamTNT\TNTSearch\Exceptions\IndexNotFoundException;
 
 /**
  * Class TNTSearchPlugin
@@ -32,7 +33,8 @@ class TNTSearchPlugin extends Plugin
     public static function getSubscribedEvents()
     {
         return [
-            'onPluginsInitialized' => ['onPluginsInitialized', 0]
+            'onPluginsInitialized' => ['onPluginsInitialized', 0],
+            'onTwigLoader' => ['onTwigLoader', 0],
         ];
     }
 
@@ -41,13 +43,15 @@ class TNTSearchPlugin extends Plugin
         include __DIR__.'/vendor/autoload.php';
 
         if ($this->isAdmin()) {
+            $this->enable([
+                'onTwigSiteVariables' => ['onTwigAdminVariables', 0],
+            ]);
             return;
         }
 
         $this->enable([
             'onPagesInitialized' => ['onPagesInitialized', 1000],
             'onTwigSiteVariables' => ['onTwigSiteVariables', 0],
-            'onTwigLoader' => ['onTwigLoader', 0],
         ]);
     }
 
@@ -66,22 +70,24 @@ class TNTSearchPlugin extends Plugin
         $page = $pages->dispatch($this->current_route);
 
         if (!$page) {
-            $page = new Page;
-
-            if ($this->query_route == $this->current_route) {
+            if ($this->query_route && $this->query_route == $this->current_route) {
+                $page = new Page;
                 $page->init(new \SplFileInfo(__DIR__ . "/pages/tntquery.md"));
-            } elseif ($this->search_route == $this->current_route) {
+            } elseif ($this->search_route && $this->search_route == $this->current_route) {
+                $page = new Page;
                 $page->init(new \SplFileInfo(__DIR__ . "/pages/search.md"));
             }
+            if ($page) {
+                $page->slug(basename($this->current_route));
+                $pages->addPage($page, $this->current_route);
+            }
 
-            $page->slug(basename($this->current_route));
-            $pages->addPage($page, $this->current_route);
         }
 
         $this->config->set('plugins.tntsearch', $this->mergeConfig($page));
 
-        $tnt = new GravTNTSearch(['json' => false]);
-        $this->results = $tnt->search($this->query);
+        $gtnt = new GravTNTSearch();
+        $this->results = $gtnt->search($this->query);
     }
 
     public function onTwigLoader()
@@ -100,6 +106,32 @@ class TNTSearchPlugin extends Plugin
         $this->grav['assets']->addCss('plugin://tntsearch/assets/tntsearch.css');
         $this->grav['assets']->addJs('plugin://tntsearch/assets/tntsearch.js');
     }
+
+    public function onTwigAdminVariables()
+    {
+        $twig = $this->grav['twig'];
+
+
+        $status = true;
+
+        $gtnt= new GravTNTSearch();
+        try {
+            $gtnt->tnt->selectIndex('grav.index');
+        } catch (IndexNotFoundException $e) {
+            $status = false;
+            $msg = "Index not created";
+        }
+
+        if ($status) {
+            $msg = $gtnt->tnt->totalDocumentsInCollection() . ' documents indexed';
+        }
+
+
+        $twig->twig_vars['tntsearch_index_status'] = ['status' => $status, 'msg' => $msg];
+
+        $this->grav['assets']->addCss('plugin://tntsearch/assets/admin/tntsearch.css');
+    }
+
 
 
 }

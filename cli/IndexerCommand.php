@@ -65,8 +65,8 @@ class IndexerCommand extends ConsoleCommand
         $grav['twig']->init();
         $grav['pages']->init();
 
-        $tnt = new GravTNTSearch();
-        $tnt->indexGravPages();
+        $gtnt = new GravTNTSearch();
+        $gtnt->indexGravPages();
 
     }
 }

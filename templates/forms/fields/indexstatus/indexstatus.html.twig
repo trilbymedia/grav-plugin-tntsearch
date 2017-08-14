@@ -1,0 +1,15 @@
+{% extends "forms/field.html.twig" %}
+
+{% block input %}
+    <div class="form-list-wrapper {{ field.size }}">
+        <div class="index-status">
+            {% if tntsearch_index_status.status %}
+                <button id="tntsearch-index" class="button reindex">Re-Index Content</button>
+                <span class="success"><i class="fa fa-book"></i> {{ tntsearch_index_status.msg }}</span>
+            {% else %}
+                <button id="tntsearch-index" class="button critical">Index Content</button>
+                <span class="error"><i class="fa fa-warning"></i> {{ tntsearch_index_status.msg }}</span>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
