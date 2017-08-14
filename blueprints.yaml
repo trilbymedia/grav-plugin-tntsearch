@@ -1,15 +1,14 @@
-name: Tnt Search
+name: TNT Search
 version: 0.1.0
 description: Powerful Indexed Search Engine powered by TNTSearch
-icon: plug
+icon: search-plus
 author:
   name: Trilby Media, LLC
   email: devs@trilby.media
-homepage: https://github.com/trilbymedia/grav-plugin-tnt-search
-demo: http://demo.yoursite.com
-keywords: grav, plugin, etc
-bugs: https://github.com/trilbymedia/grav-plugin-tnt-search/issues
-docs: https://github.com/trilbymedia/grav-plugin-tnt-search/blob/develop/README.md
+homepage: https://github.com/trilbymedia/grav-plugin-tntsearch
+keywords: grav, plugin, search, search-engine
+bugs: https://github.com/trilbymedia/grav-plugin-tntsearch/issues
+docs: https://github.com/trilbymedia/grav-plugin-tntsearch/blob/develop/README.md
 license: MIT
 
 form:
@@ -25,7 +24,72 @@ form:
         0: Disabled
       validate:
         type: bool
-    text_var:
+    query_route:
       type: text
-      label: Text Variable
-      help: Text to add to the top of a page
+      size: medium
+      label: Query Route
+      help: The route used to retrieve search results.
+    search_route:
+      type: text
+      size: medium
+      label: Search Route
+      help: The route for the dedicated search page, leave empty if you wish to not have a dedicated search page.
+    search_type:
+      type: select
+      size: small
+      classes: fancy
+      label: Search Type
+      help: Configure how TNTSearch will use the search query term
+      options:
+        default: Default
+        boolean: Boolean
+        fuzzy: Fuzzy
+    display_route:
+      type: toggle
+      label: Display Route
+      highlight: 1
+      default: 1
+      options:
+        1: Enabled
+        0: Disabled
+      validate:
+        type: bool
+    display_hits:
+      type: toggle
+      label: Display Hits
+      highlight: 1
+      default: 1
+      options:
+        1: Enabled
+        0: Disabled
+      validate:
+        type: bool
+    display_time:
+      type: toggle
+      label: Display Route
+      highlight: 1
+      default: 1
+      options:
+        1: Enabled
+        0: Disabled
+      validate:
+        type: bool
+    index_page_by_default:
+      type: toggle
+      label: Index Every Page
+      help: Index every page by default unless a page specifically declares `tntsearch: process: false`. Disabling this requires a `process: true` declartion to be added to each page that should be indexed.
+      highlight: 1
+      default: 1
+      options:
+        1: Enabled
+        0: Disabled
+      validate:
+        type: bool
+    filter.items:
+      type: textarea
+      size: large
+      rows: 4
+      label: Search Filter
+      help: Use a standard collections based filter definition to restrict search to only these pages
+      yaml: true
+      placeholder: '@taxonomy.category: [news]'

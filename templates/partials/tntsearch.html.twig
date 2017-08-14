@@ -13,13 +13,13 @@
             var searchField = $('#tntsearch').val();
             var count = 1;
 
-            $.getJSON('{{ base_url }}/s?q='+searchField, function(data) {
+            $.getJSON('{{ base_url }}/{{ config.get('plugins.tntsearch.query_route','s')|ltrim('/') }}?q='+searchField, function(data) {
                 var output = '<div class="row"><p class="info">';
                 {% if config.get('plugins.tntsearch.display_hits') %}
-                output += '<span class="hits">found ' + data.number_of_hits + ' results</span> ';
+                output += '<span class="hits">Found ' + data.number_of_hits + ' results</span> ';
                 {% endif %}
                 {% if config.get('plugins.tntsearch.display_time') %}
-                output += '<span class="time">in  <span>' + data.execution_time + '</span></span>';
+                output += '<span class="time">in  <span>' + data.execution_time + ')</span></span>';
                 {% endif %}
                 output += '</p>'
 
