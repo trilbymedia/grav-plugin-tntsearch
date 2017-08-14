@@ -61,10 +61,22 @@ class TNTSearchPlugin extends Plugin
         /** @var Uri $uri */
         $uri = $this->grav['uri'];
 
+        $options = [];
+
         $this->current_route = $uri->path();
         $this->query_route = $this->config->get('plugins.tntsearch.query_route');
         $this->search_route = $this->config->get('plugins.tntsearch.search_route');
         $this->query = $uri->param('q') ?: $uri->query('q');
+
+        $snippet = $this->getFormValue('sl');
+        $limit = $this->getFormValue('l');
+
+        if ($snippet) {
+            $options['snippet'] = $snippet;
+        }
+        if ($limit) {
+            $options['limit'] = $limit;
+        }
 
         $pages = $this->grav['pages'];
         $page = $pages->dispatch($this->current_route);
@@ -86,7 +98,7 @@ class TNTSearchPlugin extends Plugin
 
         $this->config->set('plugins.tntsearch', $this->mergeConfig($page));
 
-        $gtnt = new GravTNTSearch();
+        $gtnt = new GravTNTSearch($options);
         $this->results = $gtnt->search($this->query);
     }
 
@@ -132,6 +144,11 @@ class TNTSearchPlugin extends Plugin
         $this->grav['assets']->addCss('plugin://tntsearch/assets/admin/tntsearch.css');
     }
 
+    protected function getFormValue($val)
+    {
+        $uri = $this->grav['uri'];
+        return $uri->param($val) ?: $uri->query($val) ?: filter_input(INPUT_POST, $val, FILTER_SANITIZE_ENCODED);;
+    }
 
 
 }

@@ -1,19 +1,22 @@
 {% set base_url = base_url|rtrim('/') %}
 <form role="form">
-    <div class="form-group">
-        <input type="text" class="form-control input-lg" id="tntsearch" placeholder="Search...">
+    {% block tntsearch_input %}
+    <div id="tntsearch-wrapper" class="form-group">
+        <input type="text" class="form-control" id="tntsearch" placeholder="Search...">
     </div>
+    {% endblock %}
+    <div id="tntsearch-results"></div>
 </form>
-
-<div id="tntsearch-results"></div>
 
 <script>
     $(window).load(function(){
         $('#tntsearch').keyup(function(){
             var searchField = $('#tntsearch').val();
+            var snippetLength = $('#tntsearch').data('snippet') || '';
+            var limit = $('#tntsearch').data('limit') || '';
             var count = 1;
 
-            $.getJSON('{{ base_url }}/{{ config.get('plugins.tntsearch.query_route','s')|ltrim('/') }}?q='+searchField, function(data) {
+            $.getJSON('{{ base_url }}/{{ config.get('plugins.tntsearch.query_route','s')|ltrim('/') }}?q='+searchField+'&sl='+snippetLength+'&l='+limit, function(data) {
                 var output = '<div class="row"><p class="info">';
                 {% if config.get('plugins.tntsearch.display_hits') %}
                 output += '<span class="hits">Found ' + data.number_of_hits + ' results</span> ';

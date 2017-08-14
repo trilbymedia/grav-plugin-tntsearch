@@ -10,22 +10,24 @@ class GravTNTSearch
     public $tnt;
     protected $options;
 
-    public function __construct($options = null)
+    public function __construct($options = [])
     {
         $search_type = Grav::instance()['config']->get('plugins.tntsearch.search_type');
 
-        $defaults = ['json' => false, 'search_type' => $search_type, 'limit' => 20, 'as_you_type' => true];
+        $defaults = [
+            'json' => false,
+            'search_type' => $search_type,
+            'limit' => 20,
+            'as_you_type' => true,
+            'snippet' => 300
+        ];
+
+        $this->options = array_merge($defaults, $options);
         
+        $this->tnt = new TNTSearch();
         $this->tnt = new TNTSearch();
 
         $data_path = Grav::instance()['locator']->findResource('user://data', true) . '/tntsearch';
-
-        // merge any passed-in options
-        if ($options) {
-            $this->options = array_merge($defaults, $options);
-        } else {
-            $this->options = $defaults;
-        }
 
         if (!file_exists($data_path)) {
             mkdir($data_path);
@@ -59,21 +61,31 @@ class GravTNTSearch
 
     protected function processResults($res, $query)
     {
-        $data = ['hits' => [], 'number_of_hits' => $res['hits'], 'execution_time' => $res['execution_time']];
-
+        $data = [
+            'hits' => [],
+            'number_of_hits' => isset($res['hits']) ? $res['hits'] : 0,
+            'execution_time' => $res['execution_time']
+        ];
         $pages = Grav::instance()['pages'];
 
+        $counter = 0;
+
         foreach ($res['ids'] as $path) {
+
+            if ($counter++ > $this->options['limit']) {
+                break;
+            }
+
             $page = $pages->dispatch($path);
 
             if ($page) {
                 $content = $this->getCleanContent($page);
                 $title = $page->title();
 
-                $relevant = $this->tnt->snippet($query, $content);
+                $relevant = $this->tnt->snippet($query, $content, $this->options['snippet']);
 
                 if (strlen($relevant) <= 6) {
-                    $relevant = substr($content, 0, 300);
+                    $relevant = substr($content, 0, $this->options['snippet']);
                 }
 
                 $data['hits'][] = [
