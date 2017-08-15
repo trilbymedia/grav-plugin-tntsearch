@@ -20,6 +20,7 @@ class TNTSearchPlugin extends Plugin
     protected $query_route;
     protected $search_route;
     protected $current_route;
+    protected $admin_route;
 
     /**
      * @return array
@@ -44,7 +45,13 @@ class TNTSearchPlugin extends Plugin
         include __DIR__.'/vendor/autoload.php';
 
         if ($this->isAdmin()) {
+
+            $route = $this->config->get('plugins.admin.route');
+            $base = '/' . trim($route, '/');
+            $this->admin_route = $this->grav['base_url'] . $base;
+
             $this->enable([
+                'onAdminMenu' => ['onAdminMenu', 0],
                 'onAdminTaskExecute' => ['onAdminTaskExecute', 0],
                 'onTwigSiteVariables' => ['onTwigAdminVariables', 0],
                 'onTwigLoader' => ['addAdminTwigTemplates', 0],
@@ -139,7 +146,7 @@ class TNTSearchPlugin extends Plugin
 
             header('Content-type: text/json');
 
-            if (!$controller->authorizeTask('taskReindexTNTSearch', ['admin.configuration', 'admin.super'])) {
+            if (!$controller->authorizeTask('reindexTNTSearch', ['admin.configuration', 'admin.super'])) {
                 $json_response = [
                     'status'  => 'error',
                     'message' => 'Insufficient permissions to reindex the search engine database.'
@@ -192,6 +199,19 @@ class TNTSearchPlugin extends Plugin
 
         $this->grav['assets']->addCss('plugin://tntsearch/assets/admin/tntsearch.css');
     }
+
+    public function onAdminMenu()
+    {
+        $options = [
+            'authorize' => 'taskReindexTNTSearch',
+//            'route' => $this->admin_route . '/plugins/tntsearch',
+            'hint' => 'reindexes the TNT Search index',
+            'class' => 'tntsearch-reindex',
+            'icon' => 'fa-bomb'
+        ];
+        $this->grav['twig']->plugins_quick_tray['TNT Search'] = $options;
+    }
+
 
     protected function getFormValue($val)
     {
