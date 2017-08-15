@@ -172,7 +172,7 @@ class TNTSearchPlugin extends Plugin
 
             $json_response = [
                 'status'  => $status,
-                'message' => $msg
+                'message' => '<i class="fa fa-book"></i>' . $msg
             ];
             echo json_encode($json_response);
             exit;
