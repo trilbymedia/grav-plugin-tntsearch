@@ -156,7 +156,7 @@ class TNTSearchPlugin extends Plugin
             if (!$controller->authorizeTask('reindexTNTSearch', ['admin.configuration', 'admin.super'])) {
                 $json_response = [
                     'status'  => 'error',
-                    'message' => '<span class="error"><i class="fa fa-warning"></i> Index not created</span>',
+                    'message' => '<i class="fa fa-warning"></i> Index not created',
                     'details' => 'Insufficient permissions to reindex the search engine database.'
                 ];
                 echo json_encode($json_response);
@@ -176,7 +176,7 @@ class TNTSearchPlugin extends Plugin
             list($status, $msg) = $this->getIndexCount($gtnt);
 
             $json_response = [
-                'status'  => $status,
+                'status'  => $status ? 'success' : 'error',
                 'message' => '<i class="fa fa-book"></i> ' . $msg
             ];
             echo json_encode($json_response);
