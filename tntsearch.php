@@ -166,11 +166,13 @@ class TNTSearchPlugin extends Plugin
             // capture content
             ob_start();
             $gtnt->indexGravPages();
-            $output = ob_get_clean();
+            ob_get_clean();
+
+            list($status, $msg) = $this->getIndexCount($gtnt);
 
             $json_response = [
-                'status'  => 'success',
-                'message' => $output
+                'status'  => $status,
+                'message' => $msg
             ];
             echo json_encode($json_response);
             exit;
@@ -181,25 +183,11 @@ class TNTSearchPlugin extends Plugin
     public function onTwigAdminVariables()
     {
         $twig = $this->grav['twig'];
-
-
-        $status = true;
-
         $gtnt= new GravTNTSearch();
-        try {
-            $gtnt->tnt->selectIndex('grav.index');
-        } catch (IndexNotFoundException $e) {
-            $status = false;
-            $msg = "Index not created";
-        }
 
-        if ($status) {
-            $msg = $gtnt->tnt->totalDocumentsInCollection() . ' documents indexed';
-        }
-
+        list($status, $msg) = $this->getIndexCount($gtnt);
 
         $twig->twig_vars['tntsearch_index_status'] = ['status' => $status, 'msg' => $msg];
-
         $this->grav['assets']->addCss('plugin://tntsearch/assets/admin/tntsearch.css');
     }
 
@@ -213,6 +201,20 @@ class TNTSearchPlugin extends Plugin
             'icon' => 'fa-bomb'
         ];
         $this->grav['twig']->plugins_quick_tray['TNT Search'] = $options;
+    }
+
+    protected function getIndexCount($gtnt)
+    {
+        $status = true;
+        try {
+            $gtnt->tnt->selectIndex('grav.index');
+            $msg = $gtnt->tnt->totalDocumentsInCollection() . ' documents indexed';
+        } catch (IndexNotFoundException $e) {
+            $status = false;
+            $msg = "Index not created";
+        }
+
+        return [$status, $msg];
     }
 
 
