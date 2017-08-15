@@ -5,11 +5,12 @@
         <div class="index-status">
             {% if tntsearch_index_status.status %}
                 <button id="tntsearch-index" class="button reindex tntsearch-reindex">Re-Index Content</button>
-                <span class="success"><i class="fa fa-book"></i> {{ tntsearch_index_status.msg }}</span>
+                <span class="tntsearch-status success"><i class="fa fa-book"></i> {{ tntsearch_index_status.msg }}</span>
             {% else %}
                 <button id="tntsearch-index" class="button critical tntsearch-reindex">Index Content</button>
-                <span class="error"><i class="fa fa-warning"></i> {{ tntsearch_index_status.msg }}</span>
+                <span class="tntsearch-status error"><i class="fa fa-warning"></i> {{ tntsearch_index_status.msg }}</span>
             {% endif %}
+            <div class="warning tntsearch-error-details"></div>
         </div>
     </div>
 {% endblock %}

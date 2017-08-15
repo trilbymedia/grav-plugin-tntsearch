@@ -156,7 +156,8 @@ class TNTSearchPlugin extends Plugin
             if (!$controller->authorizeTask('reindexTNTSearch', ['admin.configuration', 'admin.super'])) {
                 $json_response = [
                     'status'  => 'error',
-                    'message' => 'Insufficient permissions to reindex the search engine database.'
+                    'message' => '<span class="error"><i class="fa fa-warning"></i> Index not created</span>',
+                    'details' => 'Insufficient permissions to reindex the search engine database.'
                 ];
                 echo json_encode($json_response);
                 exit;
@@ -176,7 +177,7 @@ class TNTSearchPlugin extends Plugin
 
             $json_response = [
                 'status'  => $status,
-                'message' => '<i class="fa fa-book"></i>' . $msg
+                'message' => '<i class="fa fa-book"></i> ' . $msg
             ];
             echo json_encode($json_response);
             exit;
@@ -193,6 +194,7 @@ class TNTSearchPlugin extends Plugin
 
         $twig->twig_vars['tntsearch_index_status'] = ['status' => $status, 'msg' => $msg];
         $this->grav['assets']->addCss('plugin://tntsearch/assets/admin/tntsearch.css');
+        $this->grav['assets']->addJs('plugin://tntsearch/assets/admin/tntsearch.js');
     }
 
     public function onAdminMenu()
@@ -202,7 +204,7 @@ class TNTSearchPlugin extends Plugin
 //            'route' => $this->admin_route . '/plugins/tntsearch',
             'hint' => 'reindexes the TNT Search index',
             'class' => 'tntsearch-reindex',
-            'icon' => 'fa-bomb'
+            'icon' => 'fa-' . $this->grav['plugins']->get('tntsearch')->blueprints()->get('icon')
         ];
         $this->grav['twig']->plugins_quick_tray['TNT Search'] = $options;
     }
