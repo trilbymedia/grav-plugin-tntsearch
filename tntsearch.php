@@ -116,7 +116,11 @@ class TNTSearchPlugin extends Plugin
         }
 
         $gtnt = new GravTNTSearch($options);
-        $this->results = $gtnt->search($this->query);
+        try {
+            $this->results = $gtnt->search($this->query);
+        } catch (IndexNotFoundException $e) {
+            $this->results = ['number_of_hits' => 0, 'hits' => [], 'execution_time' => 'missing index'];
+        }
     }
 
     public function onTwigLoader()
