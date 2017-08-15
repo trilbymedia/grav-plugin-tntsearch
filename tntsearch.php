@@ -147,7 +147,7 @@ class TNTSearchPlugin extends Plugin
 
             $controller = $e['controller'];
 
-            header('Content-type: text/json');
+            header('Content-type: application/json');
 
             if (!$controller->authorizeTask('reindexTNTSearch', ['admin.configuration', 'admin.super'])) {
                 $json_response = [
