@@ -3,5 +3,5 @@
 {% block content %}
     {{ page.content }}
 
-    {% include 'partials/tntsearch.html.twig' %}
+    {% include 'partials/tntsearch.html.twig' with { in_page: true }%}
 {% endblock %}
