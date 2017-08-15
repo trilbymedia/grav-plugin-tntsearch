@@ -92,6 +92,9 @@ class TNTSearchPlugin extends Plugin
                 $page = new Page;
                 $page->init(new \SplFileInfo(__DIR__ . "/pages/tntquery.md"));
                 $page->slug(basename($this->current_route));
+                if ($uri->param('ajax') || $uri->query('ajax')) {
+                    $page->template('tntquery-ajax');
+                }
                 $pages->addPage($page, $this->current_route);
             } elseif ($this->built_in_search_page && $this->search_route == $this->current_route) {
                 $page = new Page;

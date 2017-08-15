@@ -1,9 +1,9 @@
-.tntsearch-dropdown ~ #tntsearch-results {
+.tntsearch-dropdown ~ .tntsearch-results {
     position: relative;
     margin-bottom: 0;
 }
 
-.tntsearch-dropdown ~ #tntsearch-results .row {
+.tntsearch-dropdown ~ .tntsearch-results .row {
     position: absolute;
     top: 0;
     right: 0;
@@ -14,16 +14,16 @@
     z-index: 2;
 }
 
-#tntsearch-results .info {
+.tntsearch-results .info {
     color: #999;
     font-size: 90%;
 }
 
-#tntsearch-results .title {
+.tntsearch-results .title {
     margin-bottom: 10px;
 }
 
-#tntsearch-results .route {
+.tntsearch-results .route {
     margin-top: 0;
     margin-bottom: 10px;
 }
