@@ -2,7 +2,8 @@
 namespace Grav\Plugin\TNTSearch;
 
 use Grav\Common\Grav;
-use Grav\Plugin\TNTSearch\GravConnector;
+use RocketTheme\Toolbox\Event\Event;
+use TeamTNT\TNTSearch\Exceptions\IndexNotFoundException;
 use TeamTNT\TNTSearch\TNTSearch;
 
 class GravTNTSearch
@@ -14,31 +15,27 @@ class GravTNTSearch
     {
         $search_type = Grav::instance()['config']->get('plugins.tntsearch.search_type');
         $stemmer = Grav::instance()['config']->get('plugins.tntsearch.stemmer');
-
-        $defaults = [
-            'json' => false,
-            'search_type' => $search_type,
-            'limit' => 20,
-            'as_you_type' => true,
-            'snippet' => 300
-        ];
-
-        $this->options = array_merge($defaults, $options);
-        
-        $this->tnt = new TNTSearch();
-        $this->tnt = new TNTSearch();
-
         $data_path = Grav::instance()['locator']->findResource('user://data', true) . '/tntsearch';
 
         if (!file_exists($data_path)) {
             mkdir($data_path);
         }
 
+        $defaults = [
+            'json' => false,
+            'search_type' => $search_type,
+            'stemmer' => $stemmer,
+            'limit' => 20,
+            'as_you_type' => true,
+            'snippet' => 300,
+        ];
+
+        $this->options = array_merge($defaults, $options);
+        $this->tnt = new TNTSearch();
         $this->tnt->loadConfig([
             "storage"   => $data_path,
             "driver"    => 'sqlite',
         ]);
-
     }
 
     public function search($query) {
@@ -122,7 +119,7 @@ class GravTNTSearch
         return $content;
     }
 
-    public function indexGravPages()
+    public function createIndex()
     {
         $this->tnt->setDatabaseHandle(new GravConnector);
         $indexer = $this->tnt->createIndex('grav.index');
@@ -133,6 +130,56 @@ class GravTNTSearch
         }
 
         $indexer->run();
+    }
+
+    public function deleteIndex($page)
+    {
+        $this->tnt->setDatabaseHandle(new GravConnector);
+
+        try {
+            $this->tnt->selectIndex('grav.index');
+        } catch (IndexNotFoundException $e) {
+            return;
+        }
+
+        $indexer = $this->tnt->getIndex();
+
+        // Delete existing if it exists
+        $indexer->delete($page->route());
+    }
+
+    public function updateIndex($page)
+    {
+        $this->tnt->setDatabaseHandle(new GravConnector);
+
+        try {
+            $this->tnt->selectIndex('grav.index');
+        } catch (IndexNotFoundException $e) {
+            return;
+        }
+
+        $indexer = $this->tnt->getIndex();
+
+        // Delete existing if it exists
+        $indexer->delete($page->route());
+
+        $fields = GravTNTSearch::indexPageData($page);
+        $document = (array) $fields;
+
+        // Insert document
+        $indexer->insert($document);
+    }
+
+    public static function indexPageData($page)
+    {
+        $fields = new \stdClass();
+        $fields->id = $page->route();
+        $fields->name = $page->title();
+        $fields->content = static::getCleanContent($page);
+
+        Grav::instance()->fireEvent('onTNTSearchIndex', new Event(['page' => $page, 'fields' => $fields]));
+
+        return $fields;
     }
 
 }

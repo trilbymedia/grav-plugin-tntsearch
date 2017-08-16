@@ -37,9 +37,13 @@ class TNTSearchPlugin extends Plugin
         return [
             'onPluginsInitialized' => ['onPluginsInitialized', 0],
             'onTwigLoader' => ['onTwigLoader', 0],
+            'onTNTSearchIndex' => ['onTNTSearchIndex', 0],
         ];
     }
 
+    /**
+     * Initialize the plugin
+     */
     public function onPluginsInitialized()
     {
         include __DIR__.'/vendor/autoload.php';
@@ -53,6 +57,8 @@ class TNTSearchPlugin extends Plugin
             $this->enable([
                 'onAdminMenu' => ['onAdminMenu', 0],
                 'onAdminTaskExecute' => ['onAdminTaskExecute', 0],
+                'onAdminAfterSave' => ['onAdminAfterSave', 0],
+                'onAdminAfterDelete' => ['onAdminAfterDelete', 0],
                 'onTwigSiteVariables' => ['onTwigAdminVariables', 0],
                 'onTwigLoader' => ['addAdminTwigTemplates', 0],
             ]);
@@ -65,7 +71,24 @@ class TNTSearchPlugin extends Plugin
         ]);
     }
 
+    /**
+     * A sample event to show how easy it is to extend the indexing fields
+     *
+     * @param Event $e
+     */
+    public function onTNTSearchIndex(Event $e)
+    {
+        $fields = $e['fields'];
+        $page = $e['page'];
 
+        if (isset($page->header()->author)) {
+            $fields->author = $page->header()->author;
+        }
+    }
+
+    /**
+     * Create pages and perform the search actions
+     */
     public function onPagesInitialized()
     {
         /** @var Uri $uri */
@@ -123,16 +146,25 @@ class TNTSearchPlugin extends Plugin
         }
     }
 
+    /**
+     * Add the Twig template paths to the Twig laoder
+     */
     public function onTwigLoader()
     {
         $this->grav['twig']->addPath(__DIR__ . '/templates');
     }
 
+    /**
+     * Add the current template paths to the admin Twig loader
+     */
     public function addAdminTwigTemplates()
     {
         $this->grav['twig']->addPath($this->grav['locator']->findResource('theme://templates'));
     }
-    
+
+    /**
+     * Add results and query to Twig as well as CSS/JS assets
+     */
     public function onTwigSiteVariables()
     {
         $twig = $this->grav['twig'];
@@ -145,6 +177,11 @@ class TNTSearchPlugin extends Plugin
         $this->grav['assets']->addJs('plugin://tntsearch/assets/tntsearch.js');
     }
 
+    /**
+     * Handle the Reindex task from the admin
+     *
+     * @param Event $e
+     */
     public function onAdminTaskExecute(Event $e)
     {
         if ($e['method'] == 'taskReindexTNTSearch') {
@@ -170,7 +207,7 @@ class TNTSearchPlugin extends Plugin
 
             // capture content
             ob_start();
-            $gtnt->indexGravPages();
+            $gtnt->createIndex();
             ob_get_clean();
 
             list($status, $msg) = $this->getIndexCount($gtnt);
@@ -185,10 +222,49 @@ class TNTSearchPlugin extends Plugin
 
     }
 
+    /**
+     * Perform an 'add' or 'update' for index data as needed
+     *
+     * @param $event
+     * @return bool
+     */
+    public function onAdminAfterSave($event)
+    {
+        $obj = $event['object'];
+
+        if ($obj instanceof Page) {
+            $gtnt = new GravTNTSearch();
+            $gtnt->updateIndex($obj);
+        }
+
+        return true;
+    }
+
+    /**
+     * Perform an 'add' or 'update' for index data as needed
+     *
+     * @param $event
+     * @return bool
+     */
+    public function onAdminAfterDelete($event)
+    {
+        $obj = $event['object'];
+
+        if ($obj instanceof Page) {
+            $gtnt = new GravTNTSearch();
+            $gtnt->deleteIndex($obj);
+        }
+
+        return true;
+    }
+
+    /**
+     * Set some twig vars and load CSS/JS assets for admin
+     */
     public function onTwigAdminVariables()
     {
         $twig = $this->grav['twig'];
-        $gtnt= new GravTNTSearch();
+        $gtnt = new GravTNTSearch();
 
         list($status, $msg) = $this->getIndexCount($gtnt);
 
@@ -197,11 +273,13 @@ class TNTSearchPlugin extends Plugin
         $this->grav['assets']->addJs('plugin://tntsearch/assets/admin/tntsearch.js');
     }
 
+    /**
+     * Add reindex button to the admin QuickTray
+     */
     public function onAdminMenu()
     {
         $options = [
             'authorize' => 'taskReindexTNTSearch',
-//            'route' => $this->admin_route . '/plugins/tntsearch',
             'hint' => 'reindexes the TNT Search index',
             'class' => 'tntsearch-reindex',
             'icon' => 'fa-' . $this->grav['plugins']->get('tntsearch')->blueprints()->get('icon')
@@ -209,6 +287,12 @@ class TNTSearchPlugin extends Plugin
         $this->grav['twig']->plugins_quick_tray['TNT Search'] = $options;
     }
 
+    /**
+     * Wrapper to get the number of documents currently indexed
+     *
+     * @param $gtnt
+     * @return array
+     */
     protected function getIndexCount($gtnt)
     {
         $status = true;
@@ -223,7 +307,12 @@ class TNTSearchPlugin extends Plugin
         return [$status, $msg];
     }
 
-
+    /**
+     * Helper function to read form/url values
+     *
+     * @param $val
+     * @return mixed
+     */
     protected function getFormValue($val)
     {
         $uri = $this->grav['uri'];

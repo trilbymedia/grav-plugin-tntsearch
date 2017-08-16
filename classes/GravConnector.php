@@ -3,7 +3,6 @@ namespace Grav\Plugin\TNTSearch;
 
 use Grav\Common\Grav;
 use Grav\Common\Page\Page;
-use Grav\Common\Twig\Twig;
 
 class GravConnector extends \PDO
 {
@@ -12,6 +11,10 @@ class GravConnector extends \PDO
 
     }
 
+    public function getAttribute($attribute)
+    {
+        return false;
+    }
 
     public function query($query)
     {
@@ -19,7 +22,6 @@ class GravConnector extends \PDO
         $results = [];
 
         $config = Grav::instance()['config'];
-
         $filter = $config->get('plugins.tntsearch.filter');
         $default_process = $config->get('plugins.tntsearch.index_page_by_default');
 
@@ -48,12 +50,8 @@ class GravConnector extends \PDO
             }
 
             try {
-                $mapping_fields = [
-                    'id'      => $route,
-                    'name'    => $page->title(),
-                    'content' => GravTNTSearch::getCleanContent($page)
-                ];
-                $results[] = $mapping_fields;
+                $fields = GravTNTSearch::indexPageData($page);
+                $results[] = (array) $fields;
                 echo("Added $counter $route\n");
             } catch (\Exception $e) {
                 echo("Skipped $counter $route\n");

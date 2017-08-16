@@ -6,8 +6,6 @@ use Grav\Console\ConsoleCommand;
 use Grav\Plugin\TNTSearch\GravIndexer;
 use Grav\Plugin\TNTSearch\GravTNTSearch;
 use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputOption;
-use TeamTNT\TNTSearch\TNTSearch;
 
 /**
  * Class IndexerCommand

@@ -66,7 +66,7 @@ class IndexerCommand extends ConsoleCommand
         $grav['pages']->init();
 
         $gtnt = new GravTNTSearch();
-        $gtnt->indexGravPages();
+        $gtnt->createIndex();
 
     }
 }
