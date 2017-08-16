@@ -31,13 +31,13 @@ SQLite actually comes pre-installed on your Mac, but you can upgrade it to the l
 
 Install [Homebrew](https://brew.sh/)
 
-```
+```shell
 $ /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 ```
 
 Install SQLite with Homebrew
 
-```
+```shell
 $ brew install sqlite
 ```
 
@@ -107,13 +107,13 @@ The first step after installation of the plugin, is to index your content.  Ther
 
 First if you are able to access the CLI or just choose not to use the admin plugin, you can use the built-in CLI command:
 
-```
+```shell
 $ bin/plugin tntsearch index
 ```
 
 This will scan all your pages and index the content.  You should see some output like this:
 
-```
+```shell
 Re-indexing Search
 
 Added 1 /
@@ -151,7 +151,7 @@ Once you have an index, TNTSearch makes use of admin events to **C**reate, **U**
 
 By default the TNTSearch plugin will index the `title` and `content` of your page.  This usually suffices for most cases, but there are situations where you might want to index more fields.  The plugin provides an example of this by listening to the `onTNTSearchIndex` event:
 
-```
+```php
 public static function getSubscribedEvents()
 {
     return [
@@ -178,7 +178,7 @@ The TNTSearch plugin generally uses the rendered content to index with.  However
 
 For example, say we have a homepage that is built from a few modular sub-pages with a little content below it, it's called `home.md`, so uses a `home.html.twig` file in your theme's `templates/` folder.  You can create a simplified version of this template and save it as `templates/tntsearch/home.html.twig`. For this example this template looks like this:
 
-```
+```twig
 {% for module in page.collection() %}
 <p>
     {{ module.content }}
@@ -192,7 +192,7 @@ As you can see this simply ensures the module pages as defined in the page's col
 
 To instruct TNTSearch to index with this template rather than just using the Page content by itself, you just need to add an entry in the `home.md` frontmatter:
 
-```
+```yaml
 tntsearch:
     template: 'tntsearch/home'
 ```
@@ -212,7 +212,7 @@ The actual input field can also be modified as needed by copy and editing the `t
 
 TNTSearch plugin can also be used to render the search as a drop-down rather than in a standard page.  To do this you need to `embed` the search partial and override it to fit your needs.  You could simply add this to your theme wherever you want to have an Ajax drop-down search box:
 
-```
+```twig
 {% embed 'partials/tntsearch.html.twig' %}
     {% block tntsearch_input %}
         {% set options = { uri: uri, limit: 10, snippet: 150, min: 3 } %}
