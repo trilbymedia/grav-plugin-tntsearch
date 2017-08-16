@@ -1,6 +1,6 @@
 # Tnt Search Plugin
 
-The **TNTSearch** Plugin is for [Grav CMS](http://github.com/getgrav/grav). Powerful Indexed Search Engine powered by the [TNTSearch library](https://github.com/teamtnt/tntsearch) that provides offline indexing of content for fast AJAX-based Grav content searches.  This plugin is highly flexible allowing indexes of arbitrary content data as well as custom Twig templates to provide the opportunity to index modular and other dynamic page types. TNTSearch provides CLI as well as Admin based administration and re-indexing, as well as a built-in Ajax-powered front-end search tool.
+The **TNTSearch** Plugin is for [Grav CMS](http://github.com/getgrav/grav). PPowerful indexed-based full text search engine powered by the [TNTSearch library](https://github.com/teamtnt/tntsearch) that provides fast Ajax-based Grav content searches.  This plugin is highly flexible allowing indexes of arbitrary content data as well as custom Twig templates to provide the opportunity to index modular and other dynamic page types. TNTSearch provides CLI as well as Admin based administration and re-indexing, as well as a built-in Ajax-powered front-end search tool.
 
 ![](assets/tntsearch-ajax.gif)
 
