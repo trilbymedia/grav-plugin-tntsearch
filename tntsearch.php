@@ -268,6 +268,11 @@ class TNTSearchPlugin extends Plugin
 
         list($status, $msg) = $this->getIndexCount($gtnt);
 
+        if ($status === false) {
+            $message = '<i class="fa fa-bomb"></i> <a href="/'. trim($this->admin_route, '/') . '/plugins/tntsearch">TNTSearch must be indexed before it will function properly.</a>';
+            $this->grav['admin']->addTempMessage($message, 'error');
+        }
+
         $twig->twig_vars['tntsearch_index_status'] = ['status' => $status, 'msg' => $msg];
         $this->grav['assets']->addCss('plugin://tntsearch/assets/admin/tntsearch.css');
         $this->grav['assets']->addJs('plugin://tntsearch/assets/admin/tntsearch.js');
