@@ -13,6 +13,7 @@ license: MIT
 
 form:
   validation: strict
+
   fields:
     enabled:
       type: toggle
@@ -24,9 +25,11 @@ form:
         0: Disabled
       validate:
         type: bool
+
     index_status:
       type: indexstatus
       label: Search Index Status
+
     built_in_search_page:
       type: toggle
       label: Built-in Search Page
@@ -37,11 +40,13 @@ form:
         0: Disabled
       validate:
         type: bool
+
     search_route:
       type: text
       size: medium
       label: Search Page Route
       help: The route for the built-in search page, leave empty if you wish to not have a dedicated search page.
+
     query_route:
       type: text
       size: medium
@@ -58,6 +63,22 @@ form:
         default: Default
         boolean: Boolean
         fuzzy: Fuzzy
+
+    stemmer:
+      type: select
+      size: small
+      classes: fancy
+      label: Stemmer
+      help: An automated process which produces a base string in an attempt to represent related words
+      options:
+        default: Default
+        arabic: Arabic
+        german: German
+        italian: Italian
+        porter: Porter
+        russian: Russian
+        ukrainian: Ukrainian
+
     display_route:
       type: toggle
       label: Display Route
@@ -68,6 +89,7 @@ form:
         0: Disabled
       validate:
         type: bool
+
     display_hits:
       type: toggle
       label: Display Hits
@@ -78,6 +100,7 @@ form:
         0: Disabled
       validate:
         type: bool
+
     display_time:
       type: toggle
       label: Display Route
@@ -88,6 +111,7 @@ form:
         0: Disabled
       validate:
         type: bool
+
     index_page_by_default:
       type: toggle
       label: Index Every Page
@@ -99,6 +123,7 @@ form:
         0: Disabled
       validate:
         type: bool
+
     filter.items:
       type: textarea
       size: large

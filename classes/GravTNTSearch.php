@@ -13,6 +13,7 @@ class GravTNTSearch
     public function __construct($options = [])
     {
         $search_type = Grav::instance()['config']->get('plugins.tntsearch.search_type');
+        $stemmer = Grav::instance()['config']->get('plugins.tntsearch.stemmer');
 
         $defaults = [
             'json' => false,
@@ -125,6 +126,12 @@ class GravTNTSearch
     {
         $this->tnt->setDatabaseHandle(new GravConnector);
         $indexer = $this->tnt->createIndex('grav.index');
+
+        // Set the stemmer language if set
+        if ($this->options['stemmer'] != 'default') {
+            $indexer->setLanguage($this->options['stemmer']);
+        }
+
         $indexer->run();
     }
 
