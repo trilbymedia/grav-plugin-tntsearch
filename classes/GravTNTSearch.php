@@ -59,14 +59,11 @@ class GravTNTSearch
 
     protected function processResults($res, $query)
     {
-        $data = [
-            'hits' => [],
-            'number_of_hits' => isset($res['hits']) ? $res['hits'] : 0,
-            'execution_time' => $res['execution_time']
-        ];
-        $pages = Grav::instance()['pages'];
-
         $counter = 0;
+        $data = new \stdClass();
+        $data->number_of_hits = isset($res['hits']) ? $res['hits'] : 0;
+        $data->execution_time = $res['execution_time'];
+        $pages = Grav::instance()['pages'];
 
         foreach ($res['ids'] as $path) {
 
@@ -77,24 +74,10 @@ class GravTNTSearch
             $page = $pages->dispatch($path);
 
             if ($page) {
-                $content = $this->getCleanContent($page);
-                $title = $page->title();
-
-                $relevant = $this->tnt->snippet($query, $content, $this->options['snippet']);
-
-                if (strlen($relevant) <= 6) {
-                    $relevant = substr($content, 0, $this->options['snippet']);
-                }
-
-                $data['hits'][] = [
-                    'link' => $path,
-                    'title' =>  $this->tnt->highlight($title, $query, 'em', ['wholeWord' => false]),
-                    'content' =>  $this->tnt->highlight($relevant, $query, 'em', ['wholeWord' => false]),
-                ];
+                Grav::instance()->fireEvent('onTNTSearchQuery', new Event(['page' => $page, 'query' => $query, 'options' => $this->options, 'fields' => $data, 'gtnt' => $this]));
             }
-
-
         }
+
         if ($this->options['json']) {
             return json_encode($data, JSON_PRETTY_PRINT);
         } else {
@@ -170,12 +153,12 @@ class GravTNTSearch
         $indexer->insert($document);
     }
 
-    public static function indexPageData($page)
+    public function indexPageData($page)
     {
         $fields = new \stdClass();
         $fields->id = $page->route();
         $fields->name = $page->title();
-        $fields->content = static::getCleanContent($page);
+        $fields->content = $this->getCleanContent($page);
 
         Grav::instance()->fireEvent('onTNTSearchIndex', new Event(['page' => $page, 'fields' => $fields]));
 

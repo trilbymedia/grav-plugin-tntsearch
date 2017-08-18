@@ -208,6 +208,10 @@ If you wish to customize the actual HTML output, simply copy the `templates/sear
 
 The actual input field can also be modified as needed by copy and editing the `templates/partials/tntsearch.html.twig` file to your theme and modify it.
 
+### Customizing Query Data
+
+By default the TNTSearch plugin for Grav
+
 ### Dropdown Search Field
 
 TNTSearch plugin can also be used to render the search as a drop-down rather than in a standard page.  To do this you need to `embed` the search partial and override it to fit your needs.  You could simply add this to your theme wherever you want to have an Ajax drop-down search box:
