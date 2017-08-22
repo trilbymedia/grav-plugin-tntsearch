@@ -28,8 +28,20 @@
     margin-bottom: 10px;
 }
 
+.tntsearch-results .row > p {
+    margin-top: 0;
+}
+
 .tntsearch-results em {
     font-style: normal;
     background-color: #ffff33;
 }
 
+.tntsearch-powered-by {
+    text-align: center;
+    font-size: 14px;
+}
+
+.tntsearch-dropdown ~ .tntsearch-powered-by {
+    display: none;
+}

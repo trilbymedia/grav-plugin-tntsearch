@@ -24,6 +24,7 @@ class GravConnector extends \PDO
         $config = Grav::instance()['config'];
         $filter = $config->get('plugins.tntsearch.filter');
         $default_process = $config->get('plugins.tntsearch.index_page_by_default');
+        $gtnt = new GravTNTSearch();
 
         if ($filter && array_key_exists('items', $filter)) {
             $page = new Page;
@@ -50,7 +51,7 @@ class GravConnector extends \PDO
             }
 
             try {
-                $fields = GravTNTSearch::indexPageData($page);
+                $fields = $gtnt->indexPageData($page);
                 $results[] = (array) $fields;
                 echo("Added $counter $route\n");
             } catch (\Exception $e) {

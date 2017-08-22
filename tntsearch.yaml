@@ -14,3 +14,4 @@ filter:
 #  items:
 #    taxonomy@:
 #      category: [news]
+powered_by: true

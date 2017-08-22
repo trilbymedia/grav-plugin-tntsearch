@@ -22,6 +22,9 @@ class TNTSearchPlugin extends Plugin
     protected $current_route;
     protected $admin_route;
 
+    /** @var  GravTNTSearch **/
+    protected $gtnt;
+
     /**
      * @return array
      *
@@ -38,6 +41,7 @@ class TNTSearchPlugin extends Plugin
             'onPluginsInitialized' => ['onPluginsInitialized', 0],
             'onTwigLoader' => ['onTwigLoader', 0],
             'onTNTSearchIndex' => ['onTNTSearchIndex', 0],
+            'onTNTSearchQuery' => ['onTNTSearchQuery', 0],
         ];
     }
 
@@ -50,6 +54,7 @@ class TNTSearchPlugin extends Plugin
 
         if ($this->isAdmin()) {
 
+            $this->gtnt = new GravTNTSearch();
             $route = $this->config->get('plugins.admin.route');
             $base = '/' . trim($route, '/');
             $this->admin_route = $this->grav['base_url'] . $base;
@@ -78,12 +83,36 @@ class TNTSearchPlugin extends Plugin
      */
     public function onTNTSearchIndex(Event $e)
     {
-        $fields = $e['fields'];
         $page = $e['page'];
+        $fields = $e['fields'];
 
         if (isset($page->header()->author)) {
             $fields->author = $page->header()->author;
         }
+    }
+
+    public function onTNTSearchQuery(Event $e)
+    {
+        $page = $e['page'];
+        $query = $e['query'];
+        $options = $e['options'];
+        $fields = $e['fields'];
+        $gtnt = $e['gtnt'];
+
+        $content = $gtnt->getCleanContent($page);
+        $title = $page->title();
+
+        $relevant = $gtnt->tnt->snippet($query, $content, $options['snippet']);
+
+        if (strlen($relevant) <= 6) {
+            $relevant = substr($content, 0, $options['snippet']);
+        }
+
+        $fields->hits[] = [
+            'link' => $page->route(),
+            'title' =>  $gtnt->tnt->highlight($title, $query, 'em', ['wholeWord' => false]),
+            'content' =>  $gtnt->tnt->highlight($relevant, $query, 'em', ['wholeWord' => false]),
+        ];
     }
 
     /**
@@ -114,6 +143,8 @@ class TNTSearchPlugin extends Plugin
             $options['limit'] = $limit;
         }
 
+        $this->gtnt = new GravTNTSearch($options);
+
         $pages = $this->grav['pages'];
         $page = $pages->dispatch($this->current_route);
 
@@ -138,9 +169,8 @@ class TNTSearchPlugin extends Plugin
             $this->config->set('plugins.tntsearch', $this->mergeConfig($page));
         }
 
-        $gtnt = new GravTNTSearch($options);
         try {
-            $this->results = $gtnt->search($this->query);
+            $this->results = $this->gtnt->search($this->query);
         } catch (IndexNotFoundException $e) {
             $this->results = ['number_of_hits' => 0, 'hits' => [], 'execution_time' => 'missing index'];
         }
@@ -208,14 +238,12 @@ class TNTSearchPlugin extends Plugin
             // disable warnings
             error_reporting(1);
 
-            $gtnt = new GravTNTSearch();
-
             // capture content
             ob_start();
-            $gtnt->createIndex();
+            $this->gtnt->createIndex();
             ob_get_clean();
 
-            list($status, $msg) = $this->getIndexCount($gtnt);
+            list($status, $msg) = $this->getIndexCount();
 
             $json_response = [
                 'status'  => $status ? 'success' : 'error',
@@ -238,8 +266,7 @@ class TNTSearchPlugin extends Plugin
         $obj = $event['object'];
 
         if ($obj instanceof Page) {
-            $gtnt = new GravTNTSearch();
-            $gtnt->updateIndex($obj);
+            $this->gtnt->updateIndex($obj);
         }
 
         return true;
@@ -256,8 +283,7 @@ class TNTSearchPlugin extends Plugin
         $obj = $event['object'];
 
         if ($obj instanceof Page) {
-            $gtnt = new GravTNTSearch();
-            $gtnt->deleteIndex($obj);
+            $this->gtnt->deleteIndex($obj);
         }
 
         return true;
@@ -269,9 +295,8 @@ class TNTSearchPlugin extends Plugin
     public function onTwigAdminVariables()
     {
         $twig = $this->grav['twig'];
-        $gtnt = new GravTNTSearch();
 
-        list($status, $msg) = $this->getIndexCount($gtnt);
+        list($status, $msg) = $this->getIndexCount();
 
         if ($status === false) {
             $message = '<i class="fa fa-binoculars"></i> <a href="/'. trim($this->admin_route, '/') . '/plugins/tntsearch">TNTSearch must be indexed before it will function properly.</a>';
@@ -300,15 +325,14 @@ class TNTSearchPlugin extends Plugin
     /**
      * Wrapper to get the number of documents currently indexed
      *
-     * @param $gtnt
      * @return array
      */
-    protected function getIndexCount($gtnt)
+    protected function getIndexCount()
     {
         $status = true;
         try {
-            $gtnt->tnt->selectIndex('grav.index');
-            $msg = $gtnt->tnt->totalDocumentsInCollection() . ' documents indexed';
+            $this->gtnt->tnt->selectIndex('grav.index');
+            $msg = $this->gtnt->tnt->totalDocumentsInCollection() . ' documents indexed';
         } catch (IndexNotFoundException $e) {
             $status = false;
             $msg = "Index not created";
