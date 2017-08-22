@@ -201,12 +201,103 @@ tntsearch:
 
 TNTSearch plugin for Grav comes with a built-in query page that is accessible via the `/search` route by default. This search page is a simple input field that will perform an Ajax query **as-you-type**.  Because TNTSearch is so fast, you get a real-time search response in a similar fashion to a Google search.  Also the results are returned already highlighted for matching terms.
 
+You can also test searching with the CLI:
+
+```json
+$ bin/plugin tntsearch query ipsum
+
+{
+    "number_of_hits": 3,
+    "execution_time": "2.101 ms",
+    "hits": [
+        {
+            "link": "\/blog\/classic-modern-architecture",
+            "title": "Classic Modern Architecture",
+            "content": "...sed a odio. Curabitur ut lectus tortor. Sed <em>ipsum<\/em> eros, egestas ut eleifend non, elementum vitae eros. Mauris felis diam, pellentesque vel lacinia ac, dictum a nunc.\nLorem <em>ipsum<\/em> dolor sit amet, consectetur adipiscing elit. Donec ultricies tristique nulla et mattis. Phasellus id massa eget..."
+        },
+        {
+            "link": "\/blog\/focus-and-blur",
+            "title": "Focus and Blur",
+            "content": "...sed a odio. Curabitur ut lectus tortor. Sed <em>ipsum<\/em> eros, egestas ut eleifend non, elementum vitae eros. Mauris felis diam, pellentesque vel lacinia ac, dictum a nunc.\nLorem <em>ipsum<\/em> dolor sit amet, consectetur adipiscing elit. Donec ultricies tristique nulla et mattis. Phasellus id massa eget..."
+        },
+        {
+            "link": "\/blog\/london-industry",
+            "title": "London Industry at Night",
+            "content": "...sed a odio. Curabitur ut lectus tortor. Sed <em>ipsum<\/em> eros, egestas ut eleifend non, elementum vitae eros. Mauris felis diam, pellentesque vel lacinia ac, dictum a nunc.\nLorem <em>ipsum<\/em> dolor sit amet, consectetur adipiscing elit. Donec ultricies tristique nulla et mattis. Phasellus id massa eget..."
+        }
+    ]
+}
+```
+
 ### Customizing the Search Page
 
 If a physical Grav page is found for the `/search` route, TNTSearch will use that rather than the page provided by the plugin.  This allows you to easily add content to your search page as you need.
 If you wish to customize the actual HTML output, simply copy the `templates/search.html.twig` from the plugin to your theme and customize it.
 
 The actual input field can also be modified as needed by copy and editing the `templates/partials/tntsearch.html.twig` file to your theme and modify it.
+
+### Customizing Query Data
+
+By default the TNTSearch plugin for Grav, the response JSON is sent with the following structure:
+
+```json
+{
+    "number_of_hits": 3,
+    "execution_time": "1.000 ms",
+    "hits": [
+        {
+            "link": "/page-a",
+            "title": "Title A",
+            "content": "highlighted-summary"
+        },
+        {
+            "link": "/page-b",
+            "title": "Title B",
+            "content": "highlighted-summary"
+        },
+        {
+            "link": "/page-c",
+            "title": "Title C",
+            "content": "highlighted-summary"
+        }
+    ]
+}
+```
+
+There are instances where this output is not desirable or needs to be changed.  TNTSearch actually provides a plugin event to allow you to manipulate this format.  An example of this can be seen below:
+
+```php
+public static function getSubscribedEvents() {
+    return [
+        'onTNTSearchQuery' => ['onTNTSearchQuery', 1000],
+    ];
+}
+
+public function onTNTSearchQuery(Event $e)
+{
+    $query = $this->grav['uri']->param('q');
+
+    if ($query) {
+        $page = $e['page'];
+        $query = $e['query'];
+        $options = $e['options'];
+        $fields = $e['fields'];
+        
+        $fields->results[] = $page->route();
+        $e->stopPropagation();
+    }
+}
+```
+
+The important things to note are the `1000` order-value to ensure this event runs before the default event in the `tntsearch.php` plugin file. The actual event method simply sets a result array on fields to with a route, resulting in:
+
+```json
+{
+    "number_of_hits": 3,
+    "execution_time": "1.000 ms",
+    "results": ['/page-a', '/page-b', '/page-c']
+}
+```
 
 ### Dropdown Search Field
 
