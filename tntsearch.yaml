@@ -1,6 +1,8 @@
 enabled: true
 search_route: '/search'
 query_route: '/s'
+built_in_css: true
+built_in_js: true
 built_in_search_page: true
 search_type: default
 stemmer: default
