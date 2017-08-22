@@ -1,7 +1,7 @@
 name: TNT Search
 version: 1.0.0
 description: Powerful indexed-based full text search engine powered by TNTSearch
-icon: bomb
+icon: binoculars
 author:
   name: Trilby Media, LLC
   email: devs@trilby.media

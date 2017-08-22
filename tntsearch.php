@@ -274,7 +274,7 @@ class TNTSearchPlugin extends Plugin
         list($status, $msg) = $this->getIndexCount($gtnt);
 
         if ($status === false) {
-            $message = '<i class="fa fa-bomb"></i> <a href="/'. trim($this->admin_route, '/') . '/plugins/tntsearch">TNTSearch must be indexed before it will function properly.</a>';
+            $message = '<i class="fa fa-binoculars"></i> <a href="/'. trim($this->admin_route, '/') . '/plugins/tntsearch">TNTSearch must be indexed before it will function properly.</a>';
             $this->grav['admin']->addTempMessage($message, 'error');
         }
 
@@ -292,7 +292,7 @@ class TNTSearchPlugin extends Plugin
             'authorize' => 'taskReindexTNTSearch',
             'hint' => 'reindexes the TNT Search index',
             'class' => 'tntsearch-reindex',
-            'icon' => 'fa-' . $this->grav['plugins']->get('tntsearch')->blueprints()->get('icon')
+            'icon' => 'fa-binoculars'
         ];
         $this->grav['twig']->plugins_quick_tray['TNT Search'] = $options;
     }

@@ -2,6 +2,7 @@
 ##  08/22/2017
 
 1. [](#new)
+    * Changed cartoon bomb icon with more friendly version (binoculars) [#4](https://github.com/trilbymedia/grav-plugin-tntsearch/issues/4)
     * Added the ability to disable CSS and JS independently [#3](https://github.com/trilbymedia/grav-plugin-tntsearch/issues/3)
 
 # v1.0.0
