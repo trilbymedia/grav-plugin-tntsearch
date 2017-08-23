@@ -1,3 +1,9 @@
+# v1.1.1
+##  08/xx/2017
+
+1. [](#improved)
+    * Allow the ability to pass a `placeholder` to the  `partials/tntsearch.html.twig` template
+
 # v1.1.0
 ##  08/22/2017
 

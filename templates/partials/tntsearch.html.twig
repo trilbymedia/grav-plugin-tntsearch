@@ -1,9 +1,10 @@
 {% set uri = base_url|rtrim('/') ~ '/' ~ config.get('plugins.tntsearch.query_route', 's')|trim('/') %}
 {% set options = { uri: uri, limit: '', snippet: '', min: 3 } %}
+{% set placeholder = placeholder is defined ? placeholder : 'Search...' %}
 <form role="form">
     {% block tntsearch_input %}
     <div id="tntsearch-wrapper" class="form-group">
-        <input type="text" class="form-control tntsearch-field" data-tntsearch="{{ options|json_encode|e('html_attr') }}" placeholder="Search...">
+        <input type="text" class="form-control tntsearch-field" data-tntsearch="{{ options|json_encode|e('html_attr') }}" placeholder="{{ placeholder }}">
     </div>
     {% endblock %}
     <div class="tntsearch-results{{ in_page ? ' tntsearch-inpage' : '' }}"></div>
