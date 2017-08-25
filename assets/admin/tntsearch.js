@@ -1,7 +1,7 @@
 ((function($) {
     $(document).ready(function() {
         var Request, Toastr = null;
-        if (Grav.default.Utils) {
+        if (typeof Grav !== 'undefined' && Grav && Grav.default && Grav.default.Utils) {
             Request = Grav.default.Utils.request;
             Toastr = Grav.default.Utils.toastr;
         }
