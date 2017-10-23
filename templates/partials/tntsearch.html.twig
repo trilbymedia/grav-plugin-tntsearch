@@ -4,7 +4,7 @@
 <form role="form">
     {% block tntsearch_input %}
     <div id="tntsearch-wrapper" class="form-group">
-        <input type="text" class="form-control tntsearch-field" data-tntsearch="{{ options|json_encode|e('html_attr') }}" placeholder="{{ placeholder }}" value={{ query }}>
+        <input type="text" class="form-control tntsearch-field" data-tntsearch="{{ options|json_encode|e('html_attr') }}" placeholder="{{ placeholder }}" value="{{ query }}">
     </div>
     {% endblock %}
     <div class="tntsearch-results{{ in_page ? ' tntsearch-inpage' : '' }}">
