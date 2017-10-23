@@ -4,10 +4,14 @@
 <form role="form">
     {% block tntsearch_input %}
     <div id="tntsearch-wrapper" class="form-group">
-        <input type="text" class="form-control tntsearch-field" data-tntsearch="{{ options|json_encode|e('html_attr') }}" placeholder="{{ placeholder }}">
+        <input type="text" class="form-control tntsearch-field" data-tntsearch="{{ options|json_encode|e('html_attr') }}" placeholder="{{ placeholder }}" value={{ query }}>
     </div>
     {% endblock %}
-    <div class="tntsearch-results{{ in_page ? ' tntsearch-inpage' : '' }}"></div>
+    <div class="tntsearch-results{{ in_page ? ' tntsearch-inpage' : '' }}">
+    {% if tntsearch_results is defined and tntsearch_results is not empty %}
+        {% include 'tntquery-ajax.html.twig' %}
+    {% endif %}
+    </div>
 
     <p class="tntsearch-powered-by">
         Powered by <a href="https://github.com/trilbymedia/grav-plugin-tntsearch" target="_blank">TNTSearch</a>
