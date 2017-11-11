@@ -1,5 +1,5 @@
 {% set uri = base_url|rtrim('/') ~ '/' ~ config.get('plugins.tntsearch.query_route', 's')|trim('/') %}
-{% set options = { uri: uri, limit: '', snippet: '', min: 3 } %}
+{% set options = { uri: uri, limit: '', snippet: '', min: 3, in_page: in_page } %}
 {% set placeholder = placeholder is defined ? placeholder : 'Search...' %}
 <form role="form" class="tntsearch-form">
     {% block tntsearch_input %}
@@ -8,7 +8,7 @@
     </div>
     {% endblock %}
     <div class="tntsearch-results{{ in_page ? ' tntsearch-inpage' : '' }}">
-    {% if tntsearch_results is defined and tntsearch_results is not empty %}
+    {% if tntsearch_results is defined and tntsearch_results is not empty and in_page %}
         {% include 'tntquery-ajax.html.twig' %}
     {% endif %}
     </div>

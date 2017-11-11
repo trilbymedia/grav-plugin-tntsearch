@@ -3,6 +3,7 @@
 
 1. [](#bugfix)
     * Fixed JS issue when at login page
+    * Fixed results showing on load for dropdowns, instead of in_page only view [#10](https://github.com/trilbymedia/grav-plugin-tntsearch/issues/10)
 1. [](#improved)
     * Allow the ability to pass a `placeholder` to the  `partials/tntsearch.html.twig` template
 
