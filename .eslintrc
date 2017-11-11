@@ -1,0 +1,15 @@
+{
+  "root": true,
+  "extends": "defaults/configurations/airbnb/es6",
+
+  "rules": {
+    "no-empty-label": 0,
+    "space-after-keywords": "off",
+    "space-return-throw-case": "off",
+
+    "no-param-reassign": 0,
+    "indent": [2, 4, { "SwitchCase": 1 }],
+    "no-labels": 2,
+    "keyword-spacing": [2, {"before": true, "after": true}]
+  }
+}
