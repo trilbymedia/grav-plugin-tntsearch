@@ -1,3 +1,22 @@
+#tntsearch-wrapper {
+    position: relative;
+}
+
+.tntsearch-clear {
+    border-radius: 100%;
+    padding: 0 1rem;
+    line-height: 1;
+    position: absolute;
+    right: 0;
+    font-size: 2rem;
+    top: 0;
+    cursor: pointer;
+}
+
+.tntsearch-field-inpage {
+    width: 100%;
+}
+
 .tntsearch-dropdown ~ .tntsearch-results {
     position: relative;
     margin-bottom: 0;
