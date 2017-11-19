@@ -41,7 +41,7 @@ const throttling = throttle(async ({ input, results, historyValue = false } = {}
         if (data.in_page) {
             clear.style.display = 'none';
 
-            if (historyValue === false) {
+            if (historyValue === false && data.live_update) {
                 historyPush({ value });
             }
         }
