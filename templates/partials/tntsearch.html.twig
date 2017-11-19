@@ -1,14 +1,18 @@
 {% set uri = base_url|rtrim('/') ~ '/' ~ config.get('plugins.tntsearch.query_route', 's')|trim('/') %}
-{% set options = { uri: uri, limit: '', snippet: '', min: 3 } %}
+{% set live_update = in_page ? config.get('plugins.tntsearch.live_uri_update', 1) : 0 %}
+{% set options = { uri: uri, limit: '', snippet: '', min: 3, in_page: in_page, live_update: live_update } %}
 {% set placeholder = placeholder is defined ? placeholder : 'Search...' %}
-<form role="form">
+<form role="form" class="tntsearch-form">
     {% block tntsearch_input %}
     <div id="tntsearch-wrapper" class="form-group">
-        <input type="text" class="form-control tntsearch-field" data-tntsearch="{{ options|json_encode|e('html_attr') }}" placeholder="{{ placeholder }}" value="{{ query }}">
+        <input type="text" class="form-control tntsearch-field{{ in_page ? ' tntsearch-field-inpage' : '' }}" data-tntsearch="{{ options|json_encode|e('html_attr') }}" placeholder="{{ placeholder }}" value="{{ query }}">
+        {% if config.get('plugins.tntsearch.built_in_css') %}
+            <span class="tntsearch-clear"{{ not query ? ' style="display: none;"' : '' }}>&times;</span>
+        {% endif %}
     </div>
     {% endblock %}
-    <div class="tntsearch-results{{ in_page ? ' tntsearch-inpage' : '' }}">
-    {% if tntsearch_results is defined and tntsearch_results is not empty %}
+    <div class="tntsearch-results{{ in_page ? ' tntsearch-results-inpage' : '' }}">
+    {% if tntsearch_results is defined and tntsearch_results is not empty and in_page %}
         {% include 'tntquery-ajax.html.twig' %}
     {% endif %}
     </div>

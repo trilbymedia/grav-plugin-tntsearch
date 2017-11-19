@@ -170,6 +170,7 @@ class TNTSearchPlugin extends Plugin
         }
 
         try {
+            // $this->query OR/or/AND/and/-/(/)
             $this->results = $this->gtnt->search($this->query);
         } catch (IndexNotFoundException $e) {
             $this->results = ['number_of_hits' => 0, 'hits' => [], 'execution_time' => 'missing index'];
@@ -208,6 +209,7 @@ class TNTSearchPlugin extends Plugin
             $this->grav['assets']->addCss('plugin://tntsearch/assets/tntsearch.css');
         }
         if ($this->config->get('plugins.tntsearch.built_in_js')) {
+            // $this->grav['assets']->addJs('plugin://tntsearch/assets/tntsearch.js');
             $this->grav['assets']->addJs('plugin://tntsearch/assets/tntsearch.js');
         }
     }
