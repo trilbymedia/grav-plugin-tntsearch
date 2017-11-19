@@ -10,6 +10,7 @@ class GravTNTSearch
 {
     public $tnt;
     protected $options;
+    protected $bool_characters = ['-', '(', ')', 'or'];
 
     public function __construct($options = [])
     {
@@ -39,19 +40,36 @@ class GravTNTSearch
     }
 
     public function search($query) {
-
+        $uri = Grav::instance()['uri'];
+        $type = $uri->query('search_type');
         $this->tnt->selectIndex('grav.index');
         $this->tnt->asYouType = $this->options['as_you_type'];
 
-        $limit = intval($this->options['limit']);
+        if (isset($this->options['fuzzy']) && $this->options['fuzzy']) {
+            $this->tnt->fuzziness = true;
+        }
 
-        if ($this->options['search_type'] == 'boolean') {
-            $results = $this->tnt->searchBoolean($query, $limit);
-        } else {
-            if ($this->options['search_type'] == 'fuzzy') {
-                $this->tnt->fuzziness = true;
-            }
-            $results = $this->tnt->search($query, $limit);
+        $limit = intval($this->options['limit']);
+        $type = isset($type) ? $type : $this->options['search_type'];
+
+        switch ($type) {
+            case 'basic':
+                $results = $this->tnt->search($query, $limit);
+                break;
+            case 'boolean':
+                $results = $this->tnt->searchBoolean($query, $limit);
+                break;
+            case 'default':
+            case 'auto':
+            default:
+                $guess = 'search';
+                foreach ($this->bool_characters as $char) {
+                    if (strpos($query, $char) !== false) {
+                        $guess = 'searchBoolean';
+                    }
+                }
+
+                $results = $this->tnt->$guess($query, $limit);
         }
 
         return $this->processResults($results, $query);

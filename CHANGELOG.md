@@ -4,11 +4,14 @@
 1. [](#new)
     * Reworked JS to VanillaJS [#12](https://github.com/trilbymedia/grav-plugin-tntsearch/pull/12)
     * Implemented live URI / history refresh when typing in the field
+    * Added new 'auto' setting for search_type that automatically detects 'basic' or 'boolean'.
+    * It is now possible to force a search_type mode whether it's `basic` or `boolean`
 1. [](#bugfix)
     * Fixed JS issue when at login page
     * Fixed results showing on load for dropdowns, instead of in_page only view [#10](https://github.com/trilbymedia/grav-plugin-tntsearch/issues/10)
 1. [](#improved)
     * Allow the ability to pass a `placeholder` to the  `partials/tntsearch.html.twig` template
+    * Moved 'fuzzy' option as independent option
 
 # v1.1.0
 ## 08/22/2017

@@ -170,7 +170,6 @@ class TNTSearchPlugin extends Plugin
         }
 
         try {
-            // $this->query OR/or/AND/and/-/(/)
             $this->results = $this->gtnt->search($this->query);
         } catch (IndexNotFoundException $e) {
             $this->results = ['number_of_hits' => 0, 'hits' => [], 'execution_time' => 'missing index'];

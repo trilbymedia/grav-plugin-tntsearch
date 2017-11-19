@@ -5,9 +5,10 @@ import history from './history';
 
 export const DEFAULTS = {
     uri: '',
-    limit: '',
-    snippet: '',
+    limit: 20,
+    snippet: 300,
     min: 3,
+    search_type: 'auto',
     in_page: false,
     live_update: true,
 };
@@ -61,6 +62,7 @@ const throttling = throttle(async ({ input, results, historyValue = false } = {}
         q: value,
         l: data.limit,
         sl: data.snippet,
+        search_type: data.search_type,
         ajax: true,
     };
 

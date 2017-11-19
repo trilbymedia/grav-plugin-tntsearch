@@ -85,10 +85,22 @@ form:
       classes: fancy
       label: Search Type
       help: Configure how TNTSearch will use the search query term
+      default: auto
       options:
-        default: Default
+        auto: Auto
+        basic: Basic
         boolean: Boolean
-        fuzzy: Fuzzy
+
+    fuzzy:
+      type: toggle
+      label: Fuzzy Search
+      highlight: 1
+      default: 1
+      options:
+        1: Enabled
+        0: Disabled
+      validate:
+        type: bool
 
     stemmer:
       type: select
@@ -148,6 +160,21 @@ form:
         0: Disabled
       validate:
         type: bool
+
+    limit:
+      type: text
+      label: Results Limit
+      default: 20
+
+    min:
+      type: text
+      label: Min Chars Before Search
+      default: 3
+
+    snippet:
+      type: text
+      label: Results Text Limit
+      default: 300
 
     index_page_by_default:
       type: toggle
