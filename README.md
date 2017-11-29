@@ -78,11 +78,14 @@ The configuration options are as follows:
 * `enabled` - enable or disable the plugin instantly
 * `search_route` - the route used for the built-in search page
 * `query_route` - the route used by the search form to query the search engine
+* `built_in_css` - enable or disable the built-in css styling
+* `built_in_js` - enable or disable the built-in javascript
 * `built_in_search_page` - enable or disable the built-in search page
 * `search_type` - can be one of these types:
-  * `default` - standard string matching
-  * `fuzzy` - matches if the words are 'close' but not necessarily exact matches
-  * `boolean` - supports and/or plus minus. e.g. `foo -bar`
+  * `basic` - standard string matching
+  * `boolean` - supports `or` or `minus`. e.g. `foo -bar`
+  * `auto` - automatically detects whether to use `basic` or `boolean`
+* `fuzzy` - matches if the words are 'close' but not necessarily exact matches
 * `stemmer` - can be one of these types:
   * `default` - no stemmer
   * `arabic` - Arabic language
@@ -94,6 +97,10 @@ The configuration options are as follows:
 * `display_route` - display the route in the search results
 * `display_hits` - display the number of hits in the search results
 * `display_time` - display the execution time in the search results
+* `live_uri_update` - when `built_in_js` is enabled, live updates the URI bar in the `search_route` page
+* `limit` - maximum amount of results to be shown
+* `min` - mininum amount of characters typed before performing search
+* `snippet` - amount of characters for previewing a result item
 * `index_page_by_default` - should all pages be indexed by default unless frontmatter overrides
 * `filter` - a [Page Collections filter](https://learn.getgrav.org/content/collections#summary-of-collection-options) that lets you pick specific pages to index via a collection query
 
@@ -306,17 +313,10 @@ The important things to note are the `1000` order-value to ensure this event run
 TNTSearch plugin can also be used to render the search as a drop-down rather than in a standard page.  To do this you need to `embed` the search partial and override it to fit your needs.  You could simply add this to your theme wherever you want to have an Ajax drop-down search box:
 
 ```twig
-{% embed 'partials/tntsearch.html.twig' %}
-    {% block tntsearch_input %}
-        {% set options = { uri: uri, limit: 10, snippet: 150, min: 3 } %}
-        <div class="form-group tntsearch-dropdown">
-            <input type="text" data-tntsearch="{{ options|json_encode|e('html_attr') }}" class="form-input tntsearch-field" placeholder="Search...">
-        </div>
-    {% endblock %}
-{% endembed %}
+{% embed 'partials/tntsearch.html.twig' with { limit: 10, snippet: 150, min: 3, search_type: 'auto', dropdown: true } %}{% endembed %}
 ```
 
-Here we embed the default partial, but override the `options` and set the `.tntsearch-dropdown` class on the surrounding `<div>`
+Here we embed the default partial, but override the `options` by passing them in the `with` statement. It is important to notice that the `dropdown: true` is required to be set in order to be interpreted as dropdown.
 
 ## Credits
 
