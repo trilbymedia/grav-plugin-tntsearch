@@ -10,7 +10,7 @@ stemmer: default
 display_route: true
 display_hits: true
 display_time: true
-live_uri_update: 1
+live_uri_update: true
 limit: 20
 min: 3
 snippet: 300
