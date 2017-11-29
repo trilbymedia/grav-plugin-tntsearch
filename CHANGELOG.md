@@ -1,12 +1,12 @@
 # v1.2.0
-## 10/28/2017
+## 10/29/2017
 
 1. [](#new)
     * Reworked JS to VanillaJS [#12](https://github.com/trilbymedia/grav-plugin-tntsearch/pull/12)
     * Implemented live URI / history refresh when typing in the field
     * Added new 'auto' setting for search_type that automatically detects 'basic' or 'boolean'.
     * It is now possible to force a search_type mode whether it's `basic` or `boolean`
-    * Updated to TNTSearch Library v1.1.0             
+    * Updated to TNTSearch Library to v1.1.0             
 1. [](#bugfix)
     * Fixed JS issue when at login page
     * Fixed results showing on load for drop-downs, instead of in_page only view [#10](https://github.com/trilbymedia/grav-plugin-tntsearch/issues/10)
