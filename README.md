@@ -21,7 +21,9 @@ This will install the Tnt Search plugin into your `/user/plugins` directory with
 Other than standard Grav requirements, this plugin does have some extra requirements.  Due to the complex nature of a search engine, TNTSearch utilizes a flat-file database to store its wordlist as well as the mapping for content.  This is handled automatically by the plugin, but you do need to ensure you have the following installed on your server:
 
 * **SQLite3** Database
-* **PHP PDO** Extension
+* **PHP pdo** Extension
+* **PHP pdo_sqlite** Driver
+* **PHP pdo_mysql** Driver (only required because library references some MySQL constants, MySQL db is not used)
 
 | PHP by default comes with **PDO** and the vast majority of linux-based systems already come with SQLite.  
 
