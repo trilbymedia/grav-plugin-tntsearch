@@ -208,6 +208,7 @@ class TNTSearchPlugin extends Plugin
             $this->grav['assets']->addCss('plugin://tntsearch/assets/tntsearch.css');
         }
         if ($this->config->get('plugins.tntsearch.built_in_js')) {
+            // $this->grav['assets']->addJs('plugin://tntsearch/assets/tntsearch.js');
             $this->grav['assets']->addJs('plugin://tntsearch/assets/tntsearch.js');
         }
     }

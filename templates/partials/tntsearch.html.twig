@@ -1,12 +1,27 @@
-{% set uri = base_url|rtrim('/') ~ '/' ~ config.get('plugins.tntsearch.query_route', 's')|trim('/') %}
-{% set options = { uri: uri, limit: '', snippet: '', min: 3 } %}
-<form role="form">
+{% set url = url|default(base_url|rtrim('/') ~ '/' ~ config.get('plugins.tntsearch.query_route', 's')|trim('/')) %}
+{% set limit = limit|default(config.get('plugins.tntsearch.limit', 20)) %}
+{% set snippet = snippet|default(config.get('plugins.tntsearch.snippet', 300)) %}
+{% set min = min|default(config.get('plugins.tntsearch.min', 3)) %}
+{% set search_type = search_type|default(config.get('plugins.tntsearch.search_type', 'auto')) %}
+{% set placeholder = placeholder|default('Search...') %}
+{% set live_update = in_page ? live_update|default(config.get('plugins.tntsearch.live_uri_update', 1)) : 0 %}
+
+{% set options = { uri: url, limit: limit, snippet: snippet, min: min, in_page: in_page, live_update: live_update, search_type: search_type } %}
+
+<form role="form" class="tntsearch-form">
     {% block tntsearch_input %}
-    <div id="tntsearch-wrapper" class="form-group">
-        <input type="text" class="form-control tntsearch-field" data-tntsearch="{{ options|json_encode|e('html_attr') }}" placeholder="Search...">
+    <div id="tntsearch-wrapper" class="form-group{{ dropdown ? ' tntsearch-dropdown' : '' }}">
+        <input type="text" class="form-control tntsearch-field{{ in_page ? ' tntsearch-field-inpage' : '' }}" data-tntsearch="{{ options|json_encode|e('html_attr') }}" placeholder="{{ placeholder }}" value="{{ not dropdown ? query : '' }}">
+        {% if config.get('plugins.tntsearch.built_in_css') %}
+            <span class="tntsearch-clear"{{ not query or dropdown ? ' style="display: none;"' : '' }}>&times;</span>
+        {% endif %}
     </div>
     {% endblock %}
-    <div class="tntsearch-results{{ in_page ? ' tntsearch-inpage' : '' }}"></div>
+    <div class="tntsearch-results{{ in_page ? ' tntsearch-results-inpage' : '' }}">
+    {% if tntsearch_results is defined and tntsearch_results is not empty and in_page %}
+        {% include 'tntquery-ajax.html.twig' %}
+    {% endif %}
+    </div>
 
     <p class="tntsearch-powered-by">
         Powered by <a href="https://github.com/trilbymedia/grav-plugin-tntsearch" target="_blank">TNTSearch</a>
