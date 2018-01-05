@@ -195,7 +195,7 @@ form:
       label: Search Filter
       help: Use a standard collections based filter definition to restrict search to only these pages
       yaml: true
-      placeholder: '@taxonomy.category: [news]'
+      placeholder: 'taxonomy@: { category: [news] }'
 
     powered_by:
       type: toggle
