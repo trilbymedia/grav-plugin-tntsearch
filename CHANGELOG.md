@@ -1,8 +1,10 @@
 # v1.2.1
-## mm/dd/2018
+## 01/16/2018
 
 1. [](#new)
     * Added `onTNTSearchReIndex()` that you can fire from any plugin to reindex everything
+1. [](#bugfix)
+    * Fixed an XSS exploit in query    
 
 # v1.2.0
 ## 10/29/2017
