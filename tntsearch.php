@@ -40,6 +40,7 @@ class TNTSearchPlugin extends Plugin
         return [
             'onPluginsInitialized' => ['onPluginsInitialized', 0],
             'onTwigLoader' => ['onTwigLoader', 0],
+            'onTNTSearchReIndex' => ['onTNTSearchReIndex', 0],
             'onTNTSearchIndex' => ['onTNTSearchIndex', 0],
             'onTNTSearchQuery' => ['onTNTSearchQuery', 0],
         ];
@@ -74,6 +75,14 @@ class TNTSearchPlugin extends Plugin
             'onPagesInitialized' => ['onPagesInitialized', 1000],
             'onTwigSiteVariables' => ['onTwigSiteVariables', 0],
         ]);
+    }
+
+    /**
+     * Function to force a reindex from your own plugins
+     */
+    public function onTNTSearchReIndex()
+    {
+        $this->gtnt->createIndex();
     }
 
     /**
@@ -255,6 +264,8 @@ class TNTSearchPlugin extends Plugin
         }
 
     }
+
+
 
     /**
      * Perform an 'add' or 'update' for index data as needed
