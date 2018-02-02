@@ -1,3 +1,9 @@
+# v1.2.2
+## XX/XX/2018
+
+1. [](#bugfix)
+    * Fixed URI `hash` getting unintentionally removed by tntsearch [#15](https://github.com/trilbymedia/grav-plugin-tntsearch/pull/15)
+
 # v1.2.1
 ## 01/16/2018
 
