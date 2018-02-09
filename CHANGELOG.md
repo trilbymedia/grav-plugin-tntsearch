@@ -1,8 +1,12 @@
 # v1.2.2
-## XX/XX/2018
+## 02/09/2018
 
+1. [](#improved)
+    * Updated TNTSearch to use version 1.3.1 of TNTSearch library for PHP 7.2 compatibility [#24](https://github.com/trilbymedia/grav-plugin-tntsearch/issues/24)
 1. [](#bugfix)
-    * Fixed URI `hash` getting unintentionally removed by tntsearch [#15](https://github.com/trilbymedia/grav-plugin-tntsearch/pull/15)
+    * Fixed URI `hash` getting unintentionally removed by TNTSearch [#15](https://github.com/trilbymedia/grav-plugin-tntsearch/pull/15)
+    * Fixed issue with param separator needed for Windows [#16](https://github.com/trilbymedia/grav-plugin-tntsearch/pull/16)
+    * Fixed placeholder format in blueprint [#18](https://github.com/trilbymedia/grav-plugin-tntsearch/pull/18)
 
 # v1.2.1
 ## 01/16/2018
@@ -21,12 +25,12 @@
     * Added new 'auto' setting for search_type that automatically detects 'basic' or 'boolean'.
     * It is now possible to force a search_type mode whether it's `basic` or `boolean`
     * Updated to TNTSearch Library to v1.1.0             
-1. [](#bugfix)
-    * Fixed JS issue when at login page
-    * Fixed results showing on load for drop-downs, instead of in_page only view [#10](https://github.com/trilbymedia/grav-plugin-tntsearch/issues/10)
 1. [](#improved)
     * Allow the ability to pass a `placeholder` to the  `partials/tntsearch.html.twig` template
     * Moved 'fuzzy' option as independent option
+1. [](#bugfix)
+    * Fixed JS issue when at login page
+    * Fixed results showing on load for drop-downs, instead of in_page only view [#10](https://github.com/trilbymedia/grav-plugin-tntsearch/issues/10)
 
 # v1.1.0
 ## 08/22/2017
