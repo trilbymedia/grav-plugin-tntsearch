@@ -2,7 +2,7 @@
 ## 02/09/2018
 
 1. [](#improved)
-    * Updated TNTSearch to use version 1.3.1 of TNTSearch library for PHP 7.2 compatibility [#24](https://github.com/trilbymedia/grav-plugin-tntsearch/issues/24)
+    * Updated TNTSearch to use version `1.3.1` of TNTSearch library for PHP 7.2 compatibility [#24](https://github.com/trilbymedia/grav-plugin-tntsearch/issues/24)
 1. [](#bugfix)
     * Fixed URI `hash` getting unintentionally removed by TNTSearch [#15](https://github.com/trilbymedia/grav-plugin-tntsearch/pull/15)
     * Fixed issue with param separator needed for Windows [#16](https://github.com/trilbymedia/grav-plugin-tntsearch/pull/16)
