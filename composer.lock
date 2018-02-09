@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "teamtnt/tntsearch",
-            "version": "v1.1.0",
+            "version": "v1.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/teamtnt/tntsearch.git",
-                "reference": "db18bd9ef35ad775008410cd5ec64fcde632ff88"
+                "reference": "4b7c36c6418487b9eeede6254ece9c830ea7d57c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/teamtnt/tntsearch/zipball/db18bd9ef35ad775008410cd5ec64fcde632ff88",
-                "reference": "db18bd9ef35ad775008410cd5ec64fcde632ff88",
+                "url": "https://api.github.com/repos/teamtnt/tntsearch/zipball/4b7c36c6418487b9eeede6254ece9c830ea7d57c",
+                "reference": "4b7c36c6418487b9eeede6254ece9c830ea7d57c",
                 "shasum": ""
             },
             "require": {
@@ -60,7 +60,7 @@
                 "teamtnt",
                 "tntsearch"
             ],
-            "time": "2017-09-18T14:42:51+00:00"
+            "time": "2018-01-31T14:48:14+00:00"
         }
     ],
     "packages-dev": [],

@@ -10,6 +10,7 @@ domready(() => {
     const uri = new URI(global.location.href, true);
     history.replace({
         search: global.location.search,
+        hash: global.location.hash,
         state: {
             historyValue: uri.query.q || '',
             type: 'tntsearch',

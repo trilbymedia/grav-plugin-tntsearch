@@ -1,5 +1,5 @@
 name: TNT Search
-version: 1.2.1
+version: 1.2.2
 description: Powerful indexed-based full text search engine powered by TNTSearch
 icon: binoculars
 author:
@@ -195,7 +195,7 @@ form:
       label: Search Filter
       help: Use a standard collections based filter definition to restrict search to only these pages
       yaml: true
-      placeholder: '@taxonomy.category: [news]'
+      placeholder: 'taxonomy@: { category: [news] }'
 
     powered_by:
       type: toggle

@@ -94,6 +94,14 @@ Note: If your primary key is different than `id` set it like:
 $indexer->setPrimaryKey('article_id');
 ```
 
+### Making the primary key searchable
+
+By default the primary key is not searchable, if you wanna make it searchable simply run:
+
+```php
+$indexer->includePrimaryKey();
+```
+
 ### Searching
 
 Searching for a phrase or keyword is trivial
@@ -111,8 +119,8 @@ $res = $tnt->search("This is a test search", 12);
 
 print_r($res); //returns an array of 12 document ids that best match your query
 
-//to display the results you need an additional query
-//SELECT * FROM articles WHERE id IN $res ORDER BY FIELD(id, $res);
+// to display the results you need an additional query against your application database
+// SELECT * FROM articles WHERE id IN $res ORDER BY FIELD(id, $res);
 ```
 
 The ORDER BY FIELD clause is important otherwise the database engine will not return
@@ -214,6 +222,35 @@ $candyShopIndex->loadConfig($config);
 $candyShopIndex->selectIndex('candyShops.index');
 
 $candyShops = $candyShopIndex->findNearest($currentLocation, $distance, 10);
+```
+
+## Classification
+
+```php
+use TeamTNT\TNTSearch\Classifier\TNTClassifier;
+
+$classifier = new TNTClassifier();
+$classifier->learn("A great game", "Sports");
+$classifier->learn("The election was over", "Not sports");
+$classifier->learn("Very clean match", "Sports");
+$classifier->learn("A clean but forgettable game", "Sports");
+
+$guess = $classifier->predict("It was a close election");
+var_dump($guess['label']); //returns "Not sports"
+
+```
+
+### Saving the classifier
+
+```php
+$classifier->save('sports.cls');
+```
+
+### Loading the classifier
+
+```php
+$classifier = new TNTClassifier();
+$classifier->load('sports.cls');
 ```
 
 ## Drivers
