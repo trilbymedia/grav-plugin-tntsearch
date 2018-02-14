@@ -35,7 +35,7 @@
 
             $.ajax({
                 type: 'POST',
-                url: GravAdmin.config.base_url_relative + '.json/task' + GravAdmin.config.param_sep + 'reindexTNTSearch'
+                url: GravAdmin.config.base_url_relative + '.json/task' + GravAdmin.config.param_sep + 'reindexTNTSearch',
                 data: { 'admin-nonce': GravAdmin.config.admin_nonce }
             }).done(function(done) {
                 if (done.status === 'success') {

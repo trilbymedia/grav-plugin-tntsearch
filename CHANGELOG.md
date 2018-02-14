@@ -1,3 +1,9 @@
+# v1.2.3
+## 02/14/2018
+
+1. [](#bugfix)
+    * Missing comma in Admin JS breaking quick-tray reindexing
+
 # v1.2.2
 ## 02/09/2018
 
