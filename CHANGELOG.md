@@ -1,3 +1,9 @@
+# v1.2.5
+## mm/dd/2018
+
+1. [](#improved)
+    * Only update the a page on save if it exists in the current filter and is therefore eligible to be indexed
+
 # v1.2.4
 ## 02/14/2018
 
