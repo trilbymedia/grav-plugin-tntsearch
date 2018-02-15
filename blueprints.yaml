@@ -19,6 +19,7 @@ form:
   validation: strict
 
   fields:
+
     enabled:
       type: toggle
       label: Plugin status
@@ -196,6 +197,8 @@ form:
       help: Use a standard collections based filter definition to restrict search to only these pages
       yaml: true
       placeholder: 'taxonomy@: { category: [news] }'
+      validate:
+        type: yaml
 
     powered_by:
       type: toggle
