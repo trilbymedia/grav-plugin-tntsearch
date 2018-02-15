@@ -3,6 +3,7 @@ namespace Grav\Plugin\TNTSearch;
 
 use Grav\Common\Grav;
 use Grav\Common\Page\Page;
+use Symfony\Component\Yaml\Yaml;
 
 class GravConnector extends \PDO
 {
@@ -26,7 +27,14 @@ class GravConnector extends \PDO
         $default_process = $config->get('plugins.tntsearch.index_page_by_default');
         $gtnt = new GravTNTSearch();
 
+
+
         if ($filter && array_key_exists('items', $filter)) {
+
+            if (is_string($filter['items'])) {
+                $filter['items'] = Yaml::parse($filter['items']);
+            }
+
             $page = new Page;
             $collection = $page->collection($filter, false);
         } else {

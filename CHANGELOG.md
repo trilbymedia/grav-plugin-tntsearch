@@ -1,3 +1,9 @@
+# v1.2.4
+## 02/14/2018
+
+1. [](#bugfix)
+    * Fix issue with admin saving 'string' for filter [#25](https://github.com/trilbymedia/grav-plugin-tntsearch/issues/25)
+
 # v1.2.3
 ## 02/14/2018
 
