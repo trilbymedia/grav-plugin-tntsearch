@@ -153,7 +153,7 @@ form:
 
     display_time:
       type: toggle
-      label: Display Route
+      label: Display Time
       highlight: 1
       default: 1
       options:
