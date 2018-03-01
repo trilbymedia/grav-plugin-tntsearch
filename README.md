@@ -12,9 +12,9 @@ Installing the Tnt Search plugin can be done in one of two ways. The GPM (Grav P
 
 The simplest way to install this plugin is via the [Grav Package Manager (GPM)](http://learn.getgrav.org/advanced/grav-gpm) through your system's terminal (also called the command line).  From the root of your Grav install type:
 
-    bin/gpm install tnt-search
+    bin/gpm install tntsearch
 
-This will install the Tnt Search plugin into your `/user/plugins` directory within Grav. Its files can be found under `/your/site/grav/user/plugins/tnt-search`.
+This will install the Tnt Search plugin into your `/user/plugins` directory within Grav. Its files can be found under `/your/site/grav/user/plugins/tntsearch`.
 
 ## Requirements
 
@@ -52,7 +52,7 @@ Extract the downloaded ZIP file and run the `sqlite3.exe` executable.
 
 ## Configuration
 
-Before configuring this plugin, you should copy the `user/plugins/tnt-search/tnt-search.yaml` to `user/config/plugins/tnt-search.yaml` and only edit that copy.
+Before configuring this plugin, you should copy the `user/plugins/tntsearch/tntsearch.yaml` to `user/config/plugins/tntsearch.yaml` and only edit that copy.
 
 Here is the default configuration and an explanation of available options:
 
