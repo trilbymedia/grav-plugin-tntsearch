@@ -31,6 +31,7 @@ class GravTNTSearch
             'limit' => 20,
             'as_you_type' => true,
             'snippet' => 300,
+            'phrases' => true,
         ];
 
         $this->options = array_merge($defaults, $options);
@@ -54,9 +55,21 @@ class GravTNTSearch
         $limit = intval($this->options['limit']);
         $type = isset($type) ? $type : $this->options['search_type'];
 
+        $multiword = null;
+        if (isset($this->options['phrases']) && $this->options['phrases']) {
+            if (strlen($query) > 2) {
+                if ($query[0] === "\"" && $query[strlen($query) - 1] === "\"") {
+                    $multiword = substr($query, 1, strlen($query) - 2);
+                    $type = 'basic';
+                    $query = $multiword;
+                }
+            }
+        }
+
+
         switch ($type) {
             case 'basic':
-                $results = $this->tnt->search($query, $limit);
+                $results = $this->tnt->search($query, $limit, $multiword);
                 break;
             case 'boolean':
                 $results = $this->tnt->searchBoolean($query, $limit);
