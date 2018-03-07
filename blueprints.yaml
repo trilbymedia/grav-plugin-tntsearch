@@ -103,6 +103,17 @@ form:
       validate:
         type: bool
 
+    phrases:
+      type: toggle
+      label: Match quoted phrases
+      highlight: 1
+      default: 1
+      options:
+        1: Enabled
+        0: Disabled
+      validate:
+        type: bool
+        
     stemmer:
       type: select
       size: small
