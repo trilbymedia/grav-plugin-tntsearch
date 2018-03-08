@@ -1,5 +1,5 @@
 # v1.2.5
-## mm/dd/2018
+## 03/07/2018
 
 1. [](#improved)
     * Only update the a page on save if it exists in the current filter and is therefore eligible to be indexed\
