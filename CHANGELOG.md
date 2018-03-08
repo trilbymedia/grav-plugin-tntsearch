@@ -1,3 +1,10 @@
+# v1.2.5
+## 03/07/2018
+
+1. [](#improved)
+    * Only update the a page on save if it exists in the current filter and is therefore eligible to be indexed\
+    * Removed Admin dependency, it works fine without admin too, just need to use CLI
+
 # v1.2.4
 ## 02/14/2018
 

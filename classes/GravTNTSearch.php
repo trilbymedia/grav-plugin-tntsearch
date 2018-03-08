@@ -2,6 +2,8 @@
 namespace Grav\Plugin\TNTSearch;
 
 use Grav\Common\Grav;
+use Grav\Common\Page\Collection;
+use Grav\Common\Page\Page;
 use RocketTheme\Toolbox\Event\Event;
 use TeamTNT\TNTSearch\Exceptions\IndexNotFoundException;
 use TeamTNT\TNTSearch\TNTSearch;
@@ -164,11 +166,25 @@ class GravTNTSearch
         // Delete existing if it exists
         $indexer->delete($page->route());
 
-        $fields = GravTNTSearch::indexPageData($page);
-        $document = (array) $fields;
+        $filter = $config = Grav::instance()['config']->get('plugins.tntsearch.filter');
+        if ($filter && array_key_exists('items', $filter)) {
 
-        // Insert document
-        $indexer->insert($document);
+            if (is_string($filter['items'])) {
+                $filter['items'] = Yaml::parse($filter['items']);
+            }
+
+            $apage = new Page;
+            /** @var Collection $collection */
+            $collection = $apage->collection($filter, false);
+
+            if (array_key_exists($page->path(), $collection->toArray())) {
+                $fields = GravTNTSearch::indexPageData($page);
+                $document = (array) $fields;
+
+                // Insert document
+                $indexer->insert($document);
+            }
+        }
     }
 
     public function indexPageData($page)
