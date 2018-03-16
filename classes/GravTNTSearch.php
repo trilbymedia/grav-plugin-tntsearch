@@ -69,6 +69,7 @@ class GravTNTSearch
                 foreach ($this->bool_characters as $char) {
                     if (strpos($query, $char) !== false) {
                         $guess = 'searchBoolean';
+                        break;
                     }
                 }
 
