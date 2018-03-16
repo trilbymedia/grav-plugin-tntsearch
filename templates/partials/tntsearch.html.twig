@@ -23,7 +23,9 @@
     {% endif %}
     </div>
 
+    {% if config.get('plugins.tntsearch.powered_by') %}
     <p class="tntsearch-powered-by">
         Powered by <a href="https://github.com/trilbymedia/grav-plugin-tntsearch" target="_blank">TNTSearch</a>
     </p>
+    {% endif %}
 </form>
