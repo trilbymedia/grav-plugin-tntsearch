@@ -132,7 +132,7 @@ class TNTSearchPlugin extends Plugin
         /** @var Uri $uri */
         $uri = $this->grav['uri'];
 
-        $options = [];
+        $options = $this->config->get('plugins.tntsearch');
 
         $this->current_route = $uri->path();
 
