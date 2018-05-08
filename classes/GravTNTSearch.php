@@ -151,6 +151,11 @@ class GravTNTSearch
         $indexer->run();
     }
 
+    public function selectIndex()
+    {
+        $this->tnt->selectIndex($this->index);
+    }
+
     public function deleteIndex($obj)
     {
         if ($obj instanceof Page) {
