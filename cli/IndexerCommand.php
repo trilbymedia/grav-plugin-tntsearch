@@ -3,7 +3,7 @@ namespace Grav\Plugin\Console;
 
 use Grav\Common\Grav;
 use Grav\Console\ConsoleCommand;
-use Grav\Plugin\TNTSearch\GravTNTSearch;
+use Grav\Plugin\TNTSearchPlugin;
 
 /**
  * Class IndexerCommand
@@ -57,7 +57,6 @@ class IndexerCommand extends ConsoleCommand
 
     private function doIndex()
     {
-        include __DIR__.'/../vendor/autoload.php';
         error_reporting(1);
 
         $grav = Grav::instance();
@@ -65,7 +64,7 @@ class IndexerCommand extends ConsoleCommand
         $grav['twig']->init();
         $grav['pages']->init();
 
-        $gtnt = new GravTNTSearch();
+        $gtnt = TNTSearchPlugin::getSearchObjectType();
         $gtnt->createIndex();
 
     }

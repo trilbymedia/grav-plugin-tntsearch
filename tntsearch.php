@@ -1,6 +1,7 @@
 <?php
 namespace Grav\Plugin;
 
+use Grav\Common\Grav;
 use Grav\Common\Page\Page;
 use Grav\Common\Plugin;
 use Grav\Plugin\TNTSearch\GravTNTSearch;
@@ -374,9 +375,9 @@ class TNTSearchPlugin extends Plugin
         return $uri->param($val) ?: $uri->query($val) ?: filter_input(INPUT_POST, $val, FILTER_SANITIZE_ENCODED);;
     }
 
-    protected function getSearchObjectType($options = [])
+    public static function getSearchObjectType($options = [])
     {
-        $type = 'Grav\\Plugin\\TNTSearch\\' . $this->config->get('plugins.tntsearch.search_object_type', 'Grav') . 'TNTSearch';
+        $type = 'Grav\\Plugin\\TNTSearch\\' . Grav::instance()['config']->get('plugins.tntsearch.search_object_type', 'Grav') . 'TNTSearch';
         if (class_exists($type)) {
             return new $type($options);
         } else {

@@ -3,8 +3,8 @@ namespace Grav\Plugin\Console;
 
 use Grav\Common\Grav;
 use Grav\Console\ConsoleCommand;
-use Grav\Plugin\TNTSearch\GravIndexer;
-use Grav\Plugin\TNTSearch\GravTNTSearch;
+//use Grav\Plugin\TNTSearch\GravIndexer;
+use Grav\Plugin\TNTSearchPlugin;
 use Symfony\Component\Console\Input\InputArgument;
 
 /**
@@ -63,14 +63,12 @@ class QueryCommand extends ConsoleCommand
 
     private function doQuery()
     {
-        include __DIR__ . '/../vendor/autoload.php';
-
         $grav = Grav::instance();
         $grav['debugger']->enabled(false);
         $grav['twig']->init();
         $grav['pages']->init();
 
-        $gtnt = new GravTNTSearch(['json' => true]);
+        $gtnt = TNTSearchPlugin::getSearchObjectType(['json' => true]);
         print_r($gtnt->search($this->input->getArgument('query')));
     }
 
