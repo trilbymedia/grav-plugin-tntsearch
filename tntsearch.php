@@ -354,7 +354,6 @@ class TNTSearchPlugin extends Plugin
         $status = true;
         try {
             $this->gtnt->selectIndex();
-//            $this->gtnt->tnt->selectIndex('grav.index');
             $msg = $this->gtnt->tnt->totalDocumentsInCollection() . ' documents indexed';
         } catch (IndexNotFoundException $e) {
             $status = false;
