@@ -23,9 +23,6 @@ class TNTSearchPlugin extends Plugin
     protected $current_route;
     protected $admin_route;
 
-    /** @var  GravTNTSearch **/
-    protected $gtnt;
-
     /**
      * @return array
      *
@@ -69,7 +66,7 @@ class TNTSearchPlugin extends Plugin
 
         if ($this->isAdmin()) {
 
-            $this->gtnt = $this->getSearchObjectType();
+            $this->grav['tntsearch'] = $this->getSearchObjectType();
             $route = $this->config->get('plugins.admin.route');
             $base = '/' . trim($route, '/');
             $this->admin_route = $this->grav['base_url'] . $base;
@@ -96,7 +93,7 @@ class TNTSearchPlugin extends Plugin
      */
     public function onTNTSearchReIndex()
     {
-        $this->gtnt->createIndex();
+        $this->grav['tntsearch']->createIndex();
     }
 
     /**
@@ -154,20 +151,6 @@ class TNTSearchPlugin extends Plugin
         $this->search_route = $this->config->get('plugins.tntsearch.search_route');
         $this->query_route = $this->config->get('plugins.tntsearch.query_route');
 
-        $this->query = $uri->param('q') ?: $uri->query('q');
-
-        $snippet = $this->getFormValue('sl');
-        $limit = $this->getFormValue('l');
-
-        if ($snippet) {
-            $options['snippet'] = $snippet;
-        }
-        if ($limit) {
-            $options['limit'] = $limit;
-        }
-
-        $this->gtnt = $this->getSearchObjectType($options);
-
         $pages = $this->grav['pages'];
         $page = $pages->dispatch($this->current_route);
 
@@ -188,14 +171,31 @@ class TNTSearchPlugin extends Plugin
             }
         }
 
-        if ($page) {
-            $this->config->set('plugins.tntsearch', $this->mergeConfig($page));
-        }
+        $this->query = $uri->param('q') ?: $uri->query('q');
 
-        try {
-            $this->results = $this->gtnt->search($this->query);
-        } catch (IndexNotFoundException $e) {
-            $this->results = ['number_of_hits' => 0, 'hits' => [], 'execution_time' => 'missing index'];
+        if ($this->query) {
+
+            $snippet = $this->getFormValue('sl');
+            $limit = $this->getFormValue('l');
+
+            if ($snippet) {
+                $options['snippet'] = $snippet;
+            }
+            if ($limit) {
+                $options['limit'] = $limit;
+            }
+
+            $this->grav['tntsearch'] = $this->getSearchObjectType($options);
+
+            if ($page) {
+                $this->config->set('plugins.tntsearch', $this->mergeConfig($page));
+            }
+
+            try {
+                $this->results = $this->grav['tntsearch']->search($this->query);
+            } catch (IndexNotFoundException $e) {
+                $this->results = ['number_of_hits' => 0, 'hits' => [], 'execution_time' => 'missing index'];
+            }
         }
     }
 
@@ -264,7 +264,7 @@ class TNTSearchPlugin extends Plugin
 
             // capture content
             ob_start();
-            $this->gtnt->createIndex();
+            $this->grav['tntsearch']->createIndex();
             ob_get_clean();
 
             list($status, $msg) = $this->getIndexCount();
@@ -291,7 +291,7 @@ class TNTSearchPlugin extends Plugin
     {
         $obj = $event['object'];
 
-        $this->gtnt->updateIndex($obj);
+        $this->grav['tntsearch']->updateIndex($obj);
 
         return true;
     }
@@ -306,7 +306,7 @@ class TNTSearchPlugin extends Plugin
     {
         $obj = $event['object'];
 
-        $this->gtnt->deleteIndex($obj);
+        $this->grav['tntsearch']->deleteIndex($obj);
 
         return true;
     }
@@ -353,8 +353,8 @@ class TNTSearchPlugin extends Plugin
     {
         $status = true;
         try {
-            $this->gtnt->selectIndex();
-            $msg = $this->gtnt->tnt->totalDocumentsInCollection() . ' documents indexed';
+            $this->grav['tntsearch']->selectIndex();
+            $msg = $this->grav['tntsearch']->tnt->totalDocumentsInCollection() . ' documents indexed';
         } catch (IndexNotFoundException $e) {
             $status = false;
             $msg = "Index not created";

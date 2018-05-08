@@ -60,6 +60,10 @@ class IndexerCommand extends ConsoleCommand
         error_reporting(1);
 
         $grav = Grav::instance();
+
+        // Initialize Plugins
+        $grav->fireEvent('onPluginsInitialized');
+
         $grav['debugger']->enabled(false);
         $grav['twig']->init();
         $grav['pages']->init();

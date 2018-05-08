@@ -64,6 +64,10 @@ class QueryCommand extends ConsoleCommand
     private function doQuery()
     {
         $grav = Grav::instance();
+
+        // Initialize Plugins
+        $grav->fireEvent('onPluginsInitialized');
+
         $grav['debugger']->enabled(false);
         $grav['twig']->init();
         $grav['pages']->init();
