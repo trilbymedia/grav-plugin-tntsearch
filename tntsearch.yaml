@@ -18,6 +18,5 @@ snippet: 300
 index_page_by_default: true
 filter:
   items:
-    taxonomy@:
-      category: [news]
+    - root@.descendants
 powered_by: true
