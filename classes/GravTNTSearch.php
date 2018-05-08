@@ -14,6 +14,7 @@ class GravTNTSearch
     public $tnt;
     protected $options;
     protected $bool_characters = ['-', '(', ')', 'or'];
+    protected $index = 'grav.index';
 
     public function __construct($options = [])
     {
@@ -46,7 +47,7 @@ class GravTNTSearch
     public function search($query) {
         $uri = Grav::instance()['uri'];
         $type = $uri->query('search_type');
-        $this->tnt->selectIndex('grav.index');
+        $this->tnt->selectIndex($this->index);
         $this->tnt->asYouType = $this->options['as_you_type'];
 
         if (isset($this->options['fuzzy']) && $this->options['fuzzy']) {
@@ -140,7 +141,7 @@ class GravTNTSearch
     public function createIndex()
     {
         $this->tnt->setDatabaseHandle(new GravConnector);
-        $indexer = $this->tnt->createIndex('grav.index');
+        $indexer = $this->tnt->createIndex($this->index);
 
         // Set the stemmer language if set
         if ($this->options['stemmer'] != 'default') {
@@ -150,12 +151,18 @@ class GravTNTSearch
         $indexer->run();
     }
 
-    public function deleteIndex($page)
+    public function deleteIndex($obj)
     {
+        if ($obj instanceof Page) {
+            $page = $obj;
+        } else {
+            return;
+        }
+
         $this->tnt->setDatabaseHandle(new GravConnector);
 
         try {
-            $this->tnt->selectIndex('grav.index');
+            $this->tnt->selectIndex($this->index);
         } catch (IndexNotFoundException $e) {
             return;
         }
@@ -166,12 +173,18 @@ class GravTNTSearch
         $indexer->delete($page->route());
     }
 
-    public function updateIndex($page)
+    public function updateIndex($obj)
     {
+        if ($obj instanceof Page) {
+            $page = $obj;
+        } else {
+            return;
+        }
+
         $this->tnt->setDatabaseHandle(new GravConnector);
 
         try {
-            $this->tnt->selectIndex('grav.index');
+            $this->tnt->selectIndex($this->index);
         } catch (IndexNotFoundException $e) {
             return;
         }

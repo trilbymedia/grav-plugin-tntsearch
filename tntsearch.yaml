@@ -20,3 +20,4 @@ filter:
   items:
     - root@.descendants
 powered_by: true
+search_object_type: Grav

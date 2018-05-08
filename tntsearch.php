@@ -38,7 +38,10 @@ class TNTSearchPlugin extends Plugin
     public static function getSubscribedEvents()
     {
         return [
-            'onPluginsInitialized' => ['onPluginsInitialized', 0],
+            'onPluginsInitialized'      => [
+                ['autoload', 100000],
+                ['onPluginsInitialized', 0]
+            ],
             'onTwigLoader' => ['onTwigLoader', 0],
             'onTNTSearchReIndex' => ['onTNTSearchReIndex', 0],
             'onTNTSearchIndex' => ['onTNTSearchIndex', 0],
@@ -47,15 +50,25 @@ class TNTSearchPlugin extends Plugin
     }
 
     /**
+     * [onPluginsInitialized:100000] Composer autoload.
+     *is
+     * @return ClassLoader
+     */
+    public function autoload()
+    {
+        return require __DIR__ . '/vendor/autoload.php';
+    }
+
+    /**
      * Initialize the plugin
      */
     public function onPluginsInitialized()
     {
-        include __DIR__.'/vendor/autoload.php';
+
 
         if ($this->isAdmin()) {
 
-            $this->gtnt = new GravTNTSearch();
+            $this->gtnt = $this->getSearchObjectType();
             $route = $this->config->get('plugins.admin.route');
             $base = '/' . trim($route, '/');
             $this->admin_route = $this->grav['base_url'] . $base;
@@ -95,7 +108,7 @@ class TNTSearchPlugin extends Plugin
         $page = $e['page'];
         $fields = $e['fields'];
 
-        if (isset($page->header()->author)) {
+        if ($page && $page instanceof Page && isset($page->header()->author)) {
             $fields->author = $page->header()->author;
         }
     }
@@ -152,7 +165,7 @@ class TNTSearchPlugin extends Plugin
             $options['limit'] = $limit;
         }
 
-        $this->gtnt = new GravTNTSearch($options);
+        $this->gtnt = $this->getSearchObjectType($options);
 
         $pages = $this->grav['pages'];
         $page = $pages->dispatch($this->current_route);
@@ -277,9 +290,7 @@ class TNTSearchPlugin extends Plugin
     {
         $obj = $event['object'];
 
-        if ($obj instanceof Page) {
-            $this->gtnt->updateIndex($obj);
-        }
+        $this->gtnt->updateIndex($obj);
 
         return true;
     }
@@ -294,9 +305,7 @@ class TNTSearchPlugin extends Plugin
     {
         $obj = $event['object'];
 
-        if ($obj instanceof Page) {
-            $this->gtnt->deleteIndex($obj);
-        }
+        $this->gtnt->deleteIndex($obj);
 
         return true;
     }
@@ -363,6 +372,16 @@ class TNTSearchPlugin extends Plugin
     {
         $uri = $this->grav['uri'];
         return $uri->param($val) ?: $uri->query($val) ?: filter_input(INPUT_POST, $val, FILTER_SANITIZE_ENCODED);;
+    }
+
+    protected function getSearchObjectType($options = [])
+    {
+        $type = 'Grav\\Plugin\\TNTSearch\\' . $this->config->get('plugins.tntsearch.search_object_type', 'Grav') . 'TNTSearch';
+        if (class_exists($type)) {
+            return new $type($options);
+        } else {
+            throw new \RuntimeException('Search class: ' . $type . ' does not exist');
+        }
     }
 
 
