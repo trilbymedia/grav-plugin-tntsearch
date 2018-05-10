@@ -50,9 +50,11 @@ class IndexerCommand extends ConsoleCommand
         $this->output->writeln('');
         $this->output->writeln('<magenta>Re-indexing Search</magenta>');
         $this->output->writeln('');
-
+        $start = microtime(true);
         $this->doIndex();
-        $this->output->writeln('Done.');
+        $end =  number_format(microtime(true) - $start,1);
+        $this->output->writeln('');
+        $this->output->writeln('Indexed in ' . $end . 's');
     }
 
     private function doIndex()
@@ -69,6 +71,7 @@ class IndexerCommand extends ConsoleCommand
         $grav['pages']->init();
 
         $gtnt = TNTSearchPlugin::getSearchObjectType();
+
         $gtnt->createIndex();
 
     }
