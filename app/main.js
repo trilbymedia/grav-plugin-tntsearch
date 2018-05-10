@@ -6,7 +6,7 @@ import URI from 'url-parse';
 import search from './search';
 import history from './history';
 
-domready(() => {
+const GravTNTSearch = () => {
     const uri = new URI(global.location.href, true);
     history.replace({
         search: global.location.search,
@@ -27,15 +27,19 @@ domready(() => {
         form.addEventListener('submit', (event) => event.preventDefault());
         input.addEventListener('focus', () => search(input, results));
         input.addEventListener('input', () => {
-            clear.style.display = '';
+            if (clear) {
+                clear.style.display = '';
+            }
             search.cancel();
             search({ input, results });
         });
 
         if (clear) {
             clear.addEventListener('click', () => {
+                if (clear) {
+                    clear.style.display = 'none';
+                }
                 input.value = '';
-                clear.style.display = 'none';
                 search.cancel();
                 search({ input, results });
             });
@@ -52,4 +56,8 @@ domready(() => {
             }
         });
     });
-});
+};
+
+domready(GravTNTSearch);
+
+window.GravTNTSearch = GravTNTSearch;

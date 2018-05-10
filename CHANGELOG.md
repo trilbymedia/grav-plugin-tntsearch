@@ -1,3 +1,10 @@
+# v1.2.6
+## XX/XX/2018
+
+1. [](#improved)
+    * Exposing `GravTNTSearch` to the browser
+    * Dispatching `tntsearch:start` and `tntsearch:done` events when starting/rendering results
+
 # v1.2.5
 ## 03/07/2018
 
