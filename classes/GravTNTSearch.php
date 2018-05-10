@@ -18,9 +18,12 @@ class GravTNTSearch
 
     public function __construct($options = [])
     {
-        $search_type = Grav::instance()['config']->get('plugins.tntsearch.search_type');
-        $stemmer = Grav::instance()['config']->get('plugins.tntsearch.stemmer');
+        $search_type = Grav::instance()['config']->get('plugins.tntsearch.search_type', 'auto');
+        $stemmer = Grav::instance()['config']->get('plugins.tntsearch.stemmer', 'default');
+        $limit = Grav::instance()['config']->get('plugins.tntsearch.limit', 20);
+        $snippet = Grav::instance()['config']->get('plugins.tntsearch.snippet', 300);
         $data_path = Grav::instance()['locator']->findResource('user://data', true) . '/tntsearch';
+
 
         if (!file_exists($data_path)) {
             mkdir($data_path);
@@ -30,9 +33,9 @@ class GravTNTSearch
             'json' => false,
             'search_type' => $search_type,
             'stemmer' => $stemmer,
-            'limit' => 20,
+            'limit' => $limit,
             'as_you_type' => true,
-            'snippet' => 300,
+            'snippet' => $snippet,
             'phrases' => true,
         ];
 
