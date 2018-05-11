@@ -3,7 +3,7 @@ namespace Grav\Plugin\Console;
 
 use Grav\Common\Grav;
 use Grav\Console\ConsoleCommand;
-use Grav\Plugin\TNTSearch\GravTNTSearch;
+use Grav\Plugin\TNTSearchPlugin;
 
 /**
  * Class IndexerCommand
@@ -50,22 +50,28 @@ class IndexerCommand extends ConsoleCommand
         $this->output->writeln('');
         $this->output->writeln('<magenta>Re-indexing Search</magenta>');
         $this->output->writeln('');
-
+        $start = microtime(true);
         $this->doIndex();
-        $this->output->writeln('Done.');
+        $end =  number_format(microtime(true) - $start,1);
+        $this->output->writeln('');
+        $this->output->writeln('Indexed in ' . $end . 's');
     }
 
     private function doIndex()
     {
-        include __DIR__.'/../vendor/autoload.php';
         error_reporting(1);
 
         $grav = Grav::instance();
+
+        // Initialize Plugins
+        $grav->fireEvent('onPluginsInitialized');
+
         $grav['debugger']->enabled(false);
         $grav['twig']->init();
         $grav['pages']->init();
 
-        $gtnt = new GravTNTSearch();
+        $gtnt = TNTSearchPlugin::getSearchObjectType();
+
         $gtnt->createIndex();
 
     }

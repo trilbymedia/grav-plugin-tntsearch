@@ -1,3 +1,22 @@
+# v2.0.0
+## 05/11/2018
+
+1. [](#new)
+    * Refactored TNTSearch to allow core classes to be extensible by other plugins
+    * Added `phrases` search support [#32](https://github.com/trilbymedia/grav-plugin-tntsearch/pull/32)
+1. [](#improved)
+    * Defaulted TNTSearch to search **all pages** out of the box. This should be tweaked though
+    * Added auto-focus to search input [#28](https://github.com/trilbymedia/grav-plugin-tntsearch/pull/28)
+    * Added option to control `powered by` [#34](https://github.com/trilbymedia/grav-plugin-tntsearch/pull/34)
+    * Added a timer on CLI index command
+    * Exposing `GravTNTSearch` to the browser for JS manipulation
+    * Dispatching `tntsearch:start` and `tntsearch:done` events when starting/rendering results
+    * README.md typo fixes
+1. [](#bugfix)
+    * Implemented options as default values that were being ignored
+    * Fixed missing `break` in foreach [#33](https://github.com/trilbymedia/grav-plugin-tntsearch/pull/33)
+    * Add missing `use` statement [#41](https://github.com/trilbymedia/grav-plugin-tntsearch/pull/41)   
+
 # v1.2.5
 ## 03/07/2018
 

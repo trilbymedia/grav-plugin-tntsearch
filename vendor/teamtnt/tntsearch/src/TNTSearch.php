@@ -2,6 +2,8 @@
 
 namespace TeamTNT\TNTSearch;
 
+use Grav\Common\Grav;
+use Grav\Plugin\TNTSearch\GravTNTSearch;
 use PDO;
 use TeamTNT\TNTSearch\Exceptions\IndexNotFoundException;
 use TeamTNT\TNTSearch\Indexer\TNTIndexer;
@@ -93,10 +95,10 @@ class TNTSearch
     /**
      * @param string $phrase
      * @param int    $numOfResults
-     *
+     * @param string $multiword
      * @return array
      */
-    public function search($phrase, $numOfResults = 100)
+    public function search($phrase, $numOfResults = 100, $multiword = null)
     {
         $startTimer = microtime(true);
         $keywords   = $this->breakIntoTokens($phrase);
@@ -109,6 +111,7 @@ class TNTSearch
         $tfWeight  = 1;
         $dlWeight  = 0.5;
         $docScores = [];
+        $numKeywordsFound = [];
         $count     = $this->totalDocumentsInCollection();
 
         foreach ($keywords as $index => $term) {
@@ -125,7 +128,29 @@ class TNTSearch
                 $score             = $idf * ($num / $denom);
                 $docScores[$docID] = isset($docScores[$docID]) ?
                 $docScores[$docID] + $score : $score;
+
+                if ($multiword) {
+                    $numKeywordsFound[$docID] = isset($numKeywordsFound[$docID]) ?
+                        $numKeywordsFound[$docID] + 1 : 1;
+                }
             }
+        }
+
+        if ($multiword != null) {
+                $docScores = array_filter($docScores, function($id) use($multiword, &$numKeywordsFound, &$keywords){
+                if ($numKeywordsFound[$id] != count($keywords)){
+                    return false;
+                }
+                $page = Grav::instance()['pages']->find($id);
+                if (!$page){
+                    return false;
+                }
+                $content = GravTNTSearch::getCleanContent($page);
+                if (strpos($content, $multiword) === false) {
+                    return false;
+                }
+                return true;
+            }, ARRAY_FILTER_USE_KEY);
         }
 
         arsort($docScores);

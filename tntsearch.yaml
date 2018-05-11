@@ -6,6 +6,7 @@ built_in_js: true
 built_in_search_page: true
 search_type: auto
 fuzzy: false
+phrases: true
 stemmer: default
 display_route: true
 display_hits: true
@@ -17,6 +18,6 @@ snippet: 300
 index_page_by_default: true
 filter:
   items:
-    taxonomy@:
-      category: [news]
+    - root@.descendants
 powered_by: true
+search_object_type: Grav

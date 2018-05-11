@@ -1,6 +1,7 @@
 <?php
 namespace Grav\Plugin;
 
+use Grav\Common\Grav;
 use Grav\Common\Page\Page;
 use Grav\Common\Plugin;
 use Grav\Plugin\TNTSearch\GravTNTSearch;
@@ -22,9 +23,6 @@ class TNTSearchPlugin extends Plugin
     protected $current_route;
     protected $admin_route;
 
-    /** @var  GravTNTSearch **/
-    protected $gtnt;
-
     /**
      * @return array
      *
@@ -38,7 +36,10 @@ class TNTSearchPlugin extends Plugin
     public static function getSubscribedEvents()
     {
         return [
-            'onPluginsInitialized' => ['onPluginsInitialized', 0],
+            'onPluginsInitialized'      => [
+                ['autoload', 100000],
+                ['onPluginsInitialized', 0]
+            ],
             'onTwigLoader' => ['onTwigLoader', 0],
             'onTNTSearchReIndex' => ['onTNTSearchReIndex', 0],
             'onTNTSearchIndex' => ['onTNTSearchIndex', 0],
@@ -47,15 +48,25 @@ class TNTSearchPlugin extends Plugin
     }
 
     /**
+     * [onPluginsInitialized:100000] Composer autoload.
+     *is
+     * @return ClassLoader
+     */
+    public function autoload()
+    {
+        return require __DIR__ . '/vendor/autoload.php';
+    }
+
+    /**
      * Initialize the plugin
      */
     public function onPluginsInitialized()
     {
-        include __DIR__.'/vendor/autoload.php';
+
 
         if ($this->isAdmin()) {
 
-            $this->gtnt = new GravTNTSearch();
+            $this->grav['tntsearch'] = $this->getSearchObjectType();
             $route = $this->config->get('plugins.admin.route');
             $base = '/' . trim($route, '/');
             $this->admin_route = $this->grav['base_url'] . $base;
@@ -82,7 +93,7 @@ class TNTSearchPlugin extends Plugin
      */
     public function onTNTSearchReIndex()
     {
-        $this->gtnt->createIndex();
+        $this->grav['tntsearch']->createIndex();
     }
 
     /**
@@ -95,7 +106,7 @@ class TNTSearchPlugin extends Plugin
         $page = $e['page'];
         $fields = $e['fields'];
 
-        if (isset($page->header()->author)) {
+        if ($page && $page instanceof Page && isset($page->header()->author)) {
             $fields->author = $page->header()->author;
         }
     }
@@ -140,20 +151,6 @@ class TNTSearchPlugin extends Plugin
         $this->search_route = $this->config->get('plugins.tntsearch.search_route');
         $this->query_route = $this->config->get('plugins.tntsearch.query_route');
 
-        $this->query = $uri->param('q') ?: $uri->query('q');
-
-        $snippet = $this->getFormValue('sl');
-        $limit = $this->getFormValue('l');
-
-        if ($snippet) {
-            $options['snippet'] = $snippet;
-        }
-        if ($limit) {
-            $options['limit'] = $limit;
-        }
-
-        $this->gtnt = new GravTNTSearch($options);
-
         $pages = $this->grav['pages'];
         $page = $pages->dispatch($this->current_route);
 
@@ -174,14 +171,31 @@ class TNTSearchPlugin extends Plugin
             }
         }
 
-        if ($page) {
-            $this->config->set('plugins.tntsearch', $this->mergeConfig($page));
-        }
+        $this->query = $uri->param('q') ?: $uri->query('q');
 
-        try {
-            $this->results = $this->gtnt->search($this->query);
-        } catch (IndexNotFoundException $e) {
-            $this->results = ['number_of_hits' => 0, 'hits' => [], 'execution_time' => 'missing index'];
+        if ($this->query) {
+
+            $snippet = $this->getFormValue('sl');
+            $limit = $this->getFormValue('l');
+
+            if ($snippet) {
+                $options['snippet'] = $snippet;
+            }
+            if ($limit) {
+                $options['limit'] = $limit;
+            }
+
+            $this->grav['tntsearch'] = $this->getSearchObjectType($options);
+
+            if ($page) {
+                $this->config->set('plugins.tntsearch', $this->mergeConfig($page));
+            }
+
+            try {
+                $this->results = $this->grav['tntsearch']->search($this->query);
+            } catch (IndexNotFoundException $e) {
+                $this->results = ['number_of_hits' => 0, 'hits' => [], 'execution_time' => 'missing index'];
+            }
         }
     }
 
@@ -250,7 +264,7 @@ class TNTSearchPlugin extends Plugin
 
             // capture content
             ob_start();
-            $this->gtnt->createIndex();
+            $this->grav['tntsearch']->createIndex();
             ob_get_clean();
 
             list($status, $msg) = $this->getIndexCount();
@@ -277,9 +291,7 @@ class TNTSearchPlugin extends Plugin
     {
         $obj = $event['object'];
 
-        if ($obj instanceof Page) {
-            $this->gtnt->updateIndex($obj);
-        }
+        $this->grav['tntsearch']->updateIndex($obj);
 
         return true;
     }
@@ -294,9 +306,7 @@ class TNTSearchPlugin extends Plugin
     {
         $obj = $event['object'];
 
-        if ($obj instanceof Page) {
-            $this->gtnt->deleteIndex($obj);
-        }
+        $this->grav['tntsearch']->deleteIndex($obj);
 
         return true;
     }
@@ -343,8 +353,8 @@ class TNTSearchPlugin extends Plugin
     {
         $status = true;
         try {
-            $this->gtnt->tnt->selectIndex('grav.index');
-            $msg = $this->gtnt->tnt->totalDocumentsInCollection() . ' documents indexed';
+            $this->grav['tntsearch']->selectIndex();
+            $msg = $this->grav['tntsearch']->tnt->totalDocumentsInCollection() . ' documents indexed';
         } catch (IndexNotFoundException $e) {
             $status = false;
             $msg = "Index not created";
@@ -363,6 +373,16 @@ class TNTSearchPlugin extends Plugin
     {
         $uri = $this->grav['uri'];
         return $uri->param($val) ?: $uri->query($val) ?: filter_input(INPUT_POST, $val, FILTER_SANITIZE_ENCODED);;
+    }
+
+    public static function getSearchObjectType($options = [])
+    {
+        $type = 'Grav\\Plugin\\TNTSearch\\' . Grav::instance()['config']->get('plugins.tntsearch.search_object_type', 'Grav') . 'TNTSearch';
+        if (class_exists($type)) {
+            return new $type($options);
+        } else {
+            throw new \RuntimeException('Search class: ' . $type . ' does not exist');
+        }
     }
 
 

@@ -5,6 +5,7 @@ use Grav\Common\Grav;
 use Grav\Common\Page\Collection;
 use Grav\Common\Page\Page;
 use RocketTheme\Toolbox\Event\Event;
+use Symfony\Component\Yaml\Yaml;
 use TeamTNT\TNTSearch\Exceptions\IndexNotFoundException;
 use TeamTNT\TNTSearch\TNTSearch;
 
@@ -13,12 +14,16 @@ class GravTNTSearch
     public $tnt;
     protected $options;
     protected $bool_characters = ['-', '(', ')', 'or'];
+    protected $index = 'grav.index';
 
     public function __construct($options = [])
     {
-        $search_type = Grav::instance()['config']->get('plugins.tntsearch.search_type');
-        $stemmer = Grav::instance()['config']->get('plugins.tntsearch.stemmer');
+        $search_type = Grav::instance()['config']->get('plugins.tntsearch.search_type', 'auto');
+        $stemmer = Grav::instance()['config']->get('plugins.tntsearch.stemmer', 'default');
+        $limit = Grav::instance()['config']->get('plugins.tntsearch.limit', 20);
+        $snippet = Grav::instance()['config']->get('plugins.tntsearch.snippet', 300);
         $data_path = Grav::instance()['locator']->findResource('user://data', true) . '/tntsearch';
+
 
         if (!file_exists($data_path)) {
             mkdir($data_path);
@@ -28,9 +33,10 @@ class GravTNTSearch
             'json' => false,
             'search_type' => $search_type,
             'stemmer' => $stemmer,
-            'limit' => 20,
+            'limit' => $limit,
             'as_you_type' => true,
-            'snippet' => 300,
+            'snippet' => $snippet,
+            'phrases' => true,
         ];
 
         $this->options = array_merge($defaults, $options);
@@ -44,7 +50,7 @@ class GravTNTSearch
     public function search($query) {
         $uri = Grav::instance()['uri'];
         $type = $uri->query('search_type');
-        $this->tnt->selectIndex('grav.index');
+        $this->tnt->selectIndex($this->index);
         $this->tnt->asYouType = $this->options['as_you_type'];
 
         if (isset($this->options['fuzzy']) && $this->options['fuzzy']) {
@@ -54,9 +60,21 @@ class GravTNTSearch
         $limit = intval($this->options['limit']);
         $type = isset($type) ? $type : $this->options['search_type'];
 
+        $multiword = null;
+        if (isset($this->options['phrases']) && $this->options['phrases']) {
+            if (strlen($query) > 2) {
+                if ($query[0] === "\"" && $query[strlen($query) - 1] === "\"") {
+                    $multiword = substr($query, 1, strlen($query) - 2);
+                    $type = 'basic';
+                    $query = $multiword;
+                }
+            }
+        }
+
+
         switch ($type) {
             case 'basic':
-                $results = $this->tnt->search($query, $limit);
+                $results = $this->tnt->search($query, $limit, $multiword);
                 break;
             case 'boolean':
                 $results = $this->tnt->searchBoolean($query, $limit);
@@ -68,6 +86,7 @@ class GravTNTSearch
                 foreach ($this->bool_characters as $char) {
                     if (strpos($query, $char) !== false) {
                         $guess = 'searchBoolean';
+                        break;
                     }
                 }
 
@@ -125,7 +144,7 @@ class GravTNTSearch
     public function createIndex()
     {
         $this->tnt->setDatabaseHandle(new GravConnector);
-        $indexer = $this->tnt->createIndex('grav.index');
+        $indexer = $this->tnt->createIndex($this->index);
 
         // Set the stemmer language if set
         if ($this->options['stemmer'] != 'default') {
@@ -135,12 +154,23 @@ class GravTNTSearch
         $indexer->run();
     }
 
-    public function deleteIndex($page)
+    public function selectIndex()
     {
+        $this->tnt->selectIndex($this->index);
+    }
+
+    public function deleteIndex($obj)
+    {
+        if ($obj instanceof Page) {
+            $page = $obj;
+        } else {
+            return;
+        }
+
         $this->tnt->setDatabaseHandle(new GravConnector);
 
         try {
-            $this->tnt->selectIndex('grav.index');
+            $this->tnt->selectIndex($this->index);
         } catch (IndexNotFoundException $e) {
             return;
         }
@@ -151,12 +181,18 @@ class GravTNTSearch
         $indexer->delete($page->route());
     }
 
-    public function updateIndex($page)
+    public function updateIndex($obj)
     {
+        if ($obj instanceof Page) {
+            $page = $obj;
+        } else {
+            return;
+        }
+
         $this->tnt->setDatabaseHandle(new GravConnector);
 
         try {
-            $this->tnt->selectIndex('grav.index');
+            $this->tnt->selectIndex($this->index);
         } catch (IndexNotFoundException $e) {
             return;
         }
