@@ -5,7 +5,7 @@
     * Refactored TNTSearch to allow core classes to be extensible by other plugins
     * Added `phrases` search support [#32](https://github.com/trilbymedia/grav-plugin-tntsearch/pull/32)
 1. [](#improved)
-    * Defaulted TNTSerach to search **all pages** out of the box. This should be tweaked though
+    * Defaulted TNTSearch to search **all pages** out of the box. This should be tweaked though
     * Added autofocus to search input [#28](https://github.com/trilbymedia/grav-plugin-tntsearch/pull/28)
     * Added option to control `powered by` [#34](https://github.com/trilbymedia/grav-plugin-tntsearch/pull/34)
     * Added a timer on CLI index command
