@@ -7,7 +7,7 @@ import search from './search';
 import history from './history';
 
 const GravTNTSearch = () => {
-    const uri = new URI(global.location.href, true);
+    /* const uri = new URI(global.location.href, true);
     history.replace({
         search: global.location.search,
         hash: global.location.hash,
@@ -15,7 +15,7 @@ const GravTNTSearch = () => {
             historyValue: uri.query.q || '',
             type: 'tntsearch',
         },
-    });
+    });*/
 
     const searchForms = document.querySelectorAll('form.tntsearch-form');
     [...searchForms].forEach((form) => {

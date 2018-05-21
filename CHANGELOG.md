@@ -1,3 +1,9 @@
+# v2.0.1
+## 05/21/2018
+
+1. [](#bugfix)
+    * Potential fix for history conflicts.
+
 # v2.0.0
 ## 05/11/2018
 
