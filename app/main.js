@@ -2,9 +2,7 @@
 import 'babel-polyfill';
 
 import domready from 'domready';
-import URI from 'url-parse';
 import search from './search';
-import history from './history';
 
 const GravTNTSearch = () => {
     /* const uri = new URI(global.location.href, true);
