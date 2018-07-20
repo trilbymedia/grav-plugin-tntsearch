@@ -1,3 +1,10 @@
+# v2.0.2
+## 07/20/2018
+
+1. [](#bugfix)
+    * Ensure that credentials are passed in when searching via `fetch`
+    * Compressed JS for better performance
+
 # v2.0.1
 ## 05/21/2018
 

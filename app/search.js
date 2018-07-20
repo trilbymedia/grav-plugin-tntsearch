@@ -72,7 +72,7 @@ const throttling = throttle(async ({ input, results, historyValue = false } = {}
         .join('&');
 
     input.dispatchEvent(startEvent);
-    fetch(`${data.uri}?${query}`)
+    fetch(`${data.uri}?${query}`, { credentials: 'same-origin' })
         .then((response) => response.text())
         .then((response) => {
             if (data.in_page && data.live_update && !historyValue) {
