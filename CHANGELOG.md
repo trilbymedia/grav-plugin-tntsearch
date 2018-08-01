@@ -1,3 +1,9 @@
+# v2.0.3
+## mm/dd/2018
+
+1. [](#bugfix)
+    * Don't remove the X button if `built_in_css` is `false`
+
 # v2.0.2
 ## 07/20/2018
 
