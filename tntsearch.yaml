@@ -4,6 +4,7 @@ query_route: '/s'
 built_in_css: true
 built_in_js: true
 built_in_search_page: true
+enable_admin_page_events: true
 search_type: auto
 fuzzy: false
 phrases: true

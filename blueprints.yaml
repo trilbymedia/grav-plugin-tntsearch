@@ -67,6 +67,18 @@ form:
       validate:
         type: bool
 
+    enable_admin_page_events:
+      type: toggle
+      label: Enable Admin Page Events
+      help: Disable this if you are having problems with timeouts during page saving
+      highlight: 1
+      default: 1
+      options:
+        1: Enabled
+        0: Disabled
+      validate:
+        type: bool
+
     search_route:
       type: text
       size: medium
