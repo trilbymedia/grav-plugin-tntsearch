@@ -1,5 +1,5 @@
 # v2.0.3
-## mm/dd/2018
+## 08/16/2018
 
 1. [](#new)
     * New option to allow disabling of page events, manual updates will be required to pick up changes
