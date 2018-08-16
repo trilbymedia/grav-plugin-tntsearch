@@ -1,5 +1,5 @@
 name: TNT Search
-version: 2.0.2
+version: 2.0.3
 description: Powerful indexed-based full text search engine powered by TNTSearch
 icon: binoculars
 author:
@@ -59,6 +59,18 @@ form:
     built_in_search_page:
       type: toggle
       label: Built-in Search Page
+      highlight: 1
+      default: 1
+      options:
+        1: Enabled
+        0: Disabled
+      validate:
+        type: bool
+
+    enable_admin_page_events:
+      type: toggle
+      label: Enable Admin Page Events
+      help: Disable this if you are having problems with timeouts during page saving
       highlight: 1
       default: 1
       options:

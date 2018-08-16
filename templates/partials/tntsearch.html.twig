@@ -12,9 +12,7 @@
     {% block tntsearch_input %}
     <div id="tntsearch-wrapper" class="form-group{{ dropdown ? ' tntsearch-dropdown' : '' }}">
         <input type="text" class="form-control tntsearch-field{{ in_page ? ' tntsearch-field-inpage' : '' }}" data-tntsearch="{{ options|json_encode|e('html_attr') }}" placeholder="{{ placeholder }}" value="{{ not dropdown ? query|e : '' }}" autofocus>
-        {% if config.get('plugins.tntsearch.built_in_css') %}
-            <span class="tntsearch-clear"{{ not query or dropdown ? ' style="display: none;"' : '' }}>&times;</span>
-        {% endif %}
+        <span class="tntsearch-clear"{{ not query or dropdown ? ' style="display: none;"' : '' }}>&times;</span>
     </div>
     {% endblock %}
     <div class="tntsearch-results{{ in_page ? ' tntsearch-results-inpage' : '' }}">
