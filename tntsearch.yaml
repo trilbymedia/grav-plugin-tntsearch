@@ -18,7 +18,7 @@ min: 3
 snippet: 300
 index_page_by_default: true
 scheduled_index:
-    enabled: true
+    enabled: false
     at: '0 */3 * * *'
     logs: 'logs/tntsearch-index.out'
 filter:

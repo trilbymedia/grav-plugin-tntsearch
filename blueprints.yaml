@@ -54,8 +54,8 @@ form:
       type: toggle
       label: Enable Index Scheduled Job
       help: Use the Grav Scheduler to kick off a background index job
-      highlight: 1
-      default: 1
+      highlight: 0
+      default: 0
       options:
         1: Enabled
         0: Disabled
