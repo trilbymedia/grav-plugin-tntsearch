@@ -72,7 +72,7 @@ form:
 
     scheduled_index.logs:
       type: text
-      label: Log File
+      label: Scheduled Job Log File
       placeholder: 'logs/tntsearch-index.out'
       size: medium
 
