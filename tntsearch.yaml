@@ -20,6 +20,7 @@ index_page_by_default: true
 scheduled_index:
     enabled: true
     at: '0 */3 * * *'
+    logs: 'logs/tntsearch-index.out'
 filter:
   items:
     - root@.descendants

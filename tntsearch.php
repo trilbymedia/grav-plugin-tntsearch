@@ -106,9 +106,10 @@ class TNTSearchPlugin extends Plugin
             /** @var Scheduler $scheduler */
             $scheduler = $e['scheduler'];
             $at = $this->config->get('plugins.tntsearch.scheduled_index.at');
+            $logs = $this->config->get('plugins.tntsearch.scheduled_index.logs');
             $job = $scheduler->addFunction('Grav\Plugin\TNTSearchPlugin::indexJob', [], 'tntsearch-index');
             $job->at($at);
-            $job->output('logs/tntsearch-index.out');
+            $job->output($logs);
         }
     }
 

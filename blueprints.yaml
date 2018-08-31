@@ -70,6 +70,12 @@ form:
       default: '0 */3 * * *'
       placeholder: '0 */3 * * *'
 
+    scheduled_index.logs:
+      type: text
+      label: Log File
+      placeholder: 'logs/tntsearch-index.out'
+      size: medium
+
     ui_title:
       type: spacer
       title: UI Settings
