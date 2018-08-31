@@ -17,6 +17,9 @@ limit: 20
 min: 3
 snippet: 300
 index_page_by_default: true
+scheduled_index:
+    enabled: true
+    at: '0 */3 * * *'
 filter:
   items:
     - root@.descendants
