@@ -1,3 +1,11 @@
+# v2.0.4
+## 09/21/2018
+
+1. [](#new)
+    * Added new `tntsearch: index: true|false` page header option to skip specific pages
+1. [](#bugfix)
+    * Skip indexing of pages with `redirect` set in page header [#21](https://github.com/trilbymedia/grav-plugin-tntsearch/issues/21)
+
 # v2.0.3
 ## 08/16/2018
 

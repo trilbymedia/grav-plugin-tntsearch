@@ -157,6 +157,17 @@ Alternatively you can navigate to the TNTSearch configuration section and click 
 
 ![](assets/tntsearch-config.png)
 
+#### Skipping Indexing
+
+> NOTE: That any page that uses a `redirect` page header attribute will be skipped during indexing.
+
+You can explicitly skip a page that is in the index filter by adding this YAML to the page header:
+
+```
+tntsearch:
+    index: false
+```
+
 #### Admin Page CrUD Events
 
 Once you have an index, TNTSearch makes use of admin events to **C**reate, **U**pdate, and **D**elete index entries when you edit pages.  If your index ever looks like it's out of sync, you can simply reindex your whole site.
