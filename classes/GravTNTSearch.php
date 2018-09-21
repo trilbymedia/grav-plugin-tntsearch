@@ -225,6 +225,13 @@ class GravTNTSearch
 
     public function indexPageData($page)
     {
+        $header = (array) $page->header();
+        $redirect = (bool) $page->redirect();
+
+        if ($redirect || (isset($header['tntsearch']['index']) && $header['tntsearch']['index'] === false )) {
+            throw new \RuntimeException('redirect only...');
+        }
+
         $fields = new \stdClass();
         $fields->id = $page->route();
         $fields->name = $page->title();
