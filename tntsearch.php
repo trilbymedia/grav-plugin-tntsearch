@@ -3,6 +3,7 @@ namespace Grav\Plugin;
 
 use Grav\Common\Grav;
 use Grav\Common\Page\Page;
+use Grav\Common\Page\Pages;
 use Grav\Common\Plugin;
 use Grav\Plugin\TNTSearch\GravTNTSearch;
 use RocketTheme\Toolbox\Event\Event;
@@ -270,7 +271,21 @@ class TNTSearchPlugin extends Plugin
 
             // capture content
             ob_start();
-            $this->grav['tntsearch']->createIndex();
+
+            $language = $this->grav['language'];
+
+            if ($language->enabled()) {
+                foreach ($language->getLanguages() as $lang) {
+                    $language->init();
+                    $language->setActive($lang);
+
+                    $this->grav['pages']->init();
+                    $gtnt = $this->getSearchObjectType();
+                    $gtnt->createIndex();
+                }
+            } else {
+                $this->grav['tntsearch']->createIndex();
+            }
             ob_get_clean();
 
             list($status, $msg) = $this->getIndexCount();
@@ -359,8 +374,15 @@ class TNTSearchPlugin extends Plugin
     {
         $status = true;
         try {
+            $msg = '';
             $this->grav['tntsearch']->selectIndex();
-            $msg = $this->grav['tntsearch']->tnt->totalDocumentsInCollection() . ' documents indexed';
+            $doc_count = $this->grav['tntsearch']->tnt->totalDocumentsInCollection();
+
+            $language = $this->grav['language'];
+            if ($language->enabled()) {
+                $msg .= count($language->getLanguages()) . ' languages processed, each with ';
+            }
+            $msg .=  $doc_count . ' documents indexed';
         } catch (IndexNotFoundException $e) {
             $status = false;
             $msg = "Index not created";

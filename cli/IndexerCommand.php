@@ -68,11 +68,28 @@ class IndexerCommand extends ConsoleCommand
 
         $grav['debugger']->enabled(false);
         $grav['twig']->init();
-        $grav['pages']->init();
 
-        $gtnt = TNTSearchPlugin::getSearchObjectType();
+        $language = $grav['language'];
 
-        $gtnt->createIndex();
+        if ($language->enabled()) {
+            foreach ($language->getLanguages() as $lang) {
+                $language->init();
+                $language->setActive($lang);
+
+                $this->output->writeln('');
+                $this->output->writeln('Language: ' . $lang);
+                $grav['pages']->init();
+                $gtnt = TNTSearchPlugin::getSearchObjectType();
+                $gtnt->createIndex();
+            }
+        } else {
+            $this->output->writeln('');
+            $grav['pages']->init();
+            $gtnt = TNTSearchPlugin::getSearchObjectType();
+            $gtnt->createIndex();
+        }
+
+
 
     }
 }
