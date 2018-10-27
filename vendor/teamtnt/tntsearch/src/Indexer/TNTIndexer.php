@@ -206,8 +206,8 @@ class TNTIndexer
 
         $this->index->exec("CREATE INDEX IF NOT EXISTS 'main'.'term_id_index' ON doclist ('term_id' COLLATE BINARY);");
 
-        $connector = $this->createConnector($this->config);
         if (!$this->dbh) {
+            $connector = $this->createConnector($this->config);
             $this->dbh = $connector->connect($this->config);
         }
         return $this;
@@ -315,15 +315,35 @@ class TNTIndexer
 
         foreach ($objects as $name => $object) {
             $name = str_replace($path.'/', '', $name);
-            if (stringEndsWith($name, $this->config['extension']) && !in_array($name, $exclude)) {
+
+            if (is_callable($this->config['extension'])) {
+                $includeFile = $this->config['extension']($object);
+            } elseif (is_array($this->config['extension'])) {
+                $includeFile = in_array($object->getExtension(), $this->config['extension']);
+            } else {
+                $includeFile = stringEndsWith($name, $this->config['extension']);
+            }
+
+            if ($includeFile && !in_array($name, $exclude)) {
                 $counter++;
                 $file = [
                     'id'      => $counter,
                     'name'    => $name,
                     'content' => $this->filereader->read($object)
                 ];
-                $this->processDocument(new Collection($file));
-                $this->index->exec("INSERT INTO filemap ( 'id', 'path') values ( $counter, '$object')");
+                $fileCollection = new Collection($file);
+
+                if (is_callable($this->filereader->fileFilterCallback)) {
+                    $fileCollection = $fileCollection->filter($this->filereader->fileFilterCallback);
+                }
+                if (is_callable($this->filereader->fileMapCallback)) {
+                    $fileCollection = $fileCollection->map($this->filereader->fileMapCallback);
+                }
+
+                $this->processDocument($fileCollection);
+                $statement = $this->index->prepare("INSERT INTO filemap ( 'id', 'path') values ( $counter, :object)");
+                $statement->bindParam(':object', $object);
+                $statement->execute();
                 $this->info("Processed $counter $object");
             }
         }
