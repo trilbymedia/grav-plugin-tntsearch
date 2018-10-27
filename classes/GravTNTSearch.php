@@ -30,11 +30,9 @@ class GravTNTSearch
         $language = Grav::instance()['language'];
 
         if ($language->enabled()) {
-
             $active = $language->getActive();
             $default = $language->getDefault();
             $this->language = $active ? $active : $default;
-
             $this->index =  $this->language . '.index';
         } else {
             $this->index = 'grav.index';
@@ -59,6 +57,7 @@ class GravTNTSearch
         $this->tnt->loadConfig([
             "storage"   => $data_path,
             "driver"    => 'sqlite',
+            'charset'	=> 'utf8'
         ]);
     }
 
