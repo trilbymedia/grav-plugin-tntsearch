@@ -3,7 +3,9 @@
 
 1. [](#new)
     * Added new Grav Scheduler integration
+    * Added new Multi-Language Support
 1. [](#improved)
+    * Implemented a unified indexer that always uses the CLI command for consistency
     * Use Grav YAML handler
 
 # v2.0.4
