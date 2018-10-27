@@ -12,7 +12,7 @@ docs: https://github.com/trilbymedia/grav-plugin-tntsearch/blob/develop/README.m
 license: MIT
 
 dependencies:
-    - { name: grav, version: '>=1.3.2' }
+    - { name: grav, version: '>=1.5.1' }
 
 form:
   validation: strict
@@ -30,9 +30,55 @@ form:
       validate:
         type: bool
 
+    index_title:
+      type: spacer
+      title: Indexer Settings
+
     index_status:
       type: indexstatus
       label: Search Index Status
+
+    enable_admin_page_events:
+      type: toggle
+      label: Enable Admin Page Events
+      help: Disable this if you are having problems with timeouts during page saving
+      highlight: 1
+      default: 1
+      options:
+        1: Enabled
+        0: Disabled
+      validate:
+        type: bool
+
+    scheduled_index.enabled:
+      type: toggle
+      label: Enable Index Scheduled Job
+      help: Use the Grav Scheduler to kick off a background index job
+      highlight: 0
+      default: 0
+      options:
+        1: Enabled
+        0: Disabled
+      validate:
+        type: bool
+
+    scheduled_index.at:
+      type: cron
+      label: Scheduled Job Frequency
+      size: medium
+      help: Use 'cron' format
+      default: '0 */3 * * *'
+      placeholder: '0 */3 * * *'
+
+    scheduled_index.logs:
+      type: text
+      label: Scheduled Job Log File
+      placeholder: 'logs/tntsearch-index.out'
+      size: medium
+
+    ui_title:
+      type: spacer
+      title: UI Settings
 
     built_in_css:
       type: toggle
@@ -56,6 +102,10 @@ form:
       validate:
         type: bool
 
+    search_title:
+      type: spacer
+      title: Search Settings
+
     built_in_search_page:
       type: toggle
       label: Built-in Search Page
@@ -67,17 +117,7 @@ form:
       validate:
         type: bool
 
-    enable_admin_page_events:
-      type: toggle
-      label: Enable Admin Page Events
-      help: Disable this if you are having problems with timeouts during page saving
-      highlight: 1
-      default: 1
-      options:
-        1: Enabled
-        0: Disabled
-      validate:
-        type: bool
+
 
     search_route:
       type: text

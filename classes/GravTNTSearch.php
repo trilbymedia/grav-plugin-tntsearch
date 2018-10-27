@@ -2,10 +2,10 @@
 namespace Grav\Plugin\TNTSearch;
 
 use Grav\Common\Grav;
+use Grav\Common\Yaml;
 use Grav\Common\Page\Collection;
 use Grav\Common\Page\Page;
 use RocketTheme\Toolbox\Event\Event;
-use Symfony\Component\Yaml\Yaml;
 use TeamTNT\TNTSearch\Exceptions\IndexNotFoundException;
 use TeamTNT\TNTSearch\TNTSearch;
 

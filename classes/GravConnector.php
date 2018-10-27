@@ -2,8 +2,8 @@
 namespace Grav\Plugin\TNTSearch;
 
 use Grav\Common\Grav;
+use Grav\Common\Yaml;
 use Grav\Common\Page\Page;
-use Symfony\Component\Yaml\Yaml;
 
 class GravConnector extends \PDO
 {

@@ -1,3 +1,11 @@
+# v2.1.0
+## mm/dd/2018
+
+1. [](#new)
+    * Added new Grav Scheduler integration
+1. [](#improved)
+    * Use Grav YAML handler
+
 # v2.0.4
 ## 09/21/2018
 

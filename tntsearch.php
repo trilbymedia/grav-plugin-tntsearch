@@ -4,6 +4,7 @@ namespace Grav\Plugin;
 use Grav\Common\Grav;
 use Grav\Common\Page\Page;
 use Grav\Common\Plugin;
+use Grav\Common\Scheduler\Scheduler;
 use Grav\Plugin\TNTSearch\GravTNTSearch;
 use RocketTheme\Toolbox\Event\Event;
 use TeamTNT\TNTSearch\Exceptions\IndexNotFoundException;
@@ -40,10 +41,11 @@ class TNTSearchPlugin extends Plugin
                 ['autoload', 100000],
                 ['onPluginsInitialized', 0]
             ],
-            'onTwigLoader' => ['onTwigLoader', 0],
-            'onTNTSearchReIndex' => ['onTNTSearchReIndex', 0],
-            'onTNTSearchIndex' => ['onTNTSearchIndex', 0],
-            'onTNTSearchQuery' => ['onTNTSearchQuery', 0],
+            'onSchedulerInitialized'    => ['onSchedulerInitialized', 0],
+            'onTwigLoader'              => ['onTwigLoader', 0],
+            'onTNTSearchReIndex'        => ['onTNTSearchReIndex', 0],
+            'onTNTSearchIndex'          => ['onTNTSearchIndex', 0],
+            'onTNTSearchQuery'          => ['onTNTSearchQuery', 0],
         ];
     }
 
@@ -92,6 +94,23 @@ class TNTSearchPlugin extends Plugin
             'onPagesInitialized' => ['onPagesInitialized', 1000],
             'onTwigSiteVariables' => ['onTwigSiteVariables', 0],
         ]);
+    }
+
+    /**
+     * Add index job to Grav Scheduler
+     * Requires Grav 1.6.0 - Scheduler
+     */
+    public function onSchedulerInitialized(Event $e)
+    {
+        if ($this->config->get('plugins.tntsearch.scheduled_index.enabled')) {
+            /** @var Scheduler $scheduler */
+            $scheduler = $e['scheduler'];
+            $at = $this->config->get('plugins.tntsearch.scheduled_index.at');
+            $logs = $this->config->get('plugins.tntsearch.scheduled_index.logs');
+            $job = $scheduler->addFunction('Grav\Plugin\TNTSearchPlugin::indexJob', [], 'tntsearch-index');
+            $job->at($at);
+            $job->output($logs);
+        }
     }
 
     /**
@@ -389,6 +408,19 @@ class TNTSearchPlugin extends Plugin
         } else {
             throw new \RuntimeException('Search class: ' . $type . ' does not exist');
         }
+    }
+
+    public static function indexJob()
+    {
+        $grav = Grav::instance();
+
+        $grav['debugger']->enabled(false);
+        $grav['twig']->init();
+        $grav['pages']->init();
+
+        $gtnt = TNTSearchPlugin::getSearchObjectType();
+
+        $gtnt->createIndex();
     }
 
 
