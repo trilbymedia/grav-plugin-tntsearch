@@ -1,5 +1,6 @@
 name: TNT Search
-version: 2.0.4
+version: 3.0.0-beta.1
+testing: true
 description: Powerful indexed-based full text search engine powered by TNTSearch
 icon: binoculars
 author:
@@ -12,7 +13,7 @@ docs: https://github.com/trilbymedia/grav-plugin-tntsearch/blob/develop/README.m
 license: MIT
 
 dependencies:
-    - { name: grav, version: '>=1.5.1' }
+    - { name: grav, version: '>=1.6.0-beta.4' }
 
 form:
   validation: strict
