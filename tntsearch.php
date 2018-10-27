@@ -3,11 +3,12 @@ namespace Grav\Plugin;
 
 use Grav\Common\Grav;
 use Grav\Common\Page\Page;
-use Grav\Common\Page\Pages;
 use Grav\Common\Plugin;
 use Grav\Common\Scheduler\Scheduler;
 use Grav\Plugin\TNTSearch\GravTNTSearch;
 use RocketTheme\Toolbox\Event\Event;
+use Symfony\Component\Process\PhpExecutableFinder;
+use Symfony\Component\Process\Process;
 use TeamTNT\TNTSearch\Exceptions\IndexNotFoundException;
 
 /**
@@ -288,31 +289,26 @@ class TNTSearchPlugin extends Plugin
             // disable warnings
             error_reporting(1);
 
-            // capture content
-            ob_start();
+            $phpBinaryFinder = new PhpExecutableFinder();
+            $php = $phpBinaryFinder->find();
+            $command = 'cd ' . GRAV_ROOT . ';' . $php . ' bin/plugin tntsearch index --alt';
+            $process = new Process($command);
 
-            $language = $this->grav['language'];
+            $process->run();
 
-            if ($language->enabled()) {
-                foreach ($language->getLanguages() as $lang) {
-                    $language->init();
-                    $language->setActive($lang);
+            if (!$process->isSuccessful()) {
+                $json_response = [
+                    'status'  => 'error',
+                    'message' => '<i class="fa fa-exclamation-circle"></i> ' . $process->getErrorOutput()
+                ];
 
-                    $this->grav['pages']->init();
-                    $gtnt = $this->getSearchObjectType();
-                    $gtnt->createIndex();
-                }
             } else {
-                $this->grav['tntsearch']->createIndex();
+                $json_response = [
+                    'status'  => 'success',
+                    'message' => '<i class="fa fa-book"></i> ' . $process->getOutput()
+                ];
             }
-            ob_get_clean();
 
-            list($status, $msg) = $this->getIndexCount();
-
-            $json_response = [
-                'status'  => $status ? 'success' : 'error',
-                'message' => '<i class="fa fa-book"></i> ' . $msg
-            ];
             echo json_encode($json_response);
             exit;
         }
@@ -357,8 +353,9 @@ class TNTSearchPlugin extends Plugin
     public function onTwigAdminVariables()
     {
         $twig = $this->grav['twig'];
+        $gtnt = $this->grav['tntsearch'];
 
-        list($status, $msg) = $this->getIndexCount();
+        list($status, $msg) = $this->getIndexCount($gtnt);
 
         if ($status === false) {
             $message = '<i class="fa fa-binoculars"></i> <a href="/'. trim($this->admin_route, '/') . '/plugins/tntsearch">TNTSearch must be indexed before it will function properly.</a>';
@@ -387,21 +384,22 @@ class TNTSearchPlugin extends Plugin
     /**
      * Wrapper to get the number of documents currently indexed
      *
+     * @param $gtnt GravTNTSearch
      * @return array
      */
-    protected function getIndexCount()
+    protected static function getIndexCount($gtnt)
     {
         $status = true;
         try {
             $msg = '';
-            $this->grav['tntsearch']->selectIndex();
-            $doc_count = $this->grav['tntsearch']->tnt->totalDocumentsInCollection();
+            $gtnt->selectIndex();
+            $doc_count = $gtnt->tnt->totalDocumentsInCollection();
 
-            $language = $this->grav['language'];
+            $language = Grav::instance()['language'];
             if ($language->enabled()) {
-                $msg .= count($language->getLanguages()) . ' languages processed, each with ';
+                $msg .= 'Processed ' . count($language->getLanguages()) . ' languages, each with ';
             }
-            $msg .=  $doc_count . ' documents indexed';
+            $msg .=  $doc_count . ' documents reindexed';
         } catch (IndexNotFoundException $e) {
             $status = false;
             $msg = "Index not created";
@@ -432,18 +430,43 @@ class TNTSearchPlugin extends Plugin
         }
     }
 
-    public static function indexJob()
+    public static function indexJob($alt_output = false)
     {
         $grav = Grav::instance();
 
         $grav['debugger']->enabled(false);
         $grav['twig']->init();
-        $grav['pages']->init();
 
-        $gtnt = TNTSearchPlugin::getSearchObjectType();
+        $language = $grav['language'];
 
-        $gtnt->createIndex();
+        ob_start();
+
+        if ($language->enabled()) {
+            foreach ($language->getLanguages() as $lang) {
+                $language->init();
+                $language->setActive($lang);
+
+                echo("\nLanguage: $lang\n");
+                $grav['pages']->init();
+                $gtnt = static::getSearchObjectType();
+                $gtnt->createIndex();
+            }
+        } else {
+            $grav['pages']->init();
+            $gtnt = static::getSearchObjectType();
+            $gtnt->createIndex();
+        }
+        
+        $output = ob_get_clean();
+
+        // Alternative output
+        if ($alt_output) {
+            $gtnt = static::getSearchObjectType();
+            list($status, $msg) = static::getIndexCount($gtnt);
+            return $msg;
+        }
+
+        return $output;
     }
-
 
 }
