@@ -1,11 +1,11 @@
 # v3.0.0-beta.1
-## mm/dd/2018
+## 10/28/2018
 
 1. [](#new)
     * Added new Grav Scheduler integration
     * Added new Multi-Language Support
 1. [](#improved)
-    * Implemented a unified indexer that always uses the CLI command for consistency
+    * Implemented a unified indexer process that always uses the CLI command for consistency
     * Use Grav YAML handler
 
 # v2.0.4
