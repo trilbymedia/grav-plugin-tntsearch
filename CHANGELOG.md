@@ -1,3 +1,9 @@
+# v3.0.0-beta.2
+## mm/dd/2018
+
+1. [](#improved)
+    * Minor CSS improvements for search field
+
 # v3.0.0-beta.1
 ## 10/28/2018
 
