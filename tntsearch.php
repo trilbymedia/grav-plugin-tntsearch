@@ -134,7 +134,10 @@ class TNTSearchPlugin extends Plugin
         $fields = $e['fields'];
 
         if ($page && $page instanceof Page && isset($page->header()->author)) {
-            $fields->author = $page->header()->author;
+            $author = $page->header()->author;
+            if (is_string($author)) {
+                $fields->author = $author;
+            }
         }
     }
 

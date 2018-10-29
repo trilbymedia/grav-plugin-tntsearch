@@ -3,6 +3,8 @@
 
 1. [](#improved)
     * Minor CSS improvements for search field
+1. [](#bugfix)
+    * Put better type checking around `onTNTSearchIndex()` example that indexes `page.header.author`    
 
 # v3.0.0-beta.1
 ## 10/28/2018
