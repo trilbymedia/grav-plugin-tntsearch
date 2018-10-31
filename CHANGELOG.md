@@ -4,6 +4,7 @@
 1. [](#improved)
     * Minor CSS improvements for search field
 1. [](#bugfix)
+    * Set the db index file as a property of `GravTNTSearch` to allow for better overriding
     * Put better type checking around `onTNTSearchIndex()` example that indexes `page.header.author`    
 
 # v3.0.0-beta.1

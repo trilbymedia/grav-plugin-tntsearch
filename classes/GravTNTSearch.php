@@ -15,7 +15,7 @@ class GravTNTSearch
     public $tnt;
     protected $options;
     protected $bool_characters = ['-', '(', ')', 'or'];
-    protected $index;
+    protected $index = 'grav.index';
     protected $language;
 
     public function __construct($options = [])
@@ -34,8 +34,6 @@ class GravTNTSearch
             $default = $language->getDefault();
             $this->language = $active ? $active : $default;
             $this->index =  $this->language . '.index';
-        } else {
-            $this->index = 'grav.index';
         }
 
         if (!file_exists($data_path)) {
