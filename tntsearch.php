@@ -330,8 +330,10 @@ class TNTSearchPlugin extends Plugin
     {
         $obj = $event['object'];
 
-        $this->grav['tntsearch']->updateIndex($obj);
-
+        if ($obj) {
+            $this->grav['tntsearch']->updateIndex($obj);
+        }
+        
         return true;
     }
 
