@@ -1,3 +1,9 @@
+# v3.0.0-beta.3
+## mm/dd/2018
+
+1. [](#improved)
+    * Added a new `onFlexObjecSave()` event
+
 # v3.0.0-beta.2
 ## 11/12/2018
 

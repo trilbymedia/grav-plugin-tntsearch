@@ -48,6 +48,7 @@ class TNTSearchPlugin extends Plugin
             'onTNTSearchReIndex'        => ['onTNTSearchReIndex', 0],
             'onTNTSearchIndex'          => ['onTNTSearchIndex', 0],
             'onTNTSearchQuery'          => ['onTNTSearchQuery', 0],
+            'onFlexObjectSave'          => ['onFlexObjectSave', 0],
         ];
     }
 
@@ -333,7 +334,16 @@ class TNTSearchPlugin extends Plugin
         if ($obj) {
             $this->grav['tntsearch']->updateIndex($obj);
         }
-        
+
+        return true;
+    }
+
+    public function onFlexObjectSave($event)
+    {
+        $obj = $event['object'];
+
+        $this->grav['tntsearch']->updateIndex($obj);
+
         return true;
     }
 
