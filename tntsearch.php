@@ -1,6 +1,7 @@
 <?php
 namespace Grav\Plugin;
 
+use Composer\Autoload\ClassLoader;
 use Grav\Common\Grav;
 use Grav\Common\Page\Page;
 use Grav\Common\Plugin;
@@ -68,8 +69,6 @@ class TNTSearchPlugin extends Plugin
      */
     public function onPluginsInitialized()
     {
-
-
         if ($this->isAdmin()) {
 
             $this->grav['tntsearch'] = $this->getSearchObjectType();
