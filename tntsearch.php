@@ -48,7 +48,8 @@ class TNTSearchPlugin extends Plugin
             'onTNTSearchReIndex'        => ['onTNTSearchReIndex', 0],
             'onTNTSearchIndex'          => ['onTNTSearchIndex', 0],
             'onTNTSearchQuery'          => ['onTNTSearchQuery', 0],
-            'onFlexObjectSave'          => ['onFlexObjectSave', 0],
+            'onFlexObjectSave'          => ['onObjectSave', 0],
+            'onFlexObjectDelete'        => ['onObjectDelete', 0],
         ];
     }
 
@@ -85,8 +86,8 @@ class TNTSearchPlugin extends Plugin
 
             if ($this->config->get('plugins.tntsearch.enable_admin_page_events', true)) {
                 $this->enable([
-                    'onAdminAfterSave' => ['onAdminAfterSave', 0],
-                    'onAdminAfterDelete' => ['onAdminAfterDelete', 0],
+                    'onAdminAfterSave' => ['onObjectSave', 0],
+                    'onAdminAfterDelete' => ['onObjectDelete', 0],
                 ]);
             }
 
@@ -319,17 +320,15 @@ class TNTSearchPlugin extends Plugin
 
     }
 
-
-
     /**
      * Perform an 'add' or 'update' for index data as needed
      *
      * @param $event
      * @return bool
      */
-    public function onAdminAfterSave($event)
+    public function onObjectSave($event)
     {
-        $obj = $event['object'];
+        $obj = $event['object'] ?: $event['page'];
 
         if ($obj) {
             $this->grav['tntsearch']->updateIndex($obj);
@@ -338,26 +337,19 @@ class TNTSearchPlugin extends Plugin
         return true;
     }
 
-    public function onFlexObjectSave($event)
-    {
-        $obj = $event['object'];
-
-        $this->grav['tntsearch']->updateIndex($obj);
-
-        return true;
-    }
-
     /**
-     * Perform an 'add' or 'update' for index data as needed
+     * Perform a 'delete' for index data as needed
      *
      * @param $event
      * @return bool
      */
-    public function onAdminAfterDelete($event)
+    public function onObjectDelete($event)
     {
-        $obj = $event['object'];
+        $obj = $event['object'] ?: $event['page'];
 
-        $this->grav['tntsearch']->deleteIndex($obj);
+        if ($obj) {
+            $this->grav['tntsearch']->deleteIndex($obj);
+        }
 
         return true;
     }
