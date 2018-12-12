@@ -292,26 +292,15 @@ class TNTSearchPlugin extends Plugin
 
             // disable warnings
             error_reporting(1);
+            // disable execution time
+            set_time_limit(0);
 
-            $phpBinaryFinder = new PhpExecutableFinder();
-            $php = $phpBinaryFinder->find();
-            $command = 'cd ' . GRAV_ROOT . ';' . $php . ' bin/plugin tntsearch index --alt';
-            $process = new Process($command);
+            list($status, $msg, $output) = $this->indexJob();
 
-            $process->run();
-
-            if (!$process->isSuccessful()) {
-                $json_response = [
-                    'status'  => 'error',
-                    'message' => '<i class="fa fa-exclamation-circle"></i> ' . $process->getErrorOutput()
-                ];
-
-            } else {
-                $json_response = [
-                    'status'  => 'success',
-                    'message' => '<i class="fa fa-book"></i> ' . $process->getOutput()
-                ];
-            }
+            $json_response = [
+                'status'  => $status ? 'success' : 'error',
+                'message' => $msg
+            ];
 
             echo json_encode($json_response);
             exit;
@@ -436,7 +425,7 @@ class TNTSearchPlugin extends Plugin
         }
     }
 
-    public static function indexJob($alt_output = false)
+    public static function indexJob()
     {
         $grav = Grav::instance();
 
@@ -465,14 +454,11 @@ class TNTSearchPlugin extends Plugin
         
         $output = ob_get_clean();
 
-        // Alternative output
-        if ($alt_output) {
-            $gtnt = static::getSearchObjectType();
-            list($status, $msg) = static::getIndexCount($gtnt);
-            return $msg;
-        }
+        // Reset and get index count and status
+        $gtnt = static::getSearchObjectType();
+        list($status, $msg) = static::getIndexCount($gtnt);
 
-        return $output;
+        return [$status, $msg, $output];
     }
 
 }

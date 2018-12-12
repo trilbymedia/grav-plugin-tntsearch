@@ -71,7 +71,9 @@ class IndexerCommand extends ConsoleCommand
         $grav = Grav::instance();
         $grav->fireEvent('onPluginsInitialized');
 
-        $this->output->write(TNTSearchPlugin::indexJob($alt_output));
+        list($status, $msg, $output) = TNTSearchPlugin::indexJob();
+
+        $this->output->write($output);
         $this->output->writeln('');
     }
 }
