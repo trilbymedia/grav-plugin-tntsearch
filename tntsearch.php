@@ -319,7 +319,8 @@ class TNTSearchPlugin extends Plugin
         $obj = $event['object'] ?: $event['page'];
 
         if ($obj) {
-            $this->grav['tntsearch']->updateIndex($obj);
+            $search = isset($this->grav['tntsearch']) ? $this->grav['tntsearch'] : static::getSearchObjectType();
+            $search->updateIndex($obj);
         }
 
         return true;
@@ -336,7 +337,8 @@ class TNTSearchPlugin extends Plugin
         $obj = $event['object'] ?: $event['page'];
 
         if ($obj) {
-            $this->grav['tntsearch']->deleteIndex($obj);
+            $search = isset($this->grav['tntsearch']) ? $this->grav['tntsearch'] : static::getSearchObjectType();
+            $search->deleteIndex($obj);
         }
 
         return true;
