@@ -8,8 +8,6 @@ use Grav\Common\Plugin;
 use Grav\Common\Scheduler\Scheduler;
 use Grav\Plugin\TNTSearch\GravTNTSearch;
 use RocketTheme\Toolbox\Event\Event;
-use Symfony\Component\Process\PhpExecutableFinder;
-use Symfony\Component\Process\Process;
 use TeamTNT\TNTSearch\Exceptions\IndexNotFoundException;
 
 /**
@@ -71,7 +69,7 @@ class TNTSearchPlugin extends Plugin
     {
         if ($this->isAdmin()) {
 
-            $this->grav['tntsearch'] = $this->getSearchObjectType();
+            $this->GravTNTSearch();
             $route = $this->config->get('plugins.admin.route');
             $base = '/' . trim($route, '/');
             $this->admin_route = $this->grav['base_url'] . $base;
@@ -121,7 +119,7 @@ class TNTSearchPlugin extends Plugin
      */
     public function onTNTSearchReIndex()
     {
-        $this->grav['tntsearch']->createIndex();
+        $this->GravTNTSearch()->createIndex();
     }
 
     /**
@@ -223,7 +221,7 @@ class TNTSearchPlugin extends Plugin
             }
 
             try {
-                $this->results = $this->grav['tntsearch']->search($this->query);
+                $this->results = $this->GravTNTSearch()->search($this->query);
             } catch (IndexNotFoundException $e) {
                 $this->results = ['number_of_hits' => 0, 'hits' => [], 'execution_time' => 'missing index'];
             }
@@ -319,8 +317,7 @@ class TNTSearchPlugin extends Plugin
         $obj = $event['object'] ?: $event['page'];
 
         if ($obj) {
-            $search = isset($this->grav['tntsearch']) ? $this->grav['tntsearch'] : static::getSearchObjectType();
-            $search->updateIndex($obj);
+            $this->GravTNTSearch()->updateIndex($obj);
         }
 
         return true;
@@ -337,8 +334,7 @@ class TNTSearchPlugin extends Plugin
         $obj = $event['object'] ?: $event['page'];
 
         if ($obj) {
-            $search = isset($this->grav['tntsearch']) ? $this->grav['tntsearch'] : static::getSearchObjectType();
-            $search->deleteIndex($obj);
+            $this->GravTNTSearch()->deleteIndex($obj);
         }
 
         return true;
@@ -350,7 +346,7 @@ class TNTSearchPlugin extends Plugin
     public function onTwigAdminVariables()
     {
         $twig = $this->grav['twig'];
-        $gtnt = $this->grav['tntsearch'];
+        $gtnt = $this->GravTNTSearch();
 
         list($status, $msg) = $this->getIndexCount($gtnt);
 
@@ -461,6 +457,20 @@ class TNTSearchPlugin extends Plugin
         list($status, $msg) = static::getIndexCount($gtnt);
 
         return [$status, $msg, $output];
+    }
+
+    /**
+     * Helper to initialize TNTSearch if required
+     *
+     * @return TNTSearch\GravTNTSearch
+     */
+    protected function GravTNTSearch()
+    {
+        if (!isset($this->grav['tntsearch'])) {
+            $this->grav['tntsearch'] = static::getSearchObjectType();
+        }
+
+        return $this->grav['tntsearch'];
     }
 
 }
