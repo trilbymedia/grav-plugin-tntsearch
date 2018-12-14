@@ -1,8 +1,12 @@
 # v3.0.0-beta.3
-## mm/dd/2018
+## 12/14/2018
 
 1. [](#improved)
     * Added a new `onFlexObjecSave()` event
+    * Simplified indexing logic
+    * Code cleanup
+1. [](#bugfix)
+    * Fixed issues when updating search index    
 
 # v3.0.0-beta.2
 ## 11/12/2018
