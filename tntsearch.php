@@ -111,6 +111,7 @@ class TNTSearchPlugin extends Plugin
             $job = $scheduler->addFunction('Grav\Plugin\TNTSearchPlugin::indexJob', [], 'tntsearch-index');
             $job->at($at);
             $job->output($logs);
+            $job->backlink('/plugins/tntsearch');
         }
     }
 
