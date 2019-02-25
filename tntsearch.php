@@ -103,18 +103,21 @@ class TNTSearchPlugin extends Plugin
     }
 
     /**
-     * A sample event to show how easy it is to extend the indexing fields
-     *
-     * @param Event $e
-     */
+    * A sample event to show how easy it is to extend the indexing fields
+    *
+    * @param Event $e
+    */
     public function onTNTSearchIndex(Event $e)
     {
-        $page = $e['page'];
-        $fields = $e['fields'];
+      $page = $e['page'];
+      $fields = $e['fields'];
 
-        if ($page && $page instanceof Page && isset($page->header()->author)) {
-            $fields->author = $page->header()->author;
-        }
+      if ($page && $page instanceof Page && isset($page->header()->author)) {
+           $author = $page->header()->author;
+           if (is_string($author)) {
+               $fields->author = $author;
+           }
+      }
     }
 
     public function onTNTSearchQuery(Event $e)
