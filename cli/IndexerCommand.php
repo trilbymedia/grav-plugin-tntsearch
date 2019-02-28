@@ -70,6 +70,7 @@ class IndexerCommand extends ConsoleCommand
 
         $grav = Grav::instance();
         $grav->fireEvent('onPluginsInitialized');
+        $grav->fireEvent('onThemeInitialized');
 
         list($status, $msg, $output) = TNTSearchPlugin::indexJob();
 
