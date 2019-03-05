@@ -1,3 +1,9 @@
+# v3.0.0-beta.4
+## mm/dd/2018
+
+1. [](#bugfix)
+    * Use custom search object in query [#63](https://github.com/trilbymedia/grav-plugin-tntsearch/issues/63)  
+
 # v3.0.0-beta.3
 ## 12/14/2018
 

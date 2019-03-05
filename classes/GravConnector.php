@@ -25,8 +25,7 @@ class GravConnector extends \PDO
         $config = Grav::instance()['config'];
         $filter = $config->get('plugins.tntsearch.filter');
         $default_process = $config->get('plugins.tntsearch.index_page_by_default');
-        $gtnt = new GravTNTSearch();
-
+        $gtnt = \Grav\Plugin\TNTSearchPlugin::getSearchObjectType();
 
 
         if ($filter && array_key_exists('items', $filter)) {
