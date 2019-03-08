@@ -66,7 +66,7 @@ composer require teamtnt/tntsearch
 
 Before you proceed make sure your server meets the following requirements:
 
-* PHP >= 5.5
+* PHP >= 7.1
 * PDO PHP Extension
 * SQLite PHP Extension
 * mbstring PHP Extension
@@ -274,6 +274,14 @@ $classifier->load('sports.cls');
 ## Drivers
 
 * [TNTSearch Driver for Laravel Scout](https://github.com/teamtnt/laravel-scout-tntsearch-driver)
+
+## PS4Ware
+
+You're free to use this package, but if it makes it to your production environment we would highly appreciate you sending us a PS4 game of your choise. This way you support us to further develop and add new features to this package.
+
+Our address is: TNT Studio, Sv. Mateja 19, 10010 Zagreb, Croatia.
+
+We'll publish all received games on our company website.
 
 ## Support [![OpenCollective](https://opencollective.com/tntsearch/backers/badge.svg)](#backers) [![OpenCollective](https://opencollective.com/tntsearch/sponsors/badge.svg)](#sponsors)
 

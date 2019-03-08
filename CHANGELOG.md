@@ -1,6 +1,8 @@
 # v3.0.0-beta.4
 ## mm/dd/2018
 
+1. [](#improved)
+    * Switched to latest TNTSearch version 2.0 (PHP 7.1+)
 1. [](#bugfix)
     * Use custom search object in query [#63](https://github.com/trilbymedia/grav-plugin-tntsearch/issues/63)  
     * Fixed issue with Ajax results escaping

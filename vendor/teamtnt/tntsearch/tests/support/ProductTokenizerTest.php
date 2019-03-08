@@ -1,12 +1,12 @@
 <?php
 
-use TeamTNT\TNTSearch\Support\Tokenizer;
+use TeamTNT\TNTSearch\Support\ProductTokenizer;
 
-class TokenizerTest extends PHPUnit\Framework\TestCase
+class ProductTokenizerTest extends PHPUnit\Framework\TestCase
 {
     public function testTokenize()
     {
-        $tokenizer = new Tokenizer;
+        $tokenizer = new ProductTokenizer;
 
         $text = "This is some text";
         $res  = $tokenizer->tokenize($text);
@@ -20,7 +20,8 @@ class TokenizerTest extends PHPUnit\Framework\TestCase
 
         $text = "Hi! This text contains an test@email.com. Test's email 123.";
         $res  = $tokenizer->tokenize($text);
-        $this->assertContains("test", $res);
+
+        $this->assertContains("test's", $res);
         $this->assertContains("email", $res);
         $this->assertContains("contains", $res);
         $this->assertContains("123", $res);
@@ -28,7 +29,7 @@ class TokenizerTest extends PHPUnit\Framework\TestCase
         $text = "Superman (1941)";
         $res  = $tokenizer->tokenize($text);
         $this->assertContains("superman", $res);
-        $this->assertContains("1941", $res);
+        $this->assertContains("(1941)", $res);
 
         $text = "čćž šđ";
         $res  = $tokenizer->tokenize($text);

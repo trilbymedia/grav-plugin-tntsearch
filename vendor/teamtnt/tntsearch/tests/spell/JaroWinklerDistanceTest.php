@@ -2,26 +2,27 @@
 
 use TeamTNT\TNTSearch\Spell\JaroWinklerDistance;
 
-class JaroWinklerDistanceTest extends PHPUnit_Framework_TestCase
+class JaroWinklerDistanceTest extends PHPUnit\Framework\TestCase
 {
     public function __construct()
     {
         $this->sd = new JaroWinklerDistance;
+        parent::__construct();
     }
 
     public function testJaro()
     {
         $d = $this->sd->jaro('DWAYNE', 'DUANE');
-        $this->assertEquals(0.822, $d, '', 0.001);
+        $this->assertEqualsWithDelta(0.822, $d, 0.001);
 
         $d = $this->sd->jaro("MARTHA", "MARHTA");
-        $this->assertEquals(0.944444, $d, '', 0.001);
+        $this->assertEqualsWithDelta(0.944444, $d, 0.001);
 
         $d = $this->sd->jaro("DIXON", "DICKSONX");
-        $this->assertEquals(0.766667, $d, '', 0.001);
+        $this->assertEqualsWithDelta(0.766667, $d, 0.001);
 
         $d = $this->sd->jaro("JELLYFISH", "SMELLYFISH");
-        $this->assertEquals(0.896296, $d, '', 0.001);
+        $this->assertEqualsWithDelta(0.896296, $d, 0.001);
     }
 
     public function testGetDistance()
