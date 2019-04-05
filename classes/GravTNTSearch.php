@@ -143,7 +143,7 @@ class GravTNTSearch
 
         if (isset($header->tntsearch['template'])) {
             $processed_page = $twig->processTemplate($header->tntsearch['template'] . '.html.twig', ['page' => $page]);
-            $content =$processed_page;
+            $content = $processed_page;
         } else {
             $content = $page->content();
         }

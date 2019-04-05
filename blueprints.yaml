@@ -243,7 +243,7 @@ form:
     index_page_by_default:
       type: toggle
       label: Index Every Page
-      help: Index every page by default unless a page specifically declares `tntsearch: process: false`. Disabling this requires a `process: true` declartion to be added to each page that should be indexed.
+      help: 'Index every page by default unless a page specifically declares `tntsearch: process: false`. Disabling this requires a `process: true` declartion to be added to each page that should be indexed.'
       highlight: 1
       default: 1
       options:
