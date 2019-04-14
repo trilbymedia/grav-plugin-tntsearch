@@ -1,41 +1,24 @@
-# v3.0.0-beta.4
-## mm/dd/2018
-
-1. [](#improved)
-    * Switched to latest TNTSearch version 2.0 (PHP 7.1+)
-1. [](#bugfix)
-    * Use custom search object in query [#63](https://github.com/trilbymedia/grav-plugin-tntsearch/issues/63)  
-    * Fixed issue with Ajax results escaping
-
-# v3.0.0-beta.3
-## 12/14/2018
-
-1. [](#improved)
-    * Added a new `onFlexObjecSave()` event
-    * Simplified indexing logic
-    * Code cleanup
-1. [](#bugfix)
-    * Fixed issues when updating search index    
-
-# v3.0.0-beta.2
-## 11/12/2018
-
-1. [](#improved)
-    * Minor CSS improvements for search field
-1. [](#bugfix)
-    * Set the db index file as a property of `GravTNTSearch` to allow for better overriding
-    * Put better type checking around `onTNTSearchIndex()` example that indexes `page.header.author`    
-
-# v3.0.0-beta.1
-## 10/28/2018
+# v3.0.0
+## 04/14/2018
 
 1. [](#new)
     * Added new Grav Scheduler integration
     * Added new Multi-Language Support
 1. [](#improved)
+    * Switched to latest TNTSearch version 2.0 (PHP 7.1+)
+    * Added a new `onFlexObjecSave()` event
+    * Simplified indexing logic
+    * Code cleanup
+    * Minor CSS improvements for search field
     * Implemented a unified indexer process that always uses the CLI command for consistency
     * Use Grav YAML handler
-
+1. [](#bugfix)
+    * Use custom search object in query [#63](https://github.com/trilbymedia/grav-plugin-tntsearch/issues/63)  
+    * Fixed issue with Ajax results escaping
+    * Fixed issues when updating search index  
+    * Set the db index file as a property of `GravTNTSearch` to allow for better overriding
+    * Put better type checking around `onTNTSearchIndex()` example that indexes `page.header.author`
+   
 # v2.0.4
 ## 09/21/2018
 
