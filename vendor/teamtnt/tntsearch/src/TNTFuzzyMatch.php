@@ -52,6 +52,9 @@ class TNTFuzzyMatch
 
     public function hasCommonSubsequence($pattern, $str)
     {
+        $pattern = mb_strtolower($pattern);
+        $str     = mb_strtolower($str);
+
         $j             = 0;
         $patternLength = strlen($pattern);
         $strLength     = strlen($str);
@@ -90,7 +93,7 @@ class TNTFuzzyMatch
         $lines = fopen($path, "r");
         if ($lines) {
             while (!feof($lines)) {
-                $line = fgets($lines, 4096);
+                $line = rtrim(fgets($lines, 4096));
                 if ($this->hasCommonSubsequence($pattern, $line)) {
                     $res[] = $line;
                 }
@@ -101,17 +104,20 @@ class TNTFuzzyMatch
         $paternVector = $this->wordToVector($pattern);
 
         $sorted = [];
-        foreach ($res as $word) {
-            $word                   = trim($word);
+        foreach ($res as $caseSensitiveWord) {
+            $word                   = mb_strtolower(trim($caseSensitiveWord));
             $wordVector             = $this->wordToVector($word);
             $normalizedPaternVector = $this->makeVectorSameLength($wordVector, $paternVector);
 
-            $angle         = $this->angleBetweenVectors($wordVector, $normalizedPaternVector);
-            $sorted[$word] = $angle;
+            $angle = $this->angleBetweenVectors($wordVector, $normalizedPaternVector);
+
+            if (strpos($word, $pattern) !== false) {
+                $angle += 0.2;
+            }
+            $sorted[$caseSensitiveWord] = $angle;
         }
 
         arsort($sorted);
-
         return $sorted;
     }
 
@@ -133,7 +139,12 @@ class TNTFuzzyMatch
             $wordVector             = $this->wordToVector($word);
             $normalizedPaternVector = $this->makeVectorSameLength($wordVector, $paternVector);
 
-            $angle         = $this->angleBetweenVectors($wordVector, $normalizedPaternVector);
+            $angle = $this->angleBetweenVectors($wordVector, $normalizedPaternVector);
+
+            if (strpos($word, $pattern) !== false) {
+                $angle += 0.2;
+            }
+
             $sorted[$word] = $angle;
         }
 

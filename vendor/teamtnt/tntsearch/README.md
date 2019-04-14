@@ -4,11 +4,27 @@
 [![Build Status](https://img.shields.io/travis/teamtnt/tntsearch/master.svg?style=flat-square)](https://travis-ci.org/teamtnt/tntsearch)
 [![Slack Status](https://img.shields.io/badge/slack-chat-E01563.svg?style=flat-square)](https://tntsearch.slack.com)
 
+![TNTSearch Banner](https://cloud.githubusercontent.com/assets/824840/17067635/edf2ae50-504c-11e6-9c63-a73955f55c29.jpg)
+
 # TNTSearch
 
-A fully featured full text search engine written in PHP
+TNTSearch is a fully featured full text search engine written entirely in PHP. It's simple configuration allows you to add an amazing search experience to your site in just minutes.
+It has also a build in geo-search and a text classifier. Other features are
 
-![TNTSearch Banner](https://cloud.githubusercontent.com/assets/824840/17067635/edf2ae50-504c-11e6-9c63-a73955f55c29.jpg)
+* fuzzy search
+* as you type functionality
+* geo-search
+* text-classification
+* stemming
+* custom tokenizers
+* bm25 ranking algorithm
+* boolean search
+* result highlighting
+ 
+We created also some demo pages that show tolerant retrieval with n-grams in action.
+The package has bunch of helper functions like jaro-winkler and cosine similarity for distance calculations. It supports stemming for English, Croatian, Arabic, Italian, Russian, Portuguese and Ukrainian. If the built in stemmers aren't enough, the engine lets you easily plugin any compatible snowball stemmer. Some forks of the package even support Chinese.
+
+Unlike many other engines, the index can be easily updated without doing a reindex or using deltas. 
 
 **View** [online demo](http://tntsearch.tntstudio.us/) &nbsp;|&nbsp; **Follow us** on
 [Twitter](https://twitter.com/tntstudiohr),
@@ -24,7 +40,9 @@ or [Facebook](https://www.facebook.com/tntstudiohr) &nbsp;|&nbsp;
 ---
 ## Demo
 
-To see TNTSearch in action take a look at [the demo page](http://tntsearch.tntstudio.us/)
+* [TV Shows Search](http://tntsearch.tntstudio.us/)
+* [PHPUnit Documentatin Search](http://phpunit.tntstudio.us)
+* [City Search with n-grams](http://cities.tnt.studio/)
 
 ## Tutorials
 
@@ -32,10 +50,9 @@ To see TNTSearch in action take a look at [the demo page](http://tntsearch.tntst
 * [Searching for Bobby Fisher with Laravel 5](http://tnt.studio/blog/searching-for-bobby-fisher-with-laravel-5)
 * [Did you mean functionality with Laravel Scout](http://tnt.studio/blog/did-you-mean-functionality-with-laravel-scout)
 
-## Support us on Patreon
+## Support us on Open Collective
 
-- [Nenad Ticaric](https://www.patreon.com/nticaric)
-- [Sasa Tokic](https://www.patreon.com/stokic)
+- [TNTSearch](https://opencollective.com/tntsearch)
 
 ## Installation
 
@@ -49,7 +66,7 @@ composer require teamtnt/tntsearch
 
 Before you proceed make sure your server meets the following requirements:
 
-* PHP >= 5.5
+* PHP >= 7.1
 * PDO PHP Extension
 * SQLite PHP Extension
 * mbstring PHP Extension
@@ -72,7 +89,8 @@ $tnt->loadConfig([
     'database'  => 'dbname',
     'username'  => 'user',
     'password'  => 'pass',
-    'storage'   => '/var/www/tntsearch/examples/'
+    'storage'   => '/var/www/tntsearch/examples/',
+    'stemmer'   => \TeamTNT\TNTSearch\Stemmer\PorterStemmer::class//optional
 ]);
 
 $indexer = $tnt->createIndex('name.index');
@@ -257,7 +275,17 @@ $classifier->load('sports.cls');
 
 * [TNTSearch Driver for Laravel Scout](https://github.com/teamtnt/laravel-scout-tntsearch-driver)
 
+## PS4Ware
+
+You're free to use this package, but if it makes it to your production environment we would highly appreciate you sending us a PS4 game of your choise. This way you support us to further develop and add new features to this package.
+
+Our address is: TNT Studio, Sv. Mateja 19, 10010 Zagreb, Croatia.
+
+We'll publish all received games on our company website.
+
 ## Support [![OpenCollective](https://opencollective.com/tntsearch/backers/badge.svg)](#backers) [![OpenCollective](https://opencollective.com/tntsearch/sponsors/badge.svg)](#sponsors)
+
+<a href='https://ko-fi.com/O4O3K2R9' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://az743702.vo.msecnd.net/cdn/kofi4.png?v=0' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
 
 ### Backers
 

@@ -2,6 +2,8 @@
 
 The **TNTSearch** Plugin is for [Grav CMS](http://github.com/getgrav/grav). Powerful indexed-based full text search engine powered by the [TNTSearch library](https://github.com/teamtnt/tntsearch) that provides fast Ajax-based Grav content searches.  This plugin is highly flexible allowing indexes of arbitrary content data as well as custom Twig templates to provide the opportunity to index modular and other dynamic page types. TNTSearch provides CLI as well as Admin based administration and re-indexing, as well as a built-in Ajax-powered front-end search tool.
 
+> NOTE: TNTSearch version 3.0.0 now requires Grav 1.6.0 or newer to function as it makes use of new functionality not available in previous versions.
+
 ![](assets/tntsearch-ajax.gif)
 
 ## Installation
@@ -63,8 +65,10 @@ query_route: '/s'
 built_in_css: true
 built_in_js: true
 built_in_search_page: true
+enable_admin_page_events: true
 search_type: auto
 fuzzy: false
+phrases: true
 stemmer: default
 display_route: true
 display_hits: true
@@ -74,10 +78,15 @@ limit: 20
 min: 3
 snippet: 300
 index_page_by_default: true
+scheduled_index:
+    enabled: false
+    at: '0 */3 * * *'
+    logs: 'logs/tntsearch-index.out'
 filter:
   items:
-    taxonomy@:
-      category: [news]
+    - root@.descendants
+powered_by: true
+search_object_type: Grav      
 ```
 
 The configuration options are as follows:
@@ -88,11 +97,13 @@ The configuration options are as follows:
 * `built_in_css` - enable or disable the built-in css styling
 * `built_in_js` - enable or disable the built-in javascript
 * `built_in_search_page` - enable or disable the built-in search page
+* `enable_admin_page_events` - enable or disable the page events which occur `on-save` to add/update/remove page in index
 * `search_type` - can be one of these types:
   * `basic` - standard string matching
   * `boolean` - supports `or` or `minus`. e.g. `foo -bar`
   * `auto` - automatically detects whether to use `basic` or `boolean`
 * `fuzzy` - matches if the words are 'close' but not necessarily exact matches
+* `phrases` - automatically handle phrases support
 * `stemmer` - can be one of these types:
   * `default` - no stemmer
   * `arabic` - Arabic language
@@ -109,7 +120,10 @@ The configuration options are as follows:
 * `min` - mininum amount of characters typed before performing search
 * `snippet` - amount of characters for previewing a result item
 * `index_page_by_default` - should all pages be indexed by default unless frontmatter overrides
+* `scheduled_index` - New scheduled index job.  Disabled by default, when enabled defaulted to run every 3 hours, and output results to `logs/tntsearch-index.out`
 * `filter` - a [Page Collections filter](https://learn.getgrav.org/content/collections#summary-of-collection-options) that lets you pick specific pages to index via a collection query
+* `powered_by` - Display the **powered-by TNTSearch** text
+* `search_object_type` - Allows custom classes to override the default **Grav Page** support. This allows completely custom searching capabilities for any data type.
 
 ## Usage
 
@@ -167,6 +181,20 @@ You can explicitly skip a page that is in the index filter by adding this YAML t
 tntsearch:
     index: false
 ```
+
+#### Multi-Language Support
+
+With the new 3.0 version of TNTSearch, support has been added for multiple languages (Grav 1.6 required).  Internally, this means that rather that store the index as `user:://data/tntsearch/grav.index`, multiple indexes are created per language configured in Grav.  For example if you have set the supported languages to `['en', 'fr', 'de']`, then when you perform an index,  you will get three files: `en.index`, `fr.index`, and `de.index`.  When querying the appropriate **active language** determines which index is queried.  For example, performing the search on a page called `/fr/search` will result in the `fr.index` database to be used, and French results to be returned.  
+
+Note Indexing will take longer depending on the number of languages you support as TNTSearch has to index each page in each language.
+
+> NOTE: While accented characters is supported in this release, there is currently no support in the underlying TNTSearch library to match non-accented characters to accented ones, so exact matches are required.
+
+#### Scheduler Support
+
+One of the great new features of Grav 1.6 is the built in **Scheduler** that allows plugin-provided functionality to be run periodically.  TNTSearch is a great use-case for this capability as it allows an indexing job to be scheduled to be run every few hours without the need to manually keep things in sync. There are a few options that allow you to configure this capability.
+
+First note, that this scheduler functionality is disable by default, so you first have to enable the scheduler functionality in the TNTSearch plugin settings.  After that you can configure how often the indexing job should run.  The default is every 3 hours. Lastly, you can configure where any indexing output is logged to.
 
 #### Admin Page CrUD Events
 

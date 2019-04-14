@@ -6,6 +6,7 @@ use Grav\Console\ConsoleCommand;
 //use Grav\Plugin\TNTSearch\GravIndexer;
 use Grav\Plugin\TNTSearchPlugin;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
 
 /**
  * Class IndexerCommand
@@ -48,6 +49,12 @@ class QueryCommand extends ConsoleCommand
                 InputArgument::REQUIRED,
                 'The search query you wish to use to test the database'
             )
+            ->addOption(
+                'language',
+                'l',
+                InputOption::VALUE_OPTIONAL,
+                'optional language to search against (multi-language sites only)'
+            )
             ->setHelp('The <info>query command</info> allows you to test the search engine')
         ;
     }
@@ -65,8 +72,20 @@ class QueryCommand extends ConsoleCommand
     {
         $grav = Grav::instance();
 
+
         // Initialize Plugins
         $grav->fireEvent('onPluginsInitialized');
+
+        // Set Language if one passed in
+        $language = $grav['language'];
+        if ($language->enabled()) {
+            $lang = $this->input->getOption('language');
+            if ($lang && $language->validate($lang)) {
+                $language->setActive($lang);
+            } else {
+                $language->setActive($language->getDefault());
+            }
+        }
 
         $grav['debugger']->enabled(false);
         $grav['twig']->init();

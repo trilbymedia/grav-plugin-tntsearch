@@ -4,30 +4,30 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fa94ba8b04712e6c82a3582fb8696d36",
+    "content-hash": "c82d44d0c8d193d3b4aeeaceaf771019",
     "packages": [
         {
             "name": "teamtnt/tntsearch",
-            "version": "v1.3.1",
+            "version": "v2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/teamtnt/tntsearch.git",
-                "reference": "4b7c36c6418487b9eeede6254ece9c830ea7d57c"
+                "reference": "6eb15ad2d7e4275e8a008a3b85a215419754b6b2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/teamtnt/tntsearch/zipball/4b7c36c6418487b9eeede6254ece9c830ea7d57c",
-                "reference": "4b7c36c6418487b9eeede6254ece9c830ea7d57c",
+                "url": "https://api.github.com/repos/teamtnt/tntsearch/zipball/6eb15ad2d7e4275e8a008a3b85a215419754b6b2",
+                "reference": "6eb15ad2d7e4275e8a008a3b85a215419754b6b2",
                 "shasum": ""
             },
             "require": {
                 "ext-mbstring": "*",
                 "ext-pdo_sqlite": "*",
                 "ext-sqlite3": "*",
-                "php": "~5.5|~7.0"
+                "php": "~7.1"
             },
             "require-dev": {
-                "phpunit/phpunit": "5.*"
+                "phpunit/phpunit": "7.*"
             },
             "type": "library",
             "autoload": {
@@ -60,7 +60,7 @@
                 "teamtnt",
                 "tntsearch"
             ],
-            "time": "2018-01-31T14:48:14+00:00"
+            "time": "2019-02-11T13:33:38+00:00"
         }
     ],
     "packages-dev": [],

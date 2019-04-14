@@ -2,10 +2,11 @@
 namespace Grav\Plugin\TNTSearch;
 
 use Grav\Common\Grav;
+use Grav\Common\Language\Language;
+use Grav\Common\Yaml;
 use Grav\Common\Page\Collection;
 use Grav\Common\Page\Page;
 use RocketTheme\Toolbox\Event\Event;
-use Symfony\Component\Yaml\Yaml;
 use TeamTNT\TNTSearch\Exceptions\IndexNotFoundException;
 use TeamTNT\TNTSearch\TNTSearch;
 
@@ -15,6 +16,7 @@ class GravTNTSearch
     protected $options;
     protected $bool_characters = ['-', '(', ')', 'or'];
     protected $index = 'grav.index';
+    protected $language;
 
     public function __construct($options = [])
     {
@@ -24,6 +26,15 @@ class GravTNTSearch
         $snippet = Grav::instance()['config']->get('plugins.tntsearch.snippet', 300);
         $data_path = Grav::instance()['locator']->findResource('user://data', true) . '/tntsearch';
 
+        /** @var Language $language */
+        $language = Grav::instance()['language'];
+
+        if ($language->enabled()) {
+            $active = $language->getActive();
+            $default = $language->getDefault();
+            $this->language = $active ? $active : $default;
+            $this->index =  $this->language . '.index';
+        }
 
         if (!file_exists($data_path)) {
             mkdir($data_path);
@@ -44,6 +55,7 @@ class GravTNTSearch
         $this->tnt->loadConfig([
             "storage"   => $data_path,
             "driver"    => 'sqlite',
+            'charset'	=> 'utf8'
         ]);
     }
 
@@ -131,7 +143,7 @@ class GravTNTSearch
 
         if (isset($header->tntsearch['template'])) {
             $processed_page = $twig->processTemplate($header->tntsearch['template'] . '.html.twig', ['page' => $page]);
-            $content =$processed_page;
+            $content = $processed_page;
         } else {
             $content = $page->content();
         }
@@ -232,10 +244,16 @@ class GravTNTSearch
             throw new \RuntimeException('redirect only...');
         }
 
+        $route = $page->route();
+
         $fields = new \stdClass();
-        $fields->id = $page->route();
+        $fields->id = $route;
         $fields->name = $page->title();
         $fields->content = $this->getCleanContent($page);
+
+        if ($this->language) {
+            $fields->display_route = '/' . $this->language . $route;
+        }
 
         Grav::instance()->fireEvent('onTNTSearchIndex', new Event(['page' => $page, 'fields' => $fields]));
 

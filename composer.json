@@ -1,6 +1,6 @@
 {
   "require": {
-    "teamtnt/tntsearch": "^1.0"
+    "teamtnt/tntsearch": "^2.0"
   },
   "autoload": {
     "psr-4": {
