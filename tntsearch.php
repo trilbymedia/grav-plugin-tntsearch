@@ -315,6 +315,10 @@ class TNTSearchPlugin extends Plugin
      */
     public function onObjectSave($event)
     {
+        if (defined('CLI_DISABLE_TNTSEARCH')) {
+            return true;
+        }
+
         $obj = $event['object'] ?: $event['page'];
 
         if ($obj) {
@@ -332,6 +336,9 @@ class TNTSearchPlugin extends Plugin
      */
     public function onObjectDelete($event)
     {
+        if (defined('CLI_DISABLE_TNTSEARCH')) {
+            return true;
+        }
         $obj = $event['object'] ?: $event['page'];
 
         if ($obj) {
