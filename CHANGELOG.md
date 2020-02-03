@@ -1,5 +1,5 @@
 # v3.0.1
-## mm/dd/2020
+## 02/03/2020
 
 1. [](#bugfix)
     * Fixed an issue indexing via Admin with Grav 1.7
