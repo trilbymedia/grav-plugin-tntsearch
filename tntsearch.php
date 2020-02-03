@@ -4,6 +4,7 @@ namespace Grav\Plugin;
 use Composer\Autoload\ClassLoader;
 use Grav\Common\Grav;
 use Grav\Common\Page\Page;
+use Grav\Common\Page\Pages;
 use Grav\Common\Plugin;
 use Grav\Common\Scheduler\Scheduler;
 use Grav\Plugin\TNTSearch\GravTNTSearch;
@@ -315,6 +316,10 @@ class TNTSearchPlugin extends Plugin
      */
     public function onObjectSave($event)
     {
+        if (defined('CLI_DISABLE_TNTSEARCH')) {
+            return true;
+        }
+
         $obj = $event['object'] ?: $event['page'];
 
         if ($obj) {
@@ -332,6 +337,9 @@ class TNTSearchPlugin extends Plugin
      */
     public function onObjectDelete($event)
     {
+        if (defined('CLI_DISABLE_TNTSEARCH')) {
+            return true;
+        }
         $obj = $event['object'] ?: $event['page'];
 
         if ($obj) {
@@ -433,6 +441,9 @@ class TNTSearchPlugin extends Plugin
 
         $language = $grav['language'];
 
+        /** @var Pages $pages */
+        $pages = $grav['pages'];
+
         ob_start();
 
         if ($language->enabled()) {
@@ -441,12 +452,23 @@ class TNTSearchPlugin extends Plugin
                 $language->setActive($lang);
 
                 echo("\nLanguage: $lang\n");
-                $grav['pages']->init();
+
+                if (method_exists($pages, 'enablePages')) {
+                    $pages->enablePages();
+                } else {
+                    $pages->init();
+                }
+
                 $gtnt = static::getSearchObjectType();
                 $gtnt->createIndex();
             }
         } else {
-            $grav['pages']->init();
+            if (method_exists($pages, 'enablePages')) {
+                $pages->enablePages();
+            } else {
+                $pages->init();
+            }
+
             $gtnt = static::getSearchObjectType();
             $gtnt->createIndex();
         }

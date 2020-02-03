@@ -1,5 +1,5 @@
 name: TNT Search
-version: 3.0.0
+version: 3.0.1
 testing: false
 description: Powerful indexed-based full text search engine powered by TNTSearch
 icon: binoculars

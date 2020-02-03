@@ -1,5 +1,11 @@
+# v3.0.1
+## 02/03/2020
+
+1. [](#bugfix)
+    * Fixed an issue indexing via Admin with Grav 1.7
+
 # v3.0.0
-## 04/14/2018
+## 04/14/2019
 
 1. [](#new)
     * Added new Grav Scheduler integration
