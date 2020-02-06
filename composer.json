@@ -4,7 +4,9 @@
   },
   "autoload": {
     "psr-4": {
-      "Grav\\Plugin\\TNTSearch\\": "classes/"
-    }
+      "Grav\\Plugin\\TNTSearch\\": "classes/",
+      "Grav\\Plugin\\Console\\": "cli/"
+    },
+    "classmap":  ["tntsearch.php"]
   }
 }

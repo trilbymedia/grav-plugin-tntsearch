@@ -18,6 +18,7 @@ class ComposerStaticInit6693564509f9a3fa6ed2c7bf76fdb017
         'G' => 
         array (
             'Grav\\Plugin\\TNTSearch\\' => 22,
+            'Grav\\Plugin\\Console\\' => 20,
         ),
     );
 
@@ -30,6 +31,14 @@ class ComposerStaticInit6693564509f9a3fa6ed2c7bf76fdb017
         array (
             0 => __DIR__ . '/../..' . '/classes',
         ),
+        'Grav\\Plugin\\Console\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/cli',
+        ),
+    );
+
+    public static $classMap = array (
+        'Grav\\Plugin\\TNTSearchPlugin' => __DIR__ . '/../..' . '/tntsearch.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
@@ -37,6 +46,7 @@ class ComposerStaticInit6693564509f9a3fa6ed2c7bf76fdb017
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInit6693564509f9a3fa6ed2c7bf76fdb017::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInit6693564509f9a3fa6ed2c7bf76fdb017::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit6693564509f9a3fa6ed2c7bf76fdb017::$classMap;
 
         }, null, ClassLoader::class);
     }

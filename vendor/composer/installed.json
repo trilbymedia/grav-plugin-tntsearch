@@ -1,17 +1,17 @@
 [
     {
         "name": "teamtnt/tntsearch",
-        "version": "v2.0.0",
-        "version_normalized": "2.0.0.0",
+        "version": "v2.2.0",
+        "version_normalized": "2.2.0.0",
         "source": {
             "type": "git",
             "url": "https://github.com/teamtnt/tntsearch.git",
-            "reference": "6eb15ad2d7e4275e8a008a3b85a215419754b6b2"
+            "reference": "a24399e04b6d7f152d3b31ea4a59efc6385cfd06"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/teamtnt/tntsearch/zipball/6eb15ad2d7e4275e8a008a3b85a215419754b6b2",
-            "reference": "6eb15ad2d7e4275e8a008a3b85a215419754b6b2",
+            "url": "https://api.github.com/repos/teamtnt/tntsearch/zipball/a24399e04b6d7f152d3b31ea4a59efc6385cfd06",
+            "reference": "a24399e04b6d7f152d3b31ea4a59efc6385cfd06",
             "shasum": ""
         },
         "require": {
@@ -23,7 +23,7 @@
         "require-dev": {
             "phpunit/phpunit": "7.*"
         },
-        "time": "2019-02-11T13:33:38+00:00",
+        "time": "2019-10-07T10:02:35+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {

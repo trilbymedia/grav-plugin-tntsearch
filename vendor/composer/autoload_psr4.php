@@ -8,4 +8,5 @@ $baseDir = dirname($vendorDir);
 return array(
     'TeamTNT\\TNTSearch\\' => array($vendorDir . '/teamtnt/tntsearch/src'),
     'Grav\\Plugin\\TNTSearch\\' => array($baseDir . '/classes'),
+    'Grav\\Plugin\\Console\\' => array($baseDir . '/cli'),
 );

@@ -1,3 +1,9 @@
+# v3.0.2
+## mm/dd/2020
+
+1. [](#new)
+    * Upgraded to TNTSearch version 2.2 (PHP 7.4 fixes)
+
 # v3.0.1
 ## 02/03/2020
 
