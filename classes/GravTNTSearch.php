@@ -3,6 +3,7 @@ namespace Grav\Plugin\TNTSearch;
 
 use Grav\Common\Grav;
 use Grav\Common\Language\Language;
+use Grav\Common\Page\Interfaces\PageInterface;
 use Grav\Common\Yaml;
 use Grav\Common\Page\Collection;
 use Grav\Common\Page\Page;
@@ -69,14 +70,14 @@ class GravTNTSearch
             $this->tnt->fuzziness = true;
         }
 
-        $limit = intval($this->options['limit']);
-        $type = isset($type) ? $type : $this->options['search_type'];
+        $limit = (int)$this->options['limit'];
+        $type = $type ?? $this->options['search_type'];
 
         $multiword = null;
         if (isset($this->options['phrases']) && $this->options['phrases']) {
             if (strlen($query) > 2) {
-                if ($query[0] === "\"" && $query[strlen($query) - 1] === "\"") {
-                    $multiword = substr($query, 1, strlen($query) - 2);
+                if ($query[0] === '"' && $query[strlen($query) - 1] === '"') {
+                    $multiword = substr($query, 1, -1);
                     $type = 'basic';
                     $query = $multiword;
                 }
@@ -112,12 +113,11 @@ class GravTNTSearch
     {
         $counter = 0;
         $data = new \stdClass();
-        $data->number_of_hits = isset($res['hits']) ? $res['hits'] : 0;
+        $data->number_of_hits = $res['hits'] ?? 0;
         $data->execution_time = $res['execution_time'];
         $pages = Grav::instance()['pages'];
 
         foreach ($res['ids'] as $path) {
-
             if ($counter++ > $this->options['limit']) {
                 break;
             }
@@ -131,11 +131,15 @@ class GravTNTSearch
 
         if ($this->options['json']) {
             return json_encode($data, JSON_PRETTY_PRINT);
-        } else {
-            return $data;
         }
+
+        return $data;
     }
 
+    /**
+     * @param PageInterface $page
+     * @return string|string[]|null
+     */
     public static function getCleanContent($page)
     {
         $twig = Grav::instance()['twig'];
@@ -159,7 +163,7 @@ class GravTNTSearch
         $indexer = $this->tnt->createIndex($this->index);
 
         // Set the stemmer language if set
-        if ($this->options['stemmer'] != 'default') {
+        if ($this->options['stemmer'] !== 'default') {
             $indexer->setLanguage($this->options['stemmer']);
         }
 
@@ -226,7 +230,7 @@ class GravTNTSearch
             $collection = $apage->collection($filter, false);
 
             if (array_key_exists($page->path(), $collection->toArray())) {
-                $fields = GravTNTSearch::indexPageData($page);
+                $fields = $this->indexPageData($page);
                 $document = (array) $fields;
 
                 // Insert document
@@ -235,6 +239,10 @@ class GravTNTSearch
         }
     }
 
+    /**
+     * @param PageInterface $page
+     * @return \stdClass
+     */
     public function indexPageData($page)
     {
         $header = (array) $page->header();
@@ -249,7 +257,7 @@ class GravTNTSearch
         $fields = new \stdClass();
         $fields->id = $route;
         $fields->name = $page->title();
-        $fields->content = $this->getCleanContent($page);
+        $fields->content = static::getCleanContent($page);
 
         if ($this->language) {
             $fields->display_route = '/' . $this->language . $route;

@@ -4,6 +4,7 @@ namespace Grav\Plugin\TNTSearch;
 use Grav\Common\Grav;
 use Grav\Common\Yaml;
 use Grav\Common\Page\Page;
+use Grav\Plugin\TNTSearchPlugin;
 
 class GravConnector extends \PDO
 {
@@ -25,7 +26,7 @@ class GravConnector extends \PDO
         $config = Grav::instance()['config'];
         $filter = $config->get('plugins.tntsearch.filter');
         $default_process = $config->get('plugins.tntsearch.index_page_by_default');
-        $gtnt = \Grav\Plugin\TNTSearchPlugin::getSearchObjectType();
+        $gtnt = TNTSearchPlugin::getSearchObjectType();
 
 
         if ($filter && array_key_exists('items', $filter)) {
@@ -53,7 +54,7 @@ class GravConnector extends \PDO
 
             // Only process what's configured
             if (!$process) {
-                echo("Skipped $counter $route\n");
+                echo("Skipped {$counter} {$route}\n");
                 continue;
             }
 
@@ -61,9 +62,9 @@ class GravConnector extends \PDO
                 $fields = $gtnt->indexPageData($page);
                 $results[] = (array) $fields;
                 $display_route = isset($fields->display_route) ? $fields->display_route : $route;
-                echo("Added   $counter $display_route\n");
+                echo("Added   {$counter} {$display_route}\n");
             } catch (\Exception $e) {
-                echo("Skipped $counter $route - {$e->getMessage()}\n");
+                echo("Skipped {$counter} {$route} - {$e->getMessage()}\n");
                 continue;
             }
         }

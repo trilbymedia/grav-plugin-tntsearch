@@ -42,8 +42,8 @@ class QueryCommand extends ConsoleCommand
     protected function configure()
     {
         $this
-            ->setName("query")
-            ->setDescription("TNTSearch Query")
+            ->setName('query')
+            ->setDescription('TNTSearch Query')
             ->addArgument(
                 'query',
                 InputArgument::REQUIRED,
@@ -94,6 +94,5 @@ class QueryCommand extends ConsoleCommand
         $gtnt = TNTSearchPlugin::getSearchObjectType(['json' => true]);
         print_r($gtnt->search($this->input->getArgument('query')));
     }
-
 }
 

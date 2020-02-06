@@ -7,6 +7,7 @@ use Grav\Common\Page\Page;
 use Grav\Common\Page\Pages;
 use Grav\Common\Plugin;
 use Grav\Common\Scheduler\Scheduler;
+use Grav\Common\Uri;
 use Grav\Plugin\TNTSearch\GravTNTSearch;
 use RocketTheme\Toolbox\Event\Event;
 use TeamTNT\TNTSearch\Exceptions\IndexNotFoundException;
@@ -186,9 +187,9 @@ class TNTSearchPlugin extends Plugin
         $page = $pages->dispatch($this->current_route);
 
         if (!$page) {
-            if ($this->query_route && $this->query_route == $this->current_route) {
+            if ($this->query_route && $this->query_route === $this->current_route) {
                 $page = new Page;
-                $page->init(new \SplFileInfo(__DIR__ . "/pages/tntquery.md"));
+                $page->init(new \SplFileInfo(__DIR__ . '/pages/tntquery.md'));
                 $page->slug(basename($this->current_route));
                 if ($uri->param('ajax') || $uri->query('ajax')) {
                     $page->template('tntquery-ajax');
@@ -196,7 +197,7 @@ class TNTSearchPlugin extends Plugin
                 $pages->addPage($page, $this->current_route);
             } elseif ($this->built_in_search_page && $this->search_route == $this->current_route) {
                 $page = new Page;
-                $page->init(new \SplFileInfo(__DIR__ . "/pages/search.md"));
+                $page->init(new \SplFileInfo(__DIR__ . '/pages/search.md'));
                 $page->slug(basename($this->current_route));
                 $pages->addPage($page, $this->current_route);
             }
@@ -216,7 +217,7 @@ class TNTSearchPlugin extends Plugin
                 $options['limit'] = $limit;
             }
 
-            $this->grav['tntsearch'] = $this->getSearchObjectType($options);
+            $this->grav['tntsearch'] = static::getSearchObjectType($options);
 
             if ($page) {
                 $this->config->set('plugins.tntsearch', $this->mergeConfig($page));
@@ -274,7 +275,7 @@ class TNTSearchPlugin extends Plugin
      */
     public function onAdminTaskExecute(Event $e)
     {
-        if ($e['method'] == 'taskReindexTNTSearch') {
+        if ($e['method'] === 'taskReindexTNTSearch') {
 
             $controller = $e['controller'];
 
@@ -295,7 +296,7 @@ class TNTSearchPlugin extends Plugin
             // disable execution time
             set_time_limit(0);
 
-            list($status, $msg, $output) = $this->indexJob();
+            list($status, $msg, $output) = static::indexJob();
 
             $json_response = [
                 'status'  => $status ? 'success' : 'error',
@@ -357,7 +358,7 @@ class TNTSearchPlugin extends Plugin
         $twig = $this->grav['twig'];
         $gtnt = $this->GravTNTSearch();
 
-        list($status, $msg) = $this->getIndexCount($gtnt);
+        list($status, $msg) = static::getIndexCount($gtnt);
 
         if ($status === false) {
             $message = '<i class="fa fa-binoculars"></i> <a href="/'. trim($this->admin_route, '/') . '/plugins/tntsearch">TNTSearch must be indexed before it will function properly.</a>';
@@ -404,7 +405,7 @@ class TNTSearchPlugin extends Plugin
             $msg .=  $doc_count . ' documents reindexed';
         } catch (IndexNotFoundException $e) {
             $status = false;
-            $msg = "Index not created";
+            $msg = 'Index not created';
         }
 
         return [$status, $msg];
@@ -419,7 +420,8 @@ class TNTSearchPlugin extends Plugin
     protected function getFormValue($val)
     {
         $uri = $this->grav['uri'];
-        return $uri->param($val) ?: $uri->query($val) ?: filter_input(INPUT_POST, $val, FILTER_SANITIZE_ENCODED);;
+
+        return $uri->param($val) ?: $uri->query($val) ?: filter_input(INPUT_POST, $val, FILTER_SANITIZE_ENCODED);
     }
 
     public static function getSearchObjectType($options = [])
@@ -427,9 +429,9 @@ class TNTSearchPlugin extends Plugin
         $type = 'Grav\\Plugin\\TNTSearch\\' . Grav::instance()['config']->get('plugins.tntsearch.search_object_type', 'Grav') . 'TNTSearch';
         if (class_exists($type)) {
             return new $type($options);
-        } else {
-            throw new \RuntimeException('Search class: ' . $type . ' does not exist');
         }
+
+        throw new \RuntimeException('Search class: ' . $type . ' does not exist');
     }
 
     public static function indexJob()
@@ -451,7 +453,7 @@ class TNTSearchPlugin extends Plugin
                 $language->init();
                 $language->setActive($lang);
 
-                echo("\nLanguage: $lang\n");
+                echo("\nLanguage: {$lang}\n");
 
                 if (method_exists($pages, 'enablePages')) {
                     $pages->enablePages();

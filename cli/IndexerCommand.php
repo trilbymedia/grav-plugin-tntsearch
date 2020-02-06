@@ -37,9 +37,9 @@ class IndexerCommand extends ConsoleCommand
     protected function configure()
     {
         $this
-            ->setName("index")
+            ->setName('index')
             ->addOption("alt", null, InputOption::VALUE_NONE, 'alternative output')
-            ->setDescription("TNTSearch Indexer")
+            ->setDescription('TNTSearch Indexer')
             ->setHelp('The <info>index command</info> re-indexes the search engine');
     }
 
@@ -72,7 +72,7 @@ class IndexerCommand extends ConsoleCommand
         $grav->fireEvent('onPluginsInitialized');
         $grav->fireEvent('onThemeInitialized');
 
-        list($status, $msg, $output) = TNTSearchPlugin::indexJob();
+        [$status, $msg, $output] = TNTSearchPlugin::indexJob();
 
         $this->output->write($output);
         $this->output->writeln('');
