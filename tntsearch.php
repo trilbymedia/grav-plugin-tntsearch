@@ -455,20 +455,18 @@ class TNTSearchPlugin extends Plugin
 
                 echo("\nLanguage: {$lang}\n");
 
+                $pages->init();
                 if (method_exists($pages, 'enablePages')) {
                     $pages->enablePages();
-                } else {
-                    $pages->init();
                 }
 
                 $gtnt = static::getSearchObjectType();
                 $gtnt->createIndex();
             }
         } else {
+            $pages->init();
             if (method_exists($pages, 'enablePages')) {
                 $pages->enablePages();
-            } else {
-                $pages->init();
             }
 
             $gtnt = static::getSearchObjectType();
