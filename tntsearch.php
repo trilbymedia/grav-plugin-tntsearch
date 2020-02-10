@@ -356,7 +356,7 @@ class TNTSearchPlugin extends Plugin
         $twig = $this->grav['twig'];
         $gtnt = $this->GravTNTSearch();
 
-        list($status, $msg) = static::getIndexCount($gtnt);
+        [$status, $msg] = static::getIndexCount($gtnt);
 
         if ($status === false) {
             $message = '<i class="fa fa-binoculars"></i> <a href="/'. trim($this->admin_route, '/') . '/plugins/tntsearch">TNTSearch must be indexed before it will function properly.</a>';
@@ -456,7 +456,7 @@ class TNTSearchPlugin extends Plugin
                 $language->init();
                 $language->setActive($lang);
 
-                echo("\nLanguage: {$lang}\n");
+                echo "\nLanguage: {$lang}\n";
 
                 $gtnt = static::getSearchObjectType();
                 $gtnt->createIndex();
@@ -465,7 +465,7 @@ class TNTSearchPlugin extends Plugin
             $gtnt = static::getSearchObjectType();
             $gtnt->createIndex();
         }
-        
+
         $output = ob_get_clean();
 
         // Reset and get index count and status

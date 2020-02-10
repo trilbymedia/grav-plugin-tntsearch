@@ -140,7 +140,6 @@ class GravTNTSearch
      */
     protected function processResults($res, $query)
     {
-        $counter = 0;
         $data = new \stdClass();
         $data->number_of_hits = $res['hits'] ?? 0;
         $data->execution_time = $res['execution_time'];
@@ -148,6 +147,7 @@ class GravTNTSearch
         /** @var Pages $pages */
         $pages = Grav::instance()['pages'];
 
+        $counter = 0;
         foreach ($res['ids'] as $path) {
             if ($counter++ > $this->options['limit']) {
                 break;
@@ -198,7 +198,7 @@ class GravTNTSearch
         return $content;
     }
 
-    public function createIndex(): void
+    public function createIndex()
     {
         $this->tnt->setDatabaseHandle(new GravConnector);
         $indexer = $this->tnt->createIndex($this->index);
@@ -211,21 +211,21 @@ class GravTNTSearch
         $indexer->run();
     }
 
-    public function selectIndex(): void
+    public function selectIndex()
     {
         $this->tnt->selectIndex($this->index);
     }
 
-    public function deleteIndex($obj)
+    /**
+     * @param object $object
+     */
+    public function deleteIndex($object)
     {
-        if ($obj instanceof Page) {
-            $page = $obj;
-        } else {
+        if (!$object instanceof Page) {
             return;
         }
 
         $this->tnt->setDatabaseHandle(new GravConnector);
-
         try {
             $this->tnt->selectIndex($this->index);
         } catch (IndexNotFoundException $e) {
@@ -235,14 +235,15 @@ class GravTNTSearch
         $indexer = $this->tnt->getIndex();
 
         // Delete existing if it exists
-        $indexer->delete($page->route());
+        $indexer->delete($object->route());
     }
 
-    public function updateIndex($obj): void
+    /**
+     * @param object $object
+     */
+    public function updateIndex($object)
     {
-        if ($obj instanceof Page) {
-            $page = $obj;
-        } else {
+        if (!$object instanceof Page) {
             return;
         }
 
@@ -257,7 +258,7 @@ class GravTNTSearch
         $indexer = $this->tnt->getIndex();
 
         // Delete existing if it exists
-        $indexer->delete($page->route());
+        $indexer->delete($object->route());
 
         $filter = Grav::instance()['config']->get('plugins.tntsearch.filter');
         if ($filter && array_key_exists('items', $filter)) {
@@ -270,8 +271,8 @@ class GravTNTSearch
             /** @var Collection $collection */
             $collection = $apage->collection($filter, false);
 
-            if (array_key_exists($page->path(), $collection->toArray())) {
-                $fields = $this->indexPageData($page);
+            if (array_key_exists($object->path(), $collection->toArray())) {
+                $fields = $this->indexPageData($object);
                 $document = (array) $fields;
 
                 // Insert document
