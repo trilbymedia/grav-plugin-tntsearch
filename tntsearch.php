@@ -3,6 +3,7 @@ namespace Grav\Plugin;
 
 use Composer\Autoload\ClassLoader;
 use Grav\Common\Grav;
+use Grav\Common\Language\Language;
 use Grav\Common\Page\Page;
 use Grav\Common\Page\Pages;
 use Grav\Common\Plugin;
@@ -436,10 +437,10 @@ class TNTSearchPlugin extends Plugin
     public static function indexJob()
     {
         $grav = Grav::instance();
-
         $grav['debugger']->enabled(false);
         $grav['twig']->init();
 
+        /** @var Language $language */
         $language = $grav['language'];
 
         /** @var Pages $pages */

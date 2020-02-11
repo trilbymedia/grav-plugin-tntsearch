@@ -1,6 +1,7 @@
 <?php
 namespace Grav\Plugin\TNTSearch;
 
+use Grav\Common\Config\Config;
 use Grav\Common\Grav;
 use Grav\Common\Yaml;
 use Grav\Common\Page\Page;
@@ -23,6 +24,7 @@ class GravConnector extends \PDO
         $counter = 0;
         $results = [];
 
+        /** @var Config $config */
         $config = Grav::instance()['config'];
         $filter = $config->get('plugins.tntsearch.filter');
         $default_process = $config->get('plugins.tntsearch.index_page_by_default');
@@ -64,7 +66,7 @@ class GravConnector extends \PDO
                 $display_route = $fields->display_route ?? $route;
                 echo("Added   {$counter} {$display_route}\n");
             } catch (\Exception $e) {
-                echo("Skipped {$counter} {$route} - {$e->getMessage()}\n");
+                echo("Error {$counter} {$route} - {$e->getMessage()}\n");
                 continue;
             }
         }
