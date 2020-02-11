@@ -214,6 +214,41 @@ $index->update(11, ['id' => '11', 'title' => 'updated title', 'article' => 'upda
 $index->delete(12);
 ```
 
+## Custom Tokenizer
+First, create your own Tokenizer class that implements TokenizerInterface:
+
+``` php
+
+use TeamTNT\TNTSearch\Support\TokenizerInterface;
+
+class SomeTokenizer implements TokenizerInterface {
+
+    public function tokenize($text) {
+        return preg_split("/[^\p{L}\p{N}-]+/u", strtolower($text), -1, PREG_SPLIT_NO_EMPTY);
+    }
+}
+```
+
+The only difference here from the original is that the regex contains a dash `[^\p{L}\p{N}-]`
+
+After you have the tokenizer ready, your `TNTIndexer` and `TNTSearch` class should consume it.
+
+``` php
+$someTokenizer = new SomeTokenizer;
+
+$indexer = new TNTIndexer;
+$indexer->setTokenizer($someTokenizer);
+```
+
+And in the `TNTSearch` class you do the same
+
+``` php
+$someTokenizer = new SomeTokenizer;
+
+$tnt = new TNTSearch;
+$tnt->setTokenizer($someTokenizer);
+```
+
 ## Geo Search
 
 ### Indexing
@@ -281,7 +316,9 @@ You're free to use this package, but if it makes it to your production environme
 
 Our address is: TNT Studio, Sv. Mateja 19, 10010 Zagreb, Croatia.
 
-We'll publish all received games on our company website.
+We'll publish all received games [here][link-ps4ware]
+
+[link-ps4ware]: https://github.com/teamtnt/tntsearch/blob/master/PS4Ware.md
 
 ## Support [![OpenCollective](https://opencollective.com/tntsearch/backers/badge.svg)](#backers) [![OpenCollective](https://opencollective.com/tntsearch/sponsors/badge.svg)](#sponsors)
 
