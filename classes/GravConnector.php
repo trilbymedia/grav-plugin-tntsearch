@@ -66,7 +66,7 @@ class GravConnector extends \PDO
                 $display_route = $fields->display_route ?? $route;
                 echo("Added   {$counter} {$display_route}\n");
             } catch (\Exception $e) {
-                echo("Error {$counter} {$route} - {$e->getMessage()}\n");
+                echo("Skipped {$counter} {$route} - {$e->getMessage()}\n");
                 continue;
             }
         }

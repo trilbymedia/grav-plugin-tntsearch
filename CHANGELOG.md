@@ -4,6 +4,7 @@
 1. [](#new)
     * Upgraded to TNTSearch version 2.2 (PHP 7.4 fixes)
 1. [](#improved)
+    * CLI: Fully initialize Grav
     * Code cleanup
 
 # v3.0.1

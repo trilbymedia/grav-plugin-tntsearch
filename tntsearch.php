@@ -438,17 +438,15 @@ class TNTSearchPlugin extends Plugin
     {
         $grav = Grav::instance();
         $grav['debugger']->enabled(false);
-        $grav['twig']->init();
-
-        /** @var Language $language */
-        $language = $grav['language'];
 
         /** @var Pages $pages */
         $pages = $grav['pages'];
-        $pages->init();
         if (method_exists($pages, 'enablePages')) {
             $pages->enablePages();
         }
+
+        /** @var Language $language */
+        $language = $grav['language'];
 
         ob_start();
 

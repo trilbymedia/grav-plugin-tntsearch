@@ -4,6 +4,7 @@ namespace Grav\Plugin\Console;
 use Grav\Common\Grav;
 use Grav\Console\ConsoleCommand;
 use Grav\Plugin\TNTSearchPlugin;
+use RocketTheme\Toolbox\Event\Event;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
@@ -69,8 +70,25 @@ class IndexerCommand extends ConsoleCommand
         error_reporting(1);
 
         $grav = Grav::instance();
+
+        // Initialize plugins.
+        $grav['accounts'];
         $grav->fireEvent('onPluginsInitialized');
-        $grav->fireEvent('onThemeInitialized');
+
+        // Initialize themes.
+        $grav['themes']->init();
+
+        // Initialize assets.
+        $grav['assets']->init();
+        $grav->fireEvent('onAssetsInitialized');
+
+        // Initialize twig.
+        $grav['twig']->init();
+
+        // Initialize pages.
+        $pages = $grav['pages'];
+        $pages->init();
+        $grav->fireEvent('onPagesInitialized', new Event(['pages' => $pages]));
 
         [$status, $msg, $output] = TNTSearchPlugin::indexJob();
 

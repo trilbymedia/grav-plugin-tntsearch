@@ -3,8 +3,8 @@ namespace Grav\Plugin\Console;
 
 use Grav\Common\Grav;
 use Grav\Console\ConsoleCommand;
-//use Grav\Plugin\TNTSearch\GravIndexer;
 use Grav\Plugin\TNTSearchPlugin;
+use RocketTheme\Toolbox\Event\Event;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -72,9 +72,24 @@ class QueryCommand extends ConsoleCommand
     {
         $grav = Grav::instance();
 
-
-        // Initialize Plugins
+        // Initialize plugins.
+        $grav['accounts'];
         $grav->fireEvent('onPluginsInitialized');
+
+        // Initialize themes.
+        $grav['themes']->init();
+
+        // Initialize assets.
+        $grav['assets']->init();
+        $grav->fireEvent('onAssetsInitialized');
+
+        // Initialize twig.
+        $grav['twig']->init();
+
+        // Initialize pages.
+        $pages = $grav['pages'];
+        $pages->init();
+        $grav->fireEvent('onPagesInitialized', new Event(['pages' => $pages]));
 
         // Set Language if one passed in
         $language = $grav['language'];
@@ -88,8 +103,6 @@ class QueryCommand extends ConsoleCommand
         }
 
         $grav['debugger']->enabled(false);
-        $grav['twig']->init();
-        $grav['pages']->init();
 
         $gtnt = TNTSearchPlugin::getSearchObjectType(['json' => true]);
         print_r($gtnt->search($this->input->getArgument('query')));
