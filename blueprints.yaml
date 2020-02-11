@@ -13,7 +13,7 @@ docs: https://github.com/trilbymedia/grav-plugin-tntsearch/blob/develop/README.m
 license: MIT
 
 dependencies:
-    - { name: grav, version: '>=1.6.3' }
+    - { name: grav, version: '>=1.6.21' }
 
 form:
   validation: strict

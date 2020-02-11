@@ -49,6 +49,8 @@ class IndexerCommand extends ConsoleCommand
      */
     protected function serve()
     {
+        $this->initializePages();
+
         $alt_output = $this->input->getOption('alt') ? true : false;
 
         if ($alt_output) {
@@ -68,27 +70,6 @@ class IndexerCommand extends ConsoleCommand
     private function doIndex($alt_output = false)
     {
         error_reporting(1);
-
-        $grav = Grav::instance();
-
-        // Initialize plugins.
-        $grav['accounts'];
-        $grav->fireEvent('onPluginsInitialized');
-
-        // Initialize themes.
-        $grav['themes']->init();
-
-        // Initialize assets.
-        $grav['assets']->init();
-        $grav->fireEvent('onAssetsInitialized');
-
-        // Initialize twig.
-        $grav['twig']->init();
-
-        // Initialize pages.
-        $pages = $grav['pages'];
-        $pages->init();
-        $grav->fireEvent('onPagesInitialized', new Event(['pages' => $pages]));
 
         [$status, $msg, $output] = TNTSearchPlugin::indexJob();
 

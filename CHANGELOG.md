@@ -2,10 +2,12 @@
 ## mm/dd/2020
 
 1. [](#new)
+    * Require Grav v1.6.21 
     * Upgraded to TNTSearch version 2.2 (PHP 7.4 fixes)
 1. [](#improved)
-    * CLI: Fully initialize Grav
     * Code cleanup
+1. [](#bugfix)
+    * Fixed Grav initialization in CLI
 
 # v3.0.1
 ## 02/03/2020

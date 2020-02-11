@@ -1,10 +1,8 @@
 <?php
 namespace Grav\Plugin\Console;
 
-use Grav\Common\Grav;
 use Grav\Console\ConsoleCommand;
 use Grav\Plugin\TNTSearchPlugin;
-use RocketTheme\Toolbox\Event\Event;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -64,46 +62,15 @@ class QueryCommand extends ConsoleCommand
      */
     protected function serve()
     {
+        $this->setLanguage($this->input->getOption('language'));
+        $this->initializePages();
+
         $this->doQuery();
         $this->output->writeln('');
     }
 
     private function doQuery()
     {
-        $grav = Grav::instance();
-
-        // Initialize plugins.
-        $grav['accounts'];
-        $grav->fireEvent('onPluginsInitialized');
-
-        // Initialize themes.
-        $grav['themes']->init();
-
-        // Initialize assets.
-        $grav['assets']->init();
-        $grav->fireEvent('onAssetsInitialized');
-
-        // Initialize twig.
-        $grav['twig']->init();
-
-        // Initialize pages.
-        $pages = $grav['pages'];
-        $pages->init();
-        $grav->fireEvent('onPagesInitialized', new Event(['pages' => $pages]));
-
-        // Set Language if one passed in
-        $language = $grav['language'];
-        if ($language->enabled()) {
-            $lang = $this->input->getOption('language');
-            if ($lang && $language->validate($lang)) {
-                $language->setActive($lang);
-            } else {
-                $language->setActive($language->getDefault());
-            }
-        }
-
-        $grav['debugger']->enabled(false);
-
         $gtnt = TNTSearchPlugin::getSearchObjectType(['json' => true]);
         print_r($gtnt->search($this->input->getArgument('query')));
     }
