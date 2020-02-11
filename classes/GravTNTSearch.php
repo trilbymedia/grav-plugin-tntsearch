@@ -182,8 +182,15 @@ class GravTNTSearch
      */
     public static function getCleanContent($page)
     {
+        $grav = Grav::instance();
+        $activePage = $grav['page'];
+
+        // Set active page in grav to the one we are currently processing.
+        unset($grav['page']);
+        $grav['page'] = $page;
+
         /** @var Twig $twig */
-        $twig = Grav::instance()['twig'];
+        $twig = $grav['twig'];
         $header = $page->header();
 
         if (isset($header->tntsearch['template'])) {
@@ -194,6 +201,10 @@ class GravTNTSearch
         }
 
         $content = preg_replace('/[ \t]+/', ' ', preg_replace('/\s*$^\s*/m', "\n", strip_tags($content)));
+
+        // Restore active page in Grav.
+        unset($grav['page']);
+        $grav['page'] = $activePage;
 
         return $content;
     }

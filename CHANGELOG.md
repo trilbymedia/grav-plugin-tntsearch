@@ -8,6 +8,7 @@
     * Code cleanup
 1. [](#bugfix)
     * Fixed Grav initialization in CLI
+    * Work around inconsistencies in page content if page template uses `grav.page` instead of `page`
 
 # v3.0.1
 ## 02/03/2020

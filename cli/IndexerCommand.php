@@ -1,10 +1,8 @@
 <?php
 namespace Grav\Plugin\Console;
 
-use Grav\Common\Grav;
 use Grav\Console\ConsoleCommand;
 use Grav\Plugin\TNTSearchPlugin;
-use RocketTheme\Toolbox\Event\Event;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
@@ -39,7 +37,7 @@ class IndexerCommand extends ConsoleCommand
     {
         $this
             ->setName('index')
-            ->addOption("alt", null, InputOption::VALUE_NONE, 'alternative output')
+            ->addOption('alt', null, InputOption::VALUE_NONE, 'alternative output')
             ->setDescription('TNTSearch Indexer')
             ->setHelp('The <info>index command</info> re-indexes the search engine');
     }
