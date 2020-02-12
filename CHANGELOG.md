@@ -1,5 +1,5 @@
 # v3.1.1
-## mm/dd/2020
+## 02/12/2020
 
 1. [](#improved)
     * Search with JS disabled [#75](https://github.com/trilbymedia/grav-plugin-tntsearch/pull/75)
