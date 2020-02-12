@@ -15,7 +15,7 @@
     "history": "^4.7.2",
     "lodash": "^4.17.4",
     "querystringify": "^2.0.0",
-    "url-parse": "^1.2.0",
+    "url-parse": "^1.4.3",
     "whatwg-fetch": "^2.0.3"
   },
   "devDependencies": {
