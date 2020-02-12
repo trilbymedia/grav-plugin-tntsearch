@@ -1,3 +1,9 @@
+# v3.1.1
+## mm/dd/2020
+
+1. [](#bugfix)
+    * Added missing `search_object_type` to blueprint
+
 # v3.1.0
 ## 02/11/2020
 
