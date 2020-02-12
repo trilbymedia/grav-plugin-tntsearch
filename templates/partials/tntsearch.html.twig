@@ -24,7 +24,7 @@
 
     {% if config.get('plugins.tntsearch.powered_by') %}
     <p class="tntsearch-powered-by">
-        {{ "PLUGIN_TNTSEARCH.POWERED_BY"|t("<a href='https://github.com/trilbymedia/grav-plugin-tntsearch' target='_blank'>TNTSearch</a>") }}
+        {{ "PLUGIN_TNTSEARCH.POWERED_BY"|t("<a href='https://github.com/trilbymedia/grav-plugin-tntsearch' target='_blank'>TNTSearch</a>")|raw }}
     </p>
     {% endif %}
 </form>
