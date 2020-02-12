@@ -1,5 +1,5 @@
 name: TNT Search
-version: 3.1.0
+version: 3.1.1
 testing: false
 description: Powerful indexed-based full text search engine powered by TNTSearch
 icon: binoculars
@@ -273,3 +273,13 @@ form:
         0: Disabled
       validate:
         type: bool
+
+    adv_title:
+      type: spacer
+      title: Advanced Settings
+
+    search_object_type:
+      type: text
+      label: Search Object Type
+      help: Allows for overriding the deafult search type to a custom type provided by a plugin.
+      default: Grav

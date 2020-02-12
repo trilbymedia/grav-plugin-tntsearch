@@ -5,13 +5,14 @@
 {% set search_type = search_type|default(config.get('plugins.tntsearch.search_type', 'auto')) %}
 {% set placeholder = placeholder|default('Search...') %}
 {% set live_update = in_page ? live_update|default(config.get('plugins.tntsearch.live_uri_update', 1)) : 0 %}
+{% set nojs_action = config.get('plugins.tntsearch.search_route', '/search')|trim('/') %}
 
 {% set options = { uri: url, limit: limit, snippet: snippet, min: min, in_page: in_page, live_update: live_update, search_type: search_type } %}
 
-<form role="form" class="tntsearch-form">
+<form role="form" class="tntsearch-form" action="{{ nojs_action }}" method="get">
     {% block tntsearch_input %}
     <div id="tntsearch-wrapper" class="form-group{{ dropdown ? ' tntsearch-dropdown' : '' }}">
-        <input type="text" class="form-control form-input tntsearch-field{{ in_page ? ' tntsearch-field-inpage' : '' }}" data-tntsearch="{{ options|json_encode|e('html_attr') }}" placeholder="{{ placeholder }}" value="{{ not dropdown ? query|e : '' }}" autofocus>
+        <input type="text" name="q" class="form-control form-input tntsearch-field{{ in_page ? ' tntsearch-field-inpage' : '' }}" data-tntsearch="{{ options|json_encode|e('html_attr') }}" placeholder="{{ placeholder }}" value="{{ not dropdown ? query|e : '' }}" autofocus>
         <span class="tntsearch-clear"{{ not query or dropdown ? ' style="display: none;"' : '' }}>&times;</span>
     </div>
     {% endblock %}
@@ -23,7 +24,7 @@
 
     {% if config.get('plugins.tntsearch.powered_by') %}
     <p class="tntsearch-powered-by">
-        Powered by <a href="https://github.com/trilbymedia/grav-plugin-tntsearch" target="_blank">TNTSearch</a>
+        {{ "PLUGIN_TNTSEARCH.POWERED_BY"|t("<a href='https://github.com/trilbymedia/grav-plugin-tntsearch' target='_blank'>TNTSearch</a>")|raw }}
     </p>
     {% endif %}
 </form>
