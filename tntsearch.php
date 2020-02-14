@@ -454,12 +454,11 @@ class TNTSearchPlugin extends Plugin
         /** @var Language $language */
         $language = $grav['language'];
         $langEnabled = $language->enabled();
-        $active = $language->getActive();
 
         // TODO: can be removed when Grav minimum >= v1.6.22
         $hasReset = method_exists($pages, 'reset');
         if (!$hasReset && !$langCode) {
-            $langCode = $active;
+            $langCode = $language->getActive();
         }
 
         if ($langCode && (!$langEnabled || !$language->validate($langCode))) {
@@ -469,7 +468,7 @@ class TNTSearchPlugin extends Plugin
         $langCodes = $langCode ? [$langCode] : $language->getLanguages();
         if ($langCodes) {
             foreach ($langCodes as $lang) {
-                if ($lang !== $active) {
+                if ($lang !== $language->getActive()) {
                     $language->init();
                     $language->setActive($lang);
 
