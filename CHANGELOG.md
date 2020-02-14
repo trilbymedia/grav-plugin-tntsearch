@@ -1,3 +1,9 @@
+# v3.1.2
+## mm/dd/2020
+
+1. [](#bugfix)
+    * Fixed non-routable and non-published pages showing up in search results
+
 # v3.1.1
 ## 02/12/2020
 

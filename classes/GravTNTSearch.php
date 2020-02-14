@@ -301,6 +301,12 @@ class GravTNTSearch
         $header = (array) $page->header();
         $redirect = (bool) $page->redirect();
 
+        if (!$page->published()) {
+            throw new \RuntimeException('not published...');
+        }
+        if (!$page->routable()) {
+            throw new \RuntimeException('not routable...');
+        }
         if ($redirect || (isset($header['tntsearch']['index']) && $header['tntsearch']['index'] === false )) {
             throw new \RuntimeException('redirect only...');
         }
