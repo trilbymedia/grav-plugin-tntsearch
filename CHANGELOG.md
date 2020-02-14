@@ -1,8 +1,13 @@
 # v3.1.2
 ## mm/dd/2020
 
+1. [](#new)
+    * Added support for CLI `bin/plugin index` to index only a single language (`--language=en`)
+1. [](#improved)
+    * Renamed CLI classes to avoid class name conflicts
 1. [](#bugfix)
     * Fixed non-routable and non-published pages showing up in search results
+    * Fixed indexing in multi-language sites
 
 # v3.1.1
 ## 02/12/2020

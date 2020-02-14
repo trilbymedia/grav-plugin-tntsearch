@@ -434,7 +434,11 @@ class TNTSearchPlugin extends Plugin
         throw new \RuntimeException('Search class: ' . $type . ' does not exist');
     }
 
-    public static function indexJob()
+    /**
+     * @param string|null $langCode
+     * @return array
+     */
+    public static function indexJob(string $langCode = null)
     {
         $grav = Grav::instance();
         $grav['debugger']->enabled(false);
@@ -445,15 +449,35 @@ class TNTSearchPlugin extends Plugin
             $pages->enablePages();
         }
 
-        /** @var Language $language */
-        $language = $grav['language'];
-
         ob_start();
 
-        if ($language->enabled()) {
-            foreach ($language->getLanguages() as $lang) {
-                $language->init();
-                $language->setActive($lang);
+        /** @var Language $language */
+        $language = $grav['language'];
+        $langEnabled = $language->enabled();
+        $active = $language->getActive();
+
+        // TODO: can be removed when Grav minimum >= v1.6.22
+        $hasReset = method_exists($pages, 'reset');
+        if (!$hasReset && !$langCode) {
+            $langCode = $active;
+        }
+
+        if ($langCode && (!$langEnabled || !$language->validate($langCode))) {
+            $langCode = null;
+        }
+
+        $langCodes = $langCode ? [$langCode] : $language->getLanguages();
+        if ($langCodes) {
+            foreach ($langCodes as $lang) {
+                if ($lang !== $active) {
+                    $language->init();
+                    $language->setActive($lang);
+
+                    // TODO: $hasReset test can be removed (keep reset!) when Grav minimum >= v1.6.22
+                    if ($hasReset) {
+                        $pages->reset();
+                    }
+                }
 
                 echo "\nLanguage: {$lang}\n";
 

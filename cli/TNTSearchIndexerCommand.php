@@ -10,7 +10,7 @@ use Symfony\Component\Console\Input\InputOption;
  *
  * @package Grav\Plugin\Console
  */
-class IndexerCommand extends ConsoleCommand
+class TNTSearchIndexerCommand extends ConsoleCommand
 {
     /**
      * @var array
@@ -37,7 +37,18 @@ class IndexerCommand extends ConsoleCommand
     {
         $this
             ->setName('index')
-            ->addOption('alt', null, InputOption::VALUE_NONE, 'alternative output')
+            ->addOption(
+                'alt',
+                null,
+                InputOption::VALUE_NONE,
+                'alternative output'
+            )
+            ->addOption(
+                'language',
+                'l',
+                InputOption::VALUE_OPTIONAL,
+                'optional language to index (multi-language sites only)'
+            )
             ->setDescription('TNTSearch Indexer')
             ->setHelp('The <info>index command</info> re-indexes the search engine');
     }
@@ -47,32 +58,41 @@ class IndexerCommand extends ConsoleCommand
      */
     protected function serve()
     {
+        $langCode = $this->input->getOption('language');
+
+        error_reporting(1);
+        $this->setLanguage($langCode);
         $this->initializePages();
 
         $alt_output = $this->input->getOption('alt') ? true : false;
 
         if ($alt_output) {
-            $this->doIndex($alt_output);
+            $output = $this->doIndex($langCode);
+            $this->output->write($output);
+            $this->output->writeln('');
         } else {
             $this->output->writeln('');
             $this->output->writeln('<magenta>Re-indexing</magenta>');
             $this->output->writeln('');
             $start = microtime(true);
-            $this->doIndex($alt_output);
+            $output = $this->doIndex($langCode);
+            $this->output->write($output);
+            $this->output->writeln('');
             $end =  number_format(microtime(true) - $start,1);
             $this->output->writeln('');
             $this->output->writeln('Indexed in ' . $end . 's');
         }
     }
 
-    private function doIndex($alt_output = false)
+    /**
+     * @param string|null $langCode
+     * @return string
+     */
+    private function doIndex(string $langCode = null): string
     {
-        error_reporting(1);
+        [,,$output] = TNTSearchPlugin::indexJob($langCode);
 
-        [$status, $msg, $output] = TNTSearchPlugin::indexJob();
-
-        $this->output->write($output);
-        $this->output->writeln('');
+        return $output;
     }
 }
 
