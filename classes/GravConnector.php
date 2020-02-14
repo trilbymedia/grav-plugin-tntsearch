@@ -48,7 +48,7 @@ class GravConnector extends \PDO
             $counter++;
             $process = $default_process;
             $header = $page->header();
-            $route = $page->route();
+            $url = $page->url();
 
             if (isset($header->tntsearch['process'])) {
                 $process = $header->tntsearch['process'];
@@ -56,17 +56,16 @@ class GravConnector extends \PDO
 
             // Only process what's configured
             if (!$process) {
-                echo("Skipped {$counter} {$route}\n");
+                echo("Skipped {$counter} {$url}\n");
                 continue;
             }
 
             try {
                 $fields = $gtnt->indexPageData($page);
                 $results[] = (array) $fields;
-                $display_route = $fields->display_route ?? $route;
-                echo("Added   {$counter} {$display_route}\n");
+                echo("Added   {$counter} {$url}\n");
             } catch (\Exception $e) {
-                echo("Skipped {$counter} {$route} - {$e->getMessage()}\n");
+                echo("Skipped {$counter} {$url} - {$e->getMessage()}\n");
                 continue;
             }
         }

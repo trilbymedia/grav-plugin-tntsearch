@@ -318,10 +318,6 @@ class GravTNTSearch
         $fields->name = $page->title();
         $fields->content = static::getCleanContent($page);
 
-        if ($this->language) {
-            $fields->display_route = '/' . $this->language . $route;
-        }
-
         Grav::instance()->fireEvent('onTNTSearchIndex', new Event(['page' => $page, 'fields' => $fields]));
 
         return $fields;
