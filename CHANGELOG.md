@@ -1,5 +1,5 @@
-# v3.1.2
-## mm/dd/2020
+# v3.2.0
+## 06/08/2020
 
 1. [](#new)
     * Added support for CLI `bin/plugin index` to index only a single language (`--language=en`)
