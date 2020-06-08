@@ -8,6 +8,7 @@
 1. [](#bugfix)
     * Fixed non-routable and non-published pages showing up in search results
     * Fixed indexing in multi-language sites
+    * Use CLI command directly in scheduler command to work [#95](https://github.com/trilbymedia/grav-plugin-tntsearch/issues/95) 
 
 # v3.1.1
 ## 02/12/2020
