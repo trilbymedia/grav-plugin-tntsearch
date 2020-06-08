@@ -301,6 +301,12 @@ class GravTNTSearch
         $header = (array) $page->header();
         $redirect = (bool) $page->redirect();
 
+        if (!$page->published()) {
+            throw new \RuntimeException('not published...');
+        }
+        if (!$page->routable()) {
+            throw new \RuntimeException('not routable...');
+        }
         if ($redirect || (isset($header['tntsearch']['index']) && $header['tntsearch']['index'] === false )) {
             throw new \RuntimeException('redirect only...');
         }
@@ -311,10 +317,6 @@ class GravTNTSearch
         $fields->id = $route;
         $fields->name = $page->title();
         $fields->content = static::getCleanContent($page);
-
-        if ($this->language) {
-            $fields->display_route = '/' . $this->language . $route;
-        }
 
         Grav::instance()->fireEvent('onTNTSearchIndex', new Event(['page' => $page, 'fields' => $fields]));
 

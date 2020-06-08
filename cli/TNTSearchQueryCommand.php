@@ -11,7 +11,7 @@ use Symfony\Component\Console\Input\InputOption;
  *
  * @package Grav\Plugin\Console
  */
-class QueryCommand extends ConsoleCommand
+class TNTSearchQueryCommand extends ConsoleCommand
 {
     /**
      * @var array
