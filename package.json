@@ -13,7 +13,7 @@
   "dependencies": {
     "domready": "^1.0.8",
     "history": "^4.7.2",
-    "lodash": "^4.17.4",
+    "lodash": "^4.17.19",
     "querystringify": "^2.0.0",
     "url-parse": "^1.4.3",
     "whatwg-fetch": "^2.0.3"
