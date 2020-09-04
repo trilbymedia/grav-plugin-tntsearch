@@ -1,3 +1,9 @@
+# v3.2.1
+## 09/04/2020
+
+1. [](#bugfix)
+    * Fixed bad `require("history")...` JS warning [#101](https://github.com/trilbymedia/grav-plugin-tntsearch/issues/101)
+
 # v3.2.0
 ## 06/08/2020
 
