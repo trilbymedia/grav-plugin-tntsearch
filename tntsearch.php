@@ -110,7 +110,7 @@ class TNTSearchPlugin extends Plugin
             $scheduler = $e['scheduler'];
             $at = $this->config->get('plugins.tntsearch.scheduled_index.at');
             $logs = $this->config->get('plugins.tntsearch.scheduled_index.logs');
-            $job = $scheduler->addCommand('bin/plugin tntsearch index', [], 'tntsearch-index');
+            $job = $scheduler->addCommand('bin/plugin', ['tntsearch', 'index'], 'tntsearch-index');
             $job->at($at);
             $job->output($logs);
             $job->backlink('/plugins/tntsearch');
