@@ -105,11 +105,12 @@ The configuration options are as follows:
 * `fuzzy` - matches if the words are 'close' but not necessarily exact matches
 * `phrases` - automatically handle phrases support
 * `stemmer` - can be one of these types:
-  * `default` - no stemmer
+  * `default` - Porter stemmer for English language
+  * `no` - no stemmer
   * `arabic` - Arabic language
   * `german` - German language
   * `italian` - Italian language
-  * `porter` - Porter language
+  * `porter` - Porter stemmer for English language
   * `russian` - Russian language
   * `ukrainian` - Ukrainian language
 * `display_route` - display the route in the search results

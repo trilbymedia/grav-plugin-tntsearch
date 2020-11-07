@@ -173,13 +173,14 @@ form:
       size: small
       classes: fancy
       label: Stemmer
-      help: An automated process which produces a base string in an attempt to represent related words
+      help: An automated process which produces a base string in an attempt to represent related words. If your content is not in the language listed, for best search results it is recommended to disable the stemmer.
       options:
-        default: Default
+        default: Default (English)
+        no: Disabled
         arabic: Arabic
+        porter: English
         german: German
         italian: Italian
-        porter: Porter
         russian: Russian
         ukrainian: Ukrainian
 
