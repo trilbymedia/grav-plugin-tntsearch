@@ -2,7 +2,7 @@
 ## mm/dd/2020
 
 1. [](#new)
-    * Updated TNTSearch to v2.5.0
+    * Upgraded to TNTSearch version 2.5
     * Pass phpstan level 7 tests
 
 # v3.2.1
