@@ -1,3 +1,10 @@
+# v3.2.2
+## mm/dd/2020
+
+1. [](#new)
+    * Updated TNTSearch to v2.5.0
+    * Pass phpstan level 7 tests
+
 # v3.2.1
 ## 09/04/2020
 

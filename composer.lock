@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c82d44d0c8d193d3b4aeeaceaf771019",
+    "content-hash": "c8c4f8fad2fd0401bbbfc7e7edf003dc",
     "packages": [
         {
             "name": "teamtnt/tntsearch",
-            "version": "v2.2.0",
+            "version": "v2.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/teamtnt/tntsearch.git",
-                "reference": "a24399e04b6d7f152d3b31ea4a59efc6385cfd06"
+                "reference": "60ac210e46ded12182316e789519b32617829e01"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/teamtnt/tntsearch/zipball/a24399e04b6d7f152d3b31ea4a59efc6385cfd06",
-                "reference": "a24399e04b6d7f152d3b31ea4a59efc6385cfd06",
+                "url": "https://api.github.com/repos/teamtnt/tntsearch/zipball/60ac210e46ded12182316e789519b32617829e01",
+                "reference": "60ac210e46ded12182316e789519b32617829e01",
                 "shasum": ""
             },
             "require": {
@@ -54,13 +54,16 @@
             "homepage": "https://github.com/teamtnt/tntsearch",
             "keywords": [
                 "Fuzzy search",
+                "bm25",
                 "fulltext",
                 "geosearch",
                 "search",
+                "stemming",
                 "teamtnt",
+                "text classification",
                 "tntsearch"
             ],
-            "time": "2019-10-07T10:02:35+00:00"
+            "time": "2020-11-23T13:54:31+00:00"
         }
     ],
     "packages-dev": [],
@@ -69,6 +72,12 @@
     "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
-    "platform-dev": []
+    "platform": {
+        "php": ">=7.1.3",
+        "ext-json": "*"
+    },
+    "platform-dev": [],
+    "platform-overrides": {
+        "php": "7.1.3"
+    }
 }

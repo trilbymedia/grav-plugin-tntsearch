@@ -52,8 +52,7 @@ class TNTIndexer
     public function setTokenizer(TokenizerInterface $tokenizer)
     {
         $this->tokenizer = $tokenizer;
-        $class           = get_class($tokenizer);
-        $this->index->exec("INSERT INTO info ( 'key', 'value') values ( 'tokenizer', '$class')");
+        $this->updateInfoTable('tokenizer', get_class($tokenizer));
     }
 
     public function setStopWords(array $stopWords)
@@ -72,11 +71,10 @@ class TNTIndexer
         if (!isset($this->config['driver'])) {
             $this->config['driver'] = "";
         }
-
-        if (isset($this->config['tokenizer'])) {
-            $this->tokenizer = new $this->config['tokenizer'];
+    
+        if (!isset($this->config['wal'])) {
+            $this->config['wal'] = true;
         }
-
     }
 
     /**
@@ -124,8 +122,7 @@ class TNTIndexer
     public function setStemmer($stemmer)
     {
         $this->stemmer = $stemmer;
-        $class         = get_class($stemmer);
-        $this->index->exec("INSERT INTO info ( 'key', 'value') values ( 'stemmer', '$class')");
+        $this->updateInfoTable('stemmer', get_class($stemmer));
     }
 
     public function setCroatianStemmer()
@@ -181,6 +178,10 @@ class TNTIndexer
         $this->index = new PDO('sqlite:'.$this->config['storage'].$indexName);
         $this->index->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
+        if($this->config['wal']) {
+            $this->index->exec("PRAGMA journal_mode=wal;");
+        }
+
         $this->index->exec("CREATE TABLE IF NOT EXISTS wordlist (
                     id INTEGER PRIMARY KEY,
                     term TEXT UNIQUE COLLATE nocase,
@@ -210,8 +211,19 @@ class TNTIndexer
                     value INTEGER)");
 
         $this->index->exec("INSERT INTO info ( 'key', 'value') values ( 'total_documents', 0)");
+        $this->index->exec("INSERT INTO info ( 'key', 'value') values ( 'stemmer', 'TeamTNT\TNTSearch\Stemmer\NoStemmer')");
+        $this->index->exec("INSERT INTO info ( 'key', 'value') values ( 'tokenizer', 'TeamTNT\TNTSearch\Support\Tokenizer')");
 
         $this->index->exec("CREATE INDEX IF NOT EXISTS 'main'.'term_id_index' ON doclist ('term_id' COLLATE BINARY);");
+        $this->index->exec("CREATE INDEX IF NOT EXISTS 'main'.'doc_id_index' ON doclist ('doc_id');");
+
+        if (isset($this->config['stemmer'])) {
+            $this->setStemmer(new $this->config['stemmer']);
+        }
+
+        if (isset($this->config['tokenizer'])) {
+            $this->setTokenizer(new $this->config['tokenizer']);
+        }
 
         if (!$this->dbh) {
             $connector = $this->createConnector($this->config);
@@ -340,10 +352,12 @@ class TNTIndexer
                 ];
                 $fileCollection = new Collection($file);
 
-                if (is_callable($this->filereader->fileFilterCallback)) {
+                if (property_exists($this->filereader, 'fileFilterCallback')
+                    && is_callable($this->filereader->fileFilterCallback)) {
                     $fileCollection = $fileCollection->filter($this->filereader->fileFilterCallback);
                 }
-                if (is_callable($this->filereader->fileMapCallback)) {
+                if (property_exists($this->filereader, 'fileMapCallback')
+                    && is_callable($this->filereader->fileMapCallback)) {
                     $fileCollection = $fileCollection->map($this->filereader->fileMapCallback);
                 }
 
@@ -422,7 +436,10 @@ class TNTIndexer
 
     public function updateInfoTable($key, $value)
     {
-        $this->index->exec("UPDATE info SET value = $value WHERE key = '$key'");
+        $this->updateInfoTableStmt = $this->index->prepare("UPDATE info SET value = :value WHERE key = :key");
+        $this->updateInfoTableStmt->bindValue(':key', $key);
+        $this->updateInfoTableStmt->bindValue(':value', $value);
+        $this->updateInfoTableStmt->execute();
     }
 
     public function stemText($text)
