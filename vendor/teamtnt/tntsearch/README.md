@@ -4,25 +4,26 @@
 [![Build Status](https://img.shields.io/travis/teamtnt/tntsearch/master.svg?style=flat-square)](https://travis-ci.org/teamtnt/tntsearch)
 [![Slack Status](https://img.shields.io/badge/slack-chat-E01563.svg?style=flat-square)](https://tntsearch.slack.com)
 
-![TNTSearch Banner](https://cloud.githubusercontent.com/assets/824840/17067635/edf2ae50-504c-11e6-9c63-a73955f55c29.jpg)
+![TNTSearch](https://i.imgur.com/aYKsNYv.png)
 
 # TNTSearch
 
-TNTSearch is a fully featured full text search engine written entirely in PHP. It's simple configuration allows you to add an amazing search experience to your site in just minutes.
-It has also a build in geo-search and a text classifier. Other features are
+TNTSearch is a full-featured full text search (FTS) engine written entirely in PHP. A simple configuration allows you to add an amazing search experience in just minutes. Features include:
 
-* fuzzy search
-* as you type functionality
-* geo-search
-* text-classification
-* stemming
-* custom tokenizers
-* bm25 ranking algorithm
-* boolean search
-* result highlighting
- 
-We created also some demo pages that show tolerant retrieval with n-grams in action.
-The package has bunch of helper functions like jaro-winkler and cosine similarity for distance calculations. It supports stemming for English, Croatian, Arabic, Italian, Russian, Portuguese and Ukrainian. If the built in stemmers aren't enough, the engine lets you easily plugin any compatible snowball stemmer. Some forks of the package even support Chinese.
+* Fuzzy search
+* Search as you type
+* Geo-search
+* Text classification
+* Stemming
+* Custom tokenizers
+* Bm25 ranking algorithm
+* Boolean search
+* Result highlighting
+* Dynamic index updates (no need to reindex each time)
+* Easily deployable via Packagist.org
+
+We also created some demo pages that show tolerant retrieval with n-grams in action.
+The package has a bunch of helper functions like Jaro-Winkler and Cosine similarity for distance calculations. It supports stemming for English, Croatian, Arabic, Italian, Russian, Portuguese and Ukrainian. If the built-in stemmers aren't enough, the engine lets you easily plugin any compatible snowball stemmer. Some forks of the package even support Chinese. And please contribute other languages!
 
 Unlike many other engines, the index can be easily updated without doing a reindex or using deltas. 
 
@@ -33,7 +34,7 @@ or [Facebook](https://www.facebook.com/tntstudiohr) &nbsp;|&nbsp;
 
 <p align="center">
   <a href="https://m.do.co/c/ddfc227b7d18" target="_blank">
-    <img src="https://koistya.github.io/files/digital-ocean-393x64.png" width="196.5" height="32">
+    <img src="https://images.prismic.io/www-static/49aa0a09-06d2-4bba-ad20-4bcbe56ac507_logo.png?auto=compress,format" width="196.5" height="32">
   </a>
 </p>
 
@@ -41,7 +42,7 @@ or [Facebook](https://www.facebook.com/tntstudiohr) &nbsp;|&nbsp;
 ## Demo
 
 * [TV Shows Search](http://tntsearch.tntstudio.us/)
-* [PHPUnit Documentatin Search](http://phpunit.tntstudio.us)
+* [PHPUnit Documentation Search](http://phpunit.tntstudio.us)
 * [City Search with n-grams](http://cities.tnt.studio/)
 
 ## Tutorials
@@ -64,7 +65,7 @@ composer require teamtnt/tntsearch
 
 ## Requirements
 
-Before you proceed make sure your server meets the following requirements:
+Before you proceed, make sure your server meets the following requirements:
 
 * PHP >= 7.1
 * PDO PHP Extension
@@ -75,7 +76,7 @@ Before you proceed make sure your server meets the following requirements:
 
 ### Creating an index
 
-In order to be able to make full text search queries you have to create an index.
+In order to be able to make full text search queries, you have to create an index.
 
 Usage:
 ```php
@@ -114,7 +115,7 @@ $indexer->setPrimaryKey('article_id');
 
 ### Making the primary key searchable
 
-By default the primary key is not searchable, if you wanna make it searchable simply run:
+By default the primary key is not searchable. If you wanna make it searchable, simply run:
 
 ```php
 $indexer->includePrimaryKey();
@@ -141,8 +142,8 @@ print_r($res); //returns an array of 12 document ids that best match your query
 // SELECT * FROM articles WHERE id IN $res ORDER BY FIELD(id, $res);
 ```
 
-The ORDER BY FIELD clause is important otherwise the database engine will not return
-the results in required order
+The ORDER BY FIELD clause is important, otherwise the database engine will not return
+the results in the required order.
 
 ### Boolean Search
 
@@ -172,7 +173,7 @@ The fuzziness can be tweaked by setting the following member variables:
 ```php
 public $fuzzy_prefix_length  = 2;
 public $fuzzy_max_expansions = 50;
-public $fuzzy_distance       = 2 //represents the levenshtein distance;
+public $fuzzy_distance       = 2; //represents the Levenshtein distance;
 ```
 
 ```php
@@ -184,14 +185,14 @@ $tnt->loadConfig($config);
 $tnt->selectIndex("name.index");
 $tnt->fuzziness = true;
 
-//when the fuzziness flag is set to true the keyword juleit will return
-//documents that match the word juliet, the default levenshtein distance is 2
+//when the fuzziness flag is set to true, the keyword juleit will return
+//documents that match the word juliet, the default Levenshtein distance is 2
 $res = $tnt->search("juleit");
 
 ```
 ## Updating the index
 
-Once you created an index you don't need to reindex it each time you make some changes 
+Once you created an index, you don't need to reindex it each time you make some changes 
 to your document collection. TNTSearch supports dynamic index updates.
 
 ```php
@@ -215,23 +216,27 @@ $index->delete(12);
 ```
 
 ## Custom Tokenizer
-First, create your own Tokenizer class that implements TokenizerInterface:
+First, create your own Tokenizer class. It should extend AbstractTokenizer class, define 
+word split $pattern value and must implement TokenizerInterface:
 
 ``` php
 
+use TeamTNT\TNTSearch\Support\AbstractTokenizer;
 use TeamTNT\TNTSearch\Support\TokenizerInterface;
 
-class SomeTokenizer implements TokenizerInterface {
+class SomeTokenizer extends AbstractTokenizer implements TokenizerInterface
+{
+    static protected $pattern = '/[\s,\.]+/';
 
     public function tokenize($text) {
-        return preg_split("/[^\p{L}\p{N}-]+/u", strtolower($text), -1, PREG_SPLIT_NO_EMPTY);
+        return preg_split($this->getPattern(), strtolower($text), -1, PREG_SPLIT_NO_EMPTY);
     }
 }
 ```
 
-The only difference here from the original is that the regex contains a dash `[^\p{L}\p{N}-]`
+This tokenizer will split words using spaces, commas and periods.
 
-After you have the tokenizer ready, your `TNTIndexer` and `TNTSearch` class should consume it.
+After you have the tokenizer ready, you should pass it to `TNTIndexer` via `setTokenizer` method.
 
 ``` php
 $someTokenizer = new SomeTokenizer;
@@ -240,13 +245,28 @@ $indexer = new TNTIndexer;
 $indexer->setTokenizer($someTokenizer);
 ```
 
-And in the `TNTSearch` class you do the same
+Another way would be to pass the tokenizer via config:
 
-``` php
-$someTokenizer = new SomeTokenizer;
+```php
+use TeamTNT\TNTSearch\TNTSearch;
 
 $tnt = new TNTSearch;
-$tnt->setTokenizer($someTokenizer);
+
+$tnt->loadConfig([
+    'driver'    => 'mysql',
+    'host'      => 'localhost',
+    'database'  => 'dbname',
+    'username'  => 'user',
+    'password'  => 'pass',
+    'storage'   => '/var/www/tntsearch/examples/',
+    'stemmer'   => \TeamTNT\TNTSearch\Stemmer\PorterStemmer::class//optional,
+    'tokenizer' => \TeamTNT\TNTSearch\Support\SomeTokenizer::class
+]);
+
+$indexer = $tnt->createIndex('name.index');
+$indexer->query('SELECT id, article FROM articles;');
+$indexer->run();
+
 ```
 
 ## Geo Search
@@ -312,7 +332,7 @@ $classifier->load('sports.cls');
 
 ## PS4Ware
 
-You're free to use this package, but if it makes it to your production environment we would highly appreciate you sending us a PS4 game of your choise. This way you support us to further develop and add new features to this package.
+You're free to use this package, but if it makes it to your production environment, we would highly appreciate you sending us a PS4 game of your choice. This way you support us to further develop and add new features.
 
 Our address is: TNT Studio, Sv. Mateja 19, 10010 Zagreb, Croatia.
 

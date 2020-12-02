@@ -14,11 +14,19 @@ class GravConnector extends \PDO
 
     }
 
+    /**
+     * @param int $attribute
+     * @return bool
+     */
     public function getAttribute($attribute): bool
     {
         return false;
     }
 
+    /**
+     * @param string $query
+     * @return GravResultObject
+     */
     public function query($query)
     {
         $counter = 0;
