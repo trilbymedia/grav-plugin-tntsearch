@@ -38,6 +38,7 @@ class ComposerStaticInit6693564509f9a3fa6ed2c7bf76fdb017
     );
 
     public static $classMap = array (
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'Grav\\Plugin\\TNTSearchPlugin' => __DIR__ . '/../..' . '/tntsearch.php',
     );
 

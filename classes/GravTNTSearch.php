@@ -18,10 +18,15 @@ use TeamTNT\TNTSearch\TNTSearch;
 
 class GravTNTSearch
 {
+    /** @var TNTSearch */
     public $tnt;
+    /** @var array */
     protected $options;
+    /** @var string[] */
     protected $bool_characters = ['-', '(', ')', 'or'];
+    /** @var string */
     protected $index = 'grav.index';
+    /** @var false|string */
     protected $language;
 
     /**
@@ -78,7 +83,7 @@ class GravTNTSearch
     }
 
     /**
-     * @param $query
+     * @param string $query
      * @return object|string
      * @throws IndexNotFoundException
      */
@@ -97,6 +102,7 @@ class GravTNTSearch
         $limit = (int)$this->options['limit'];
         $type = $type ?? $this->options['search_type'];
 
+        // TODO: Multiword parameter has been removed from $tnt->search(), please check if this works
         $multiword = null;
         if (isset($this->options['phrases']) && $this->options['phrases']) {
             if (strlen($query) > 2) {
@@ -111,7 +117,7 @@ class GravTNTSearch
 
         switch ($type) {
             case 'basic':
-                $results = $this->tnt->search($query, $limit, $multiword);
+                $results = $this->tnt->search($query, $limit);
                 break;
             case 'boolean':
                 $results = $this->tnt->searchBoolean($query, $limit);
@@ -170,7 +176,7 @@ class GravTNTSearch
         }
 
         if ($this->options['json']) {
-            return json_encode($data, JSON_PRETTY_PRINT);
+            return json_encode($data, JSON_PRETTY_PRINT) ?: '';
         }
 
         return $data;
@@ -193,6 +199,7 @@ class GravTNTSearch
         $twig = $grav['twig'];
         $header = $page->header();
 
+        // @phpstan-ignore-next-line
         if (isset($header->tntsearch['template'])) {
             $processed_page = $twig->processTemplate($header->tntsearch['template'] . '.html.twig', ['page' => $page]);
             $content = $processed_page;
@@ -200,7 +207,8 @@ class GravTNTSearch
             $content = $page->content();
         }
 
-        $content = preg_replace('/[ \t]+/', ' ', preg_replace('/\s*$^\s*/m', "\n", strip_tags($content)));
+        $content = strip_tags($content);
+        $content = preg_replace('/[ \t]+/', ' ', preg_replace('/\s*$^\s*/m', "\n", $content));
 
         // Restore active page in Grav.
         unset($grav['page']);
@@ -209,6 +217,9 @@ class GravTNTSearch
         return $content;
     }
 
+    /**
+     * @return void
+     */
     public function createIndex()
     {
         $this->tnt->setDatabaseHandle(new GravConnector);
@@ -222,6 +233,10 @@ class GravTNTSearch
         $indexer->run();
     }
 
+    /**
+     * @return void
+     * @throws IndexNotFoundException
+     */
     public function selectIndex()
     {
         $this->tnt->selectIndex($this->index);
@@ -229,6 +244,7 @@ class GravTNTSearch
 
     /**
      * @param object $object
+     * @return void
      */
     public function deleteIndex($object)
     {
@@ -251,6 +267,7 @@ class GravTNTSearch
 
     /**
      * @param object $object
+     * @return void
      */
     public function updateIndex($object)
     {
@@ -282,7 +299,8 @@ class GravTNTSearch
             /** @var Collection $collection */
             $collection = $apage->collection($filter, false);
 
-            if (array_key_exists($object->path(), $collection->toArray())) {
+            $path = $object->path();
+            if ($path && array_key_exists($path, $collection->toArray())) {
                 $fields = $this->indexPageData($object);
                 $document = (array) $fields;
 

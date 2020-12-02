@@ -31,7 +31,7 @@ class TNTSearchIndexerCommand extends ConsoleCommand
     ];
 
     /**
-     *
+     * @return void
      */
     protected function configure()
     {
@@ -54,7 +54,7 @@ class TNTSearchIndexerCommand extends ConsoleCommand
     }
 
     /**
-     * @return int|null|void
+     * @return void
      */
     protected function serve()
     {

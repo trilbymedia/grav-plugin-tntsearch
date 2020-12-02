@@ -19,13 +19,19 @@ use TeamTNT\TNTSearch\Exceptions\IndexNotFoundException;
  */
 class TNTSearchPlugin extends Plugin
 {
+    /** @var array|object|string */
     protected $results = [];
+    /** @var string */
     protected $query;
-
+    /** @var bool */
     protected $built_in_search_page;
+    /** @var string */
     protected $query_route;
+    /** @var string */
     protected $search_route;
+    /** @var string */
     protected $current_route;
+    /** @var string */
     protected $admin_route;
 
     /**
@@ -50,8 +56,6 @@ class TNTSearchPlugin extends Plugin
             'onTNTSearchReIndex'        => ['onTNTSearchReIndex', 0],
             'onTNTSearchIndex'          => ['onTNTSearchIndex', 0],
             'onTNTSearchQuery'          => ['onTNTSearchQuery', 0],
-            'onFlexObjectSave'          => ['onObjectSave', 0],
-            'onFlexObjectDelete'        => ['onObjectDelete', 0],
         ];
     }
 
@@ -85,8 +89,10 @@ class TNTSearchPlugin extends Plugin
 
             if ($this->config->get('plugins.tntsearch.enable_admin_page_events', true)) {
                 $this->enable([
-                    'onAdminAfterSave' => ['onObjectSave', 0],
-                    'onAdminAfterDelete' => ['onObjectDelete', 0],
+                    'onAdminAfterSave'      => ['onObjectSave', 0],
+                    'onAdminAfterDelete'    => ['onObjectDelete', 0],
+                    'onFlexObjectSave'      => ['onObjectSave', 0],
+                    'onFlexObjectDelete'    => ['onObjectDelete', 0],
                 ]);
             }
 
@@ -110,7 +116,7 @@ class TNTSearchPlugin extends Plugin
             $scheduler = $e['scheduler'];
             $at = $this->config->get('plugins.tntsearch.scheduled_index.at');
             $logs = $this->config->get('plugins.tntsearch.scheduled_index.logs');
-            $job = $scheduler->addCommand('bin/plugin tntsearch index', [], 'tntsearch-index');
+            $job = $scheduler->addCommand('bin/plugin', ['tntsearch', 'index'], 'tntsearch-index');
             $job->at($at);
             $job->output($logs);
             $job->backlink('/plugins/tntsearch');
@@ -203,7 +209,7 @@ class TNTSearchPlugin extends Plugin
             }
         }
 
-        $this->query = $uri->param('q') ?: $uri->query('q');
+        $this->query = (string)($uri->param('q', null) ?? $uri->query('q') ?: '');
 
         if ($this->query) {
             $snippet = $this->getFormValue('sl');
@@ -387,7 +393,7 @@ class TNTSearchPlugin extends Plugin
     /**
      * Wrapper to get the number of documents currently indexed
      *
-     * @param $gtnt GravTNTSearch
+     * @param GravTNTSearch $gtnt
      * @return array
      */
     protected static function getIndexCount($gtnt): array
@@ -414,7 +420,7 @@ class TNTSearchPlugin extends Plugin
     /**
      * Helper function to read form/url values
      *
-     * @param $val
+     * @param string $val
      * @return mixed
      */
     protected function getFormValue($val)
@@ -424,6 +430,10 @@ class TNTSearchPlugin extends Plugin
         return $uri->param($val) ?: $uri->query($val) ?: filter_input(INPUT_POST, $val, FILTER_SANITIZE_ENCODED);
     }
 
+    /**
+     * @param array $options
+     * @return GravTNTSearch
+     */
     public static function getSearchObjectType($options = [])
     {
         $type = 'Grav\\Plugin\\TNTSearch\\' . Grav::instance()['config']->get('plugins.tntsearch.search_object_type', 'Grav') . 'TNTSearch';
@@ -500,7 +510,7 @@ class TNTSearchPlugin extends Plugin
     /**
      * Helper to initialize TNTSearch if required
      *
-     * @return TNTSearch\GravTNTSearch
+     * @return GravTNTSearch
      */
     protected function GravTNTSearch()
     {

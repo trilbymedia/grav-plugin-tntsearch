@@ -1,5 +1,5 @@
 {
-  "name": "grav-plugin-tntsearch",
+  "name": "trilbymedia/grav-plugin-tntsearch",
   "type": "grav-plugin",
   "description": "TNTSearch plugin for Grav CMS",
   "keywords": ["tntsearch","search"],

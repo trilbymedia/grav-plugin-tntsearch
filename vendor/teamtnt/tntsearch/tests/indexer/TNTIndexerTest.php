@@ -1,6 +1,7 @@
 <?php
 
 use TeamTNT\TNTSearch\Indexer\TNTIndexer;
+use TeamTNT\TNTSearch\Support\AbstractTokenizer;
 use TeamTNT\TNTSearch\Support\TokenizerInterface;
 use TeamTNT\TNTSearch\TNTSearch;
 
@@ -61,7 +62,7 @@ class TNTIndexerTest extends PHPUnit\Framework\TestCase
         $count = $index->countWordInWordList('document');
 
         $this->assertTrue($count == 3, 'Word document should be 3');
-        $this->assertEquals('TeamTNT\TNTSearch\Stemmer\PorterStemmer', get_class($tnt->getStemmer()));
+        $this->assertEquals('TeamTNT\TNTSearch\Stemmer\NoStemmer', get_class($tnt->getStemmer()));
     }
 
     public function testIfCroatianStemmerIsSet()
@@ -178,11 +179,12 @@ class TNTIndexerTest extends PHPUnit\Framework\TestCase
     }
 }
 
-class SomeTokenizer implements TokenizerInterface
+class SomeTokenizer extends AbstractTokenizer implements TokenizerInterface
 {
+    static protected $pattern = '/[\s,\.]+/';
 
     public function tokenize($text, $stopwords = [])
     {
-        return preg_split("/[^\p{L}\p{N}-]+/u", mb_strtolower($text), -1, PREG_SPLIT_NO_EMPTY);
+        return preg_split($this->getPattern(), mb_strtolower($text), -1, PREG_SPLIT_NO_EMPTY);
     }
 }
