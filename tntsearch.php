@@ -50,8 +50,6 @@ class TNTSearchPlugin extends Plugin
             'onTNTSearchReIndex'        => ['onTNTSearchReIndex', 0],
             'onTNTSearchIndex'          => ['onTNTSearchIndex', 0],
             'onTNTSearchQuery'          => ['onTNTSearchQuery', 0],
-            'onFlexObjectSave'          => ['onObjectSave', 0],
-            'onFlexObjectDelete'        => ['onObjectDelete', 0],
         ];
     }
 
@@ -85,8 +83,10 @@ class TNTSearchPlugin extends Plugin
 
             if ($this->config->get('plugins.tntsearch.enable_admin_page_events', true)) {
                 $this->enable([
-                    'onAdminAfterSave' => ['onObjectSave', 0],
-                    'onAdminAfterDelete' => ['onObjectDelete', 0],
+                    'onAdminAfterSave'      => ['onObjectSave', 0],
+                    'onAdminAfterDelete'    => ['onObjectDelete', 0],
+                    'onFlexObjectSave'      => ['onObjectSave', 0],
+                    'onFlexObjectDelete'    => ['onObjectDelete', 0],
                 ]);
             }
 
