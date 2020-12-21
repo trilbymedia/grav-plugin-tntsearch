@@ -1,3 +1,9 @@
+# v3.3.1
+## mm/dd/202y
+
+1. [](#bugfix)
+    * Fixed `query` truncation when containing a hash (`#`) and preventing proper search results [#110](https://github.com/trilbymedia/grav-plugin-tntsearch/pull/110)
+
 # v3.3.0
 ## 12/02/2020
 
