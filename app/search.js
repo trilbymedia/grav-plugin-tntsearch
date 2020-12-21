@@ -59,7 +59,7 @@ const throttling = throttle(async ({ input, results, historyValue = false } = {}
     }
 
     const params = {
-        q: value,
+        q: encodeURIComponent(value),
         l: data.limit,
         sl: data.snippet,
         search_type: data.search_type,
