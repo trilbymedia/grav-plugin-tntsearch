@@ -3,6 +3,7 @@
 
 1. [](#bugfix)
     * Fixed `query` truncation when containing a hash (`#`) and preventing proper search results [#110](https://github.com/trilbymedia/grav-plugin-tntsearch/pull/110)
+    * Fixed PHP 8 compatibility issues
 
 # v3.3.0
 ## 12/02/2020

@@ -236,11 +236,11 @@ For example, say we have a homepage that is built from a few modular sub-pages w
 ```twig
 {% for module in page.collection() %}
 <p>
-    {{ module.content }}
+    {{ module.content|raw }}
 </p>
 {% endfor %}
 
-{{ page.content }}
+{{ page.content|raw }}
 ``` 
 
 As you can see this simply ensures the module pages as defined in the page's collection are displayed, then the actual page content is displayed.  

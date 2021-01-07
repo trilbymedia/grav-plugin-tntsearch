@@ -6,12 +6,12 @@ use Grav\Common\Grav;
 use Grav\Common\Yaml;
 use Grav\Common\Page\Page;
 use Grav\Plugin\TNTSearchPlugin;
+use PDO;
 
-class GravConnector extends \PDO
+class GravConnector extends PDO
 {
     public function __construct()
     {
-
     }
 
     /**
@@ -23,11 +23,13 @@ class GravConnector extends \PDO
         return false;
     }
 
-    /**
-     * @param string $query
+    /***
+     * @param string $statement
+     * @param int|null $fetch_style
+     * @param mixed ...$extra
      * @return GravResultObject
      */
-    public function query($query)
+    public function query(string $statement, ?int $fetch_style = null, ...$extra): GravResultObject
     {
         $counter = 0;
         $results = [];
