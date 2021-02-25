@@ -209,7 +209,7 @@ class TNTSearchPlugin extends Plugin
             }
         }
 
-        $this->query = (string)($uri->param('q', null) ?? $uri->query('q') ?: '');
+        $this->query = (string)($uri->param('q', null) ?: $uri->query('q') ?: '');
 
         if ($this->query) {
             $snippet = $this->getFormValue('sl');
