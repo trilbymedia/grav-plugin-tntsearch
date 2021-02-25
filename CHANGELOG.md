@@ -1,6 +1,8 @@
 # v3.3.1
 ## mm/dd/202y
 
+1. [](#improved)
+    * Update to latest `2.6.0` of TNTSearch
 1. [](#bugfix)
     * Fixed `query` truncation when containing a hash (`#`) and preventing proper search results [#110](https://github.com/trilbymedia/grav-plugin-tntsearch/pull/110)
     * Fixed PHP 8 compatibility issues

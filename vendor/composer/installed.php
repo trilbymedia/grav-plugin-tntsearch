@@ -6,19 +6,19 @@
     'aliases' => 
     array (
     ),
-    'reference' => 'd202e52e50d96d2ff15be1826fa2e9561efe63bd',
+    'reference' => '7836c86e194af3454fafab9ca0d717813bf3525e',
     'name' => 'trilbymedia/grav-plugin-tntsearch',
   ),
   'versions' => 
   array (
     'teamtnt/tntsearch' => 
     array (
-      'pretty_version' => 'v2.5.0',
-      'version' => '2.5.0.0',
+      'pretty_version' => 'v2.6.0',
+      'version' => '2.6.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => '60ac210e46ded12182316e789519b32617829e01',
+      'reference' => 'd9b2d764491c87f03ec214ed8dbc27336cf0c0e4',
     ),
     'trilbymedia/grav-plugin-tntsearch' => 
     array (
@@ -27,7 +27,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => 'd202e52e50d96d2ff15be1826fa2e9561efe63bd',
+      'reference' => '7836c86e194af3454fafab9ca0d717813bf3525e',
     ),
   ),
 );
