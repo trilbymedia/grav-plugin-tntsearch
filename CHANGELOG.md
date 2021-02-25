@@ -1,3 +1,9 @@
+# v3.3.2
+## mm/dd/2021
+
+1. [](#improved)
+    * Added French translation [#100](https://github.com/trilbymedia/grav-plugin-tntsearch/issues/100) 
+
 # v3.3.1
 ## 02/25/2021
 

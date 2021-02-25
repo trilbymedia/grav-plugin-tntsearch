@@ -13,3 +13,8 @@ ru:
     FOUND_RESULTS: "Результатов: %s"
     FOUND_IN: "(<span>%s</span>)"
     POWERED_BY: "Работает на %s"
+fr:
+  PLUGIN_TNTSEARCH:
+    FOUND_RESULTS: "Résultats trouvés: %s"
+    FOUND_IN: "(<span>%s</span>)"
+    POWERED_BY: "Par %s"
