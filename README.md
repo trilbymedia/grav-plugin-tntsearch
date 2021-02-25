@@ -105,11 +105,12 @@ The configuration options are as follows:
 * `fuzzy` - matches if the words are 'close' but not necessarily exact matches
 * `phrases` - automatically handle phrases support
 * `stemmer` - can be one of these types:
-  * `default` - no stemmer
+  * `default` - Porter stemmer for English language
+  * `no` - no stemmer
   * `arabic` - Arabic language
   * `german` - German language
   * `italian` - Italian language
-  * `porter` - Porter language
+  * `porter` - Porter stemmer for English language
   * `russian` - Russian language
   * `ukrainian` - Ukrainian language
 * `display_route` - display the route in the search results
@@ -236,11 +237,11 @@ For example, say we have a homepage that is built from a few modular sub-pages w
 ```twig
 {% for module in page.collection() %}
 <p>
-    {{ module.content }}
+    {{ module.content|raw }}
 </p>
 {% endfor %}
 
-{{ page.content }}
+{{ page.content|raw }}
 ``` 
 
 As you can see this simply ensures the module pages as defined in the page's collection are displayed, then the actual page content is displayed.  

@@ -1,7 +1,7 @@
 name: TNT Search
 type: plugin
 slug: tntsearch
-version: 3.3.0
+version: 3.3.1
 testing: false
 description: Powerful indexed-based full text search engine powered by TNTSearch
 icon: binoculars
@@ -173,13 +173,14 @@ form:
       size: small
       classes: fancy
       label: Stemmer
-      help: An automated process which produces a base string in an attempt to represent related words
+      help: An automated process which produces a base string in an attempt to represent related words. If your content is not in the language listed, for best search results it is recommended to disable the stemmer.
       options:
-        default: Default
+        default: Default (English)
+        no: Disabled
         arabic: Arabic
+        porter: English
         german: German
         italian: Italian
-        porter: Porter
         russian: Russian
         ukrainian: Ukrainian
 

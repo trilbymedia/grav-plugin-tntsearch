@@ -13,14 +13,9 @@ use Symfony\Component\Console\Input\InputOption;
  */
 class TNTSearchQueryCommand extends ConsoleCommand
 {
-    /**
-     * @var array
-     */
+    /** @var array */
     protected $options = [];
-
-    /**
-     * @var array
-     */
+    /** @var array */
     protected $colors = [
         'DEBUG'     => 'green',
         'INFO'      => 'cyan',
@@ -56,24 +51,24 @@ class TNTSearchQueryCommand extends ConsoleCommand
     }
 
     /**
-     * @return void
+     * @return int
      */
-    protected function serve()
+    protected function serve(): int
     {
-        $this->setLanguage($this->input->getOption('language'));
+        /** @var string|null $langCode */
+        $langCode = $this->input->getOption('language');
+        /** @var string $query */
+        $query = $this->input->getArgument('query');
+
+        $this->setLanguage($langCode);
         $this->initializePages();
 
-        $this->doQuery();
-        $this->output->writeln('');
-    }
-
-    /**
-     * @return void
-     */
-    private function doQuery()
-    {
         $gtnt = TNTSearchPlugin::getSearchObjectType(['json' => true]);
-        print_r($gtnt->search($this->input->getArgument('query')));
+        print_r($gtnt->search($query));
+
+        $this->output->newLine();
+
+        return 0;
     }
 }
 

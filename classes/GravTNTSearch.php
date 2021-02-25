@@ -208,7 +208,7 @@ class GravTNTSearch
         }
 
         $content = strip_tags($content);
-        $content = preg_replace('/[ \t]+/', ' ', preg_replace('/\s*$^\s*/m', "\n", $content));
+        $content = preg_replace(['/[ \t]+/', '/\s*$^\s*/m'], [' ', "\n"], $content) ?? $content;
 
         // Restore active page in Grav.
         unset($grav['page']);

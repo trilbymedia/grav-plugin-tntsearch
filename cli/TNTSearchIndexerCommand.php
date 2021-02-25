@@ -12,13 +12,9 @@ use Symfony\Component\Console\Input\InputOption;
  */
 class TNTSearchIndexerCommand extends ConsoleCommand
 {
-    /**
-     * @var array
-     */
+    /** @var array */
     protected $options = [];
-    /**
-     * @var array
-     */
+    /** @var array */
     protected $colors = [
         'DEBUG'     => 'green',
         'INFO'      => 'cyan',
@@ -33,7 +29,7 @@ class TNTSearchIndexerCommand extends ConsoleCommand
     /**
      * @return void
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('index')
@@ -54,10 +50,11 @@ class TNTSearchIndexerCommand extends ConsoleCommand
     }
 
     /**
-     * @return void
+     * @return int
      */
-    protected function serve()
+    protected function serve(): int
     {
+        /** @var string|null $langCode */
         $langCode = $this->input->getOption('language');
 
         error_reporting(1);
@@ -82,6 +79,8 @@ class TNTSearchIndexerCommand extends ConsoleCommand
             $this->output->writeln('');
             $this->output->writeln('Indexed in ' . $end . 's');
         }
+
+        return 0;
     }
 
     /**
