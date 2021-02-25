@@ -1,7 +1,7 @@
 name: TNT Search
 type: plugin
 slug: tntsearch
-version: 3.3.0
+version: 3.3.1
 testing: false
 description: Powerful indexed-based full text search engine powered by TNTSearch
 icon: binoculars
