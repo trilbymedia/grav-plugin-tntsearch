@@ -108,9 +108,11 @@ The configuration options are as follows:
   * `default` - Porter stemmer for English language
   * `no` - no stemmer
   * `arabic` - Arabic language
+  * `croatian` - Croatian language
   * `german` - German language
   * `italian` - Italian language
   * `porter` - Porter stemmer for English language
+  * `portuguese` - Portuguese language
   * `russian` - Russian language
   * `ukrainian` - Ukrainian language
 * `display_route` - display the route in the search results

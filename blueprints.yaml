@@ -178,9 +178,11 @@ form:
         default: Default (English)
         no: Disabled
         arabic: Arabic
+        croatian: Croatian
         porter: English
         german: German
         italian: Italian
+        portuguese: Portuguese
         russian: Russian
         ukrainian: Ukrainian
 
