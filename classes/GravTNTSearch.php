@@ -224,7 +224,13 @@ class GravTNTSearch
     {
         $this->tnt->setDatabaseHandle(new GravConnector);
         $indexer = $this->tnt->createIndex($this->index);
-        $indexer->setLanguage($this->options['stemmer']);
+
+        // Disable stemmer for users with older configuration.
+        if ($this->options['stemmer'] == 'default') {
+            $indexer->setLanguage('no');
+        } else {
+            $indexer->setLanguage($this->options['stemmer']);
+        }
 
         $indexer->run();
     }
