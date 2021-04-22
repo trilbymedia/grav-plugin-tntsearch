@@ -104,6 +104,17 @@ form:
         0: Disabled
       validate:
         type: bool
+    
+    autofocus:
+      type: toggle
+      label: Autofocus
+      highlight: 1
+      default: 1
+      options:
+        1: Enabled
+        0: Disabled
+      validate:
+        type: bool
 
     search_title:
       type: spacer
