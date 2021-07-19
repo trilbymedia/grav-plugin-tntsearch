@@ -69,7 +69,7 @@ enable_admin_page_events: true
 search_type: auto
 fuzzy: false
 phrases: true
-stemmer: default
+stemmer: 'no'
 display_route: true
 display_hits: true
 display_time: true
@@ -105,7 +105,6 @@ The configuration options are as follows:
 * `fuzzy` - matches if the words are 'close' but not necessarily exact matches
 * `phrases` - automatically handle phrases support
 * `stemmer` - can be one of these types:
-  * `default` - Porter stemmer for English language
   * `no` - no stemmer
   * `arabic` - Arabic language
   * `croatian` - Croatian language

@@ -42,7 +42,7 @@ class GravTNTSearch
         $locator = Grav::instance()['locator'];
 
         $search_type = $config->get('plugins.tntsearch.search_type', 'auto');
-        $stemmer = $config->get('plugins.tntsearch.stemmer', 'default');
+        $stemmer = $config->get('plugins.tntsearch.stemmer', 'no');
         $limit = $config->get('plugins.tntsearch.limit', 20);
         $snippet = $config->get('plugins.tntsearch.snippet', 300);
         $data_path = $locator->findResource('user://data', true) . '/tntsearch';
@@ -225,8 +225,10 @@ class GravTNTSearch
         $this->tnt->setDatabaseHandle(new GravConnector);
         $indexer = $this->tnt->createIndex($this->index);
 
-        // Set the stemmer language if set
-        if ($this->options['stemmer'] !== 'default') {
+        // Disable stemmer for users with older configuration.
+        if ($this->options['stemmer'] == 'default') {
+            $indexer->setLanguage('no');
+        } else {
             $indexer->setLanguage($this->options['stemmer']);
         }
 

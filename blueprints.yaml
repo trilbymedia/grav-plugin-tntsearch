@@ -174,8 +174,8 @@ form:
       classes: fancy
       label: Stemmer
       help: An automated process which produces a base string in an attempt to represent related words. If your content is not in the language listed, for best search results it is recommended to disable the stemmer.
+      default: no
       options:
-        default: Default (English)
         no: Disabled
         arabic: Arabic
         croatian: Croatian
