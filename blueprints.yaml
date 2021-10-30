@@ -231,17 +231,20 @@ form:
         type: bool
 
     limit:
-      type: text
+      type: number
+      size: x-small
       label: Results Limit
       default: 20
 
     min:
-      type: text
+      type: number
+      size: x-small
       label: Min Chars Before Search
       default: 3
 
     snippet:
-      type: text
+      type: number
+      size: x-small
       label: Results Text Limit
       default: 300
 
