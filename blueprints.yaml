@@ -159,10 +159,10 @@ form:
 
     distance:
       type: number
+      size: x-small
       label: Levenshtein distance of fuzzy search
       help: It represents the amount of characters which need to be changed, removed, or added in a word in order it to match the search keyword. Increasing the distance produces more search results but decreases the accuracy of the search.
       default: 2
-      size: x-small
 
     phrases:
       type: toggle
