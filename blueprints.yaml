@@ -150,7 +150,7 @@ form:
       type: toggle
       label: Fuzzy Search
       highlight: 1
-      default: 1
+      default: 0
       options:
         1: Enabled
         0: Disabled

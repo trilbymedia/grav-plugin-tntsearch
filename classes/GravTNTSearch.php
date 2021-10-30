@@ -42,6 +42,7 @@ class GravTNTSearch
         $locator = Grav::instance()['locator'];
 
         $search_type = $config->get('plugins.tntsearch.search_type', 'auto');
+        $fuzzy = $config->get('plugins.tntsearch.fuzzy', false);
         $stemmer = $config->get('plugins.tntsearch.stemmer', 'no');
         $limit = $config->get('plugins.tntsearch.limit', 20);
         $snippet = $config->get('plugins.tntsearch.snippet', 300);
@@ -64,6 +65,7 @@ class GravTNTSearch
         $defaults = [
             'json' => false,
             'search_type' => $search_type,
+            'fuzzy' => $fuzzy,
             'stemmer' => $stemmer,
             'limit' => $limit,
             'as_you_type' => true,
