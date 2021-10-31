@@ -7,6 +7,7 @@ built_in_search_page: true
 enable_admin_page_events: true
 search_type: auto
 fuzzy: false
+distance: 2
 phrases: true
 stemmer: default
 display_route: true

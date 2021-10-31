@@ -68,6 +68,7 @@ built_in_search_page: true
 enable_admin_page_events: true
 search_type: auto
 fuzzy: false
+distance: 2
 phrases: true
 stemmer: 'no'
 display_route: true
@@ -103,6 +104,7 @@ The configuration options are as follows:
   * `boolean` - supports `or` or `minus`. e.g. `foo -bar`
   * `auto` - automatically detects whether to use `basic` or `boolean`
 * `fuzzy` - matches if the words are 'close' but not necessarily exact matches
+* `distance` - Levenshtein distance of fuzzy search. It represents the amount of characters which need to be changed, removed, or added in a word in order it to match the search keyword. Increasing the distance produces more search results but decreases the accuracy of the search.
 * `phrases` - automatically handle phrases support
 * `stemmer` - can be one of these types:
   * `no` - no stemmer
