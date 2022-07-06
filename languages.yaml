@@ -18,3 +18,9 @@ fr:
     FOUND_RESULTS: "Résultats trouvés: %s"
     FOUND_IN: "(<span>%s</span>)"
     POWERED_BY: "Par %s"
+es:
+  PLUGIN_TNTSEARCH:
+    FOUND_RESULTS: "Encontrados %s resultados"
+    FOUND_IN: "en <span>%s</span>"
+    POWERED_BY: "Provisto por %s"
+    
