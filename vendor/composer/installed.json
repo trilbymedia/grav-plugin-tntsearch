@@ -2,17 +2,17 @@
     "packages": [
         {
             "name": "teamtnt/tntsearch",
-            "version": "v2.6.0",
-            "version_normalized": "2.6.0.0",
+            "version": "v2.9.0",
+            "version_normalized": "2.9.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/teamtnt/tntsearch.git",
-                "reference": "d9b2d764491c87f03ec214ed8dbc27336cf0c0e4"
+                "reference": "ccedae0cfe21f7831f2dd1f973cf8904dad42d8d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/teamtnt/tntsearch/zipball/d9b2d764491c87f03ec214ed8dbc27336cf0c0e4",
-                "reference": "d9b2d764491c87f03ec214ed8dbc27336cf0c0e4",
+                "url": "https://api.github.com/repos/teamtnt/tntsearch/zipball/ccedae0cfe21f7831f2dd1f973cf8904dad42d8d",
+                "reference": "ccedae0cfe21f7831f2dd1f973cf8904dad42d8d",
                 "shasum": ""
             },
             "require": {
@@ -22,18 +22,19 @@
                 "php": "~7.1|^8"
             },
             "require-dev": {
-                "phpunit/phpunit": "7.*"
+                "phpunit/phpunit": "7.*|8.*|9.*",
+                "symfony/var-dumper": "^4|^5.2"
             },
-            "time": "2020-12-21T09:11:54+00:00",
+            "time": "2022-02-22T10:35:34+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
-                "psr-4": {
-                    "TeamTNT\\TNTSearch\\": "src"
-                },
                 "files": [
                     "helper/helpers.php"
-                ]
+                ],
+                "psr-4": {
+                    "TeamTNT\\TNTSearch\\": "src"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -62,7 +63,7 @@
             ],
             "support": {
                 "issues": "https://github.com/teamtnt/tntsearch/issues",
-                "source": "https://github.com/teamtnt/tntsearch/tree/v2.6.0"
+                "source": "https://github.com/teamtnt/tntsearch/tree/v2.9.0"
             },
             "funding": [
                 {

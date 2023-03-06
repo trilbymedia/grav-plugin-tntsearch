@@ -8,7 +8,7 @@
 
 # TNTSearch
 
-TNTSearch is a full-featured full text search (FTS) engine written entirely in PHP. A simple configuration allows you to add an amazing search experience in just minutes. Features include:
+TNTSearch is a full-text search (FTS) engine written entirely in PHP. A simple configuration allows you to add an amazing search experience in just minutes. Features include:
 
 * Fuzzy search
 * Search as you type
@@ -47,9 +47,15 @@ or [Facebook](https://www.facebook.com/tntstudiohr) &nbsp;|&nbsp;
 
 ## Tutorials
 
-* [Solving the search problem with Laravel and TNTSearch](http://tnt.studio/blog/solving-the-search-problem-with-laravel-and-tntsearch)
-* [Searching for Bobby Fisher with Laravel 5](http://tnt.studio/blog/searching-for-bobby-fisher-with-laravel-5)
-* [Did you mean functionality with Laravel Scout](http://tnt.studio/blog/did-you-mean-functionality-with-laravel-scout)
+* [Solving the search problem with Laravel and TNTSearch](https://tnt.studio/solving-the-search-problem-with-laravel-and-tntsearch)
+* [Searching for Users with Laravel Scout and TNTSearch](https://tnt.studio/searching-for-users-with-laravel-scout-and-tntsearch)
+
+## Premium products
+
+If you're using TNT Search and finding it useful, take a look at our premium analytics tool:
+
+
+[<img src="https://i.imgur.com/ujagviB.png" width="420px" />](https://analytics.tnt.studio)
 
 ## Support us on Open Collective
 
@@ -115,7 +121,8 @@ $indexer->setPrimaryKey('article_id');
 
 ### Making the primary key searchable
 
-By default the primary key is not searchable. If you wanna make it searchable, simply run:
+By default, the primary key isn't searchable. If you want to make it searchable, simply run:
+
 
 ```php
 $indexer->includePrimaryKey();
@@ -123,8 +130,7 @@ $indexer->includePrimaryKey();
 
 ### Searching
 
-Searching for a phrase or keyword is trivial
-
+Searching for a phrase or keyword is trivial:
 
 ```php
 use TeamTNT\TNTSearch\TNTSearch;

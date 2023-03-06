@@ -1,8 +1,12 @@
-# v3.3.2
-## mm/dd/2021
+# v3.4.0
+## mm/dd/2023
 
 1. [](#improved)
-    * Added French translation [#100](https://github.com/trilbymedia/grav-plugin-tntsearch/issues/100) 
+   * Updated TNTSearch library to `2.9.0`
+   * Enable Fuzy search [#123](https://github.com/trilbymedia/grav-plugin-tntsearch/pull/123)
+   * Add configuration for Levenshtein distance for fuzzy search [#124](https://github.com/trilbymedia/grav-plugin-tntsearch/pull/124)
+   * Added French translation [#100](https://github.com/trilbymedia/grav-plugin-tntsearch/issues/100)
+   * Added missing stemmers [#115](https://github.com/trilbymedia/grav-plugin-tntsearch/pull/115) [#116](https://github.com/trilbymedia/grav-plugin-tntsearch/pull/116)
 
 # v3.3.1
 ## 02/25/2021

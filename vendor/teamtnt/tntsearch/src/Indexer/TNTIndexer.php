@@ -13,7 +13,7 @@ use TeamTNT\TNTSearch\Connectors\SQLiteConnector;
 use TeamTNT\TNTSearch\Connectors\SqlServerConnector;
 use TeamTNT\TNTSearch\FileReaders\TextFileReader;
 use TeamTNT\TNTSearch\Stemmer\CroatianStemmer;
-use TeamTNT\TNTSearch\Stemmer\PorterStemmer;
+use TeamTNT\TNTSearch\Stemmer\NoStemmer;
 use TeamTNT\TNTSearch\Support\Collection;
 use TeamTNT\TNTSearch\Support\Tokenizer;
 use TeamTNT\TNTSearch\Support\TokenizerInterface;
@@ -41,7 +41,7 @@ class TNTIndexer
 
     public function __construct()
     {
-        $this->stemmer    = new PorterStemmer;
+        $this->stemmer    = new NoStemmer;
         $this->tokenizer  = new Tokenizer;
         $this->filereader = new TextFileReader;
     }
@@ -71,7 +71,7 @@ class TNTIndexer
         if (!isset($this->config['driver'])) {
             $this->config['driver'] = "";
         }
-    
+
         if (!isset($this->config['wal'])) {
             $this->config['wal'] = true;
         }
@@ -131,9 +131,9 @@ class TNTIndexer
     }
 
     /**
-     * @param string $language  - one of: arabic, croatian, german, italian, porter, russian, ukrainian
+     * @param string $language  - one of: no, arabic, croatian, german, italian, porter, portuguese, russian, ukrainian
      */
-    public function setLanguage($language = 'porter')
+    public function setLanguage($language = 'no')
     {
         $class = 'TeamTNT\\TNTSearch\\Stemmer\\'.ucfirst(strtolower($language)).'Stemmer';
         $this->setStemmer(new $class);
@@ -178,7 +178,7 @@ class TNTIndexer
         $this->index = new PDO('sqlite:'.$this->config['storage'].$indexName);
         $this->index->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        if($this->config['wal']) {
+        if ($this->config['wal']) {
             $this->index->exec("PRAGMA journal_mode=wal;");
         }
 
@@ -306,7 +306,7 @@ class TNTIndexer
             if ($counter % 10000 == 0) {
                 $this->index->commit();
                 $this->index->beginTransaction();
-                $this->info("Commited");
+                $this->info("Committed");
             }
         }
         $this->index->commit();
