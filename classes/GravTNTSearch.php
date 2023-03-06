@@ -42,7 +42,9 @@ class GravTNTSearch
         $locator = Grav::instance()['locator'];
 
         $search_type = $config->get('plugins.tntsearch.search_type', 'auto');
-        $stemmer = $config->get('plugins.tntsearch.stemmer', 'default');
+        $fuzzy = $config->get('plugins.tntsearch.fuzzy', false);
+        $distance = $config->get('plugins.tntsearch.distance', 2);
+        $stemmer = $config->get('plugins.tntsearch.stemmer', 'no');
         $limit = $config->get('plugins.tntsearch.limit', 20);
         $snippet = $config->get('plugins.tntsearch.snippet', 300);
         $data_path = $locator->findResource('user://data', true) . '/tntsearch';
@@ -64,6 +66,8 @@ class GravTNTSearch
         $defaults = [
             'json' => false,
             'search_type' => $search_type,
+            'fuzzy' => $fuzzy,
+            'distance' => $distance,
             'stemmer' => $stemmer,
             'limit' => $limit,
             'as_you_type' => true,
@@ -97,6 +101,7 @@ class GravTNTSearch
 
         if (isset($this->options['fuzzy']) && $this->options['fuzzy']) {
             $this->tnt->fuzziness = true;
+            $this->tnt->fuzzy_distance = $this->options['distance'];
         }
 
         $limit = (int)$this->options['limit'];
@@ -225,8 +230,10 @@ class GravTNTSearch
         $this->tnt->setDatabaseHandle(new GravConnector);
         $indexer = $this->tnt->createIndex($this->index);
 
-        // Set the stemmer language if set
-        if ($this->options['stemmer'] !== 'default') {
+        // Disable stemmer for users with older configuration.
+        if ($this->options['stemmer'] == 'default') {
+            $indexer->setLanguage('no');
+        } else {
             $indexer->setLanguage($this->options['stemmer']);
         }
 

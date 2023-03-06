@@ -68,8 +68,9 @@ built_in_search_page: true
 enable_admin_page_events: true
 search_type: auto
 fuzzy: false
+distance: 2
 phrases: true
-stemmer: default
+stemmer: 'no'
 display_route: true
 display_hits: true
 display_time: true
@@ -103,14 +104,16 @@ The configuration options are as follows:
   * `boolean` - supports `or` or `minus`. e.g. `foo -bar`
   * `auto` - automatically detects whether to use `basic` or `boolean`
 * `fuzzy` - matches if the words are 'close' but not necessarily exact matches
+* `distance` - Levenshtein distance of fuzzy search. It represents the amount of characters which need to be changed, removed, or added in a word in order it to match the search keyword. Increasing the distance produces more search results but decreases the accuracy of the search.
 * `phrases` - automatically handle phrases support
 * `stemmer` - can be one of these types:
-  * `default` - Porter stemmer for English language
   * `no` - no stemmer
   * `arabic` - Arabic language
+  * `croatian` - Croatian language
   * `german` - German language
   * `italian` - Italian language
   * `porter` - Porter stemmer for English language
+  * `portuguese` - Portuguese language
   * `russian` - Russian language
   * `ukrainian` - Ukrainian language
 * `display_route` - display the route in the search results

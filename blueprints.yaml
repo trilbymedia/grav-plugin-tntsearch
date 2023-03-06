@@ -1,7 +1,7 @@
 name: TNT Search
 type: plugin
 slug: tntsearch
-version: 3.3.1
+version: 3.4.0
 testing: false
 description: Powerful indexed-based full text search engine powered by TNTSearch
 icon: binoculars
@@ -150,12 +150,19 @@ form:
       type: toggle
       label: Fuzzy Search
       highlight: 1
-      default: 1
+      default: 0
       options:
         1: Enabled
         0: Disabled
       validate:
         type: bool
+
+    distance:
+      type: number
+      size: x-small
+      label: Levenshtein distance of fuzzy search
+      help: It represents the amount of characters which need to be changed, removed, or added in a word in order it to match the search keyword. Increasing the distance produces more search results but decreases the accuracy of the search.
+      default: 2
 
     phrases:
       type: toggle
@@ -174,13 +181,15 @@ form:
       classes: fancy
       label: Stemmer
       help: An automated process which produces a base string in an attempt to represent related words. If your content is not in the language listed, for best search results it is recommended to disable the stemmer.
+      default: no
       options:
-        default: Default (English)
         no: Disabled
         arabic: Arabic
+        croatian: Croatian
         porter: English
         german: German
         italian: Italian
+        portuguese: Portuguese
         russian: Russian
         ukrainian: Ukrainian
 
