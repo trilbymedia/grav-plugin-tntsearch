@@ -1,5 +1,5 @@
 # v3.4.0
-## mm/dd/2023
+## 03/06/2023
 
 1. [](#improved)
    * Updated TNTSearch library to `2.9.0`
