@@ -27,7 +27,7 @@ Other than standard Grav requirements, this plugin does have some extra requirem
 * **PHP pdo_sqlite** Driver
 * **PHP pdo_mysql** Driver (only required because library references some MySQL constants, MySQL db is not used)
 
-| PHP by default comes with **PDO** and the vast majority of linux-based systems already come with SQLite.  
+| PHP by default comes with **PDO** and the vast majority of linux-based systems already come with SQLite.
 
 ### Installation of SQLite on Mac systems
 
@@ -47,7 +47,7 @@ $ brew install sqlite
 
 ### Installation of SQLite on Windows systems
 
-Download the appropriate version of SQLite from the [SQLite Downloads Page](https://www.sqlite.org/download.html).  
+Download the appropriate version of SQLite from the [SQLite Downloads Page](https://www.sqlite.org/download.html).
 
 Extract the downloaded ZIP file and run the `sqlite3.exe` executable.
 
@@ -87,7 +87,7 @@ filter:
   items:
     - root@.descendants
 powered_by: true
-search_object_type: Grav      
+search_object_type: Grav
 ```
 
 The configuration options are as follows:
@@ -110,12 +110,16 @@ The configuration options are as follows:
   * `no` - no stemmer
   * `arabic` - Arabic language
   * `croatian` - Croatian language
+  * `french` - French language
   * `german` - German language
   * `italian` - Italian language
+  * `polish` - Polish language
   * `porter` - Porter stemmer for English language
   * `portuguese` - Portuguese language
   * `russian` - Russian language
   * `ukrainian` - Ukrainian language
+  * an array of language: Stemmer (see Multi-Language Support)
+
 * `display_route` - display the route in the search results
 * `display_hits` - display the number of hits in the search results
 * `display_time` - display the execution time in the search results
@@ -135,7 +139,7 @@ TNTSearch relies on your content being indexed into the SQLite index database be
 
 ### Indexing
 
-The first step after installation of the plugin, is to index your content.  There are several ways you can accomplish this.  
+The first step after installation of the plugin, is to index your content.  There are several ways you can accomplish this.
 
 #### CLI Indexing
 
@@ -167,7 +171,7 @@ This indicates a successful indexing of your content.
 
 #### Admin Plugin Indexing
 
-If you are using the admin plugin you can index your content directly from the plugin.  TNTSearch adds a new **quick-tray** icon that lets you create a new index or re-index all your content quickly and conveniently with a single click.  
+If you are using the admin plugin you can index your content directly from the plugin.  TNTSearch adds a new **quick-tray** icon that lets you create a new index or re-index all your content quickly and conveniently with a single click.
 
 ![](assets/tntsearch-quicktray.png)
 
@@ -188,11 +192,22 @@ tntsearch:
 
 #### Multi-Language Support
 
-With the new 3.0 version of TNTSearch, support has been added for multiple languages (Grav 1.6 required).  Internally, this means that rather that store the index as `user:://data/tntsearch/grav.index`, multiple indexes are created per language configured in Grav.  For example if you have set the supported languages to `['en', 'fr', 'de']`, then when you perform an index,  you will get three files: `en.index`, `fr.index`, and `de.index`.  When querying the appropriate **active language** determines which index is queried.  For example, performing the search on a page called `/fr/search` will result in the `fr.index` database to be used, and French results to be returned.  
+With the new 3.0 version of TNTSearch, support has been added for multiple languages (Grav 1.6 required).  Internally, this means that rather that store the index as `user:://data/tntsearch/grav.index`, multiple indexes are created per language configured in Grav.  For example if you have set the supported languages to `['en', 'fr', 'de']`, then when you perform an index,  you will get three files: `en.index`, `fr.index`, and `de.index`.  When querying the appropriate **active language** determines which index is queried.  For example, performing the search on a page called `/fr/search` will result in the `fr.index` database to be used, and French results to be returned.
+
+You can set a disctinct Stemmer for each language
+```
+stemmer:
+    de: german
+    fr: french
+    en: porter
+    dk: no
+```
 
 Note Indexing will take longer depending on the number of languages you support as TNTSearch has to index each page in each language.
 
 > NOTE: While accented characters is supported in this release, there is currently no support in the underlying TNTSearch library to match non-accented characters to accented ones, so exact matches are required.
+
+
 
 #### Scheduler Support
 
@@ -245,9 +260,9 @@ For example, say we have a homepage that is built from a few modular sub-pages w
 {% endfor %}
 
 {{ page.content|raw }}
-``` 
+```
 
-As you can see this simply ensures the module pages as defined in the page's collection are displayed, then the actual page content is displayed.  
+As you can see this simply ensures the module pages as defined in the page's collection are displayed, then the actual page content is displayed.
 
 To instruct TNTSearch to index with this template rather than just using the Page content by itself, you just need to add an entry in the `home.md` frontmatter:
 
@@ -341,7 +356,7 @@ public function onTNTSearchQuery(Event $e)
         $query = $e['query'];
         $options = $e['options'];
         $fields = $e['fields'];
-        
+
         $fields->results[] = $page->route();
         $e->stopPropagation();
     }
