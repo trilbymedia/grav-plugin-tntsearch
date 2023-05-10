@@ -174,7 +174,7 @@ form:
         0: Disabled
       validate:
         type: bool
-        
+
     stemmer:
       type: select
       size: small
@@ -186,6 +186,7 @@ form:
         no: Disabled
         arabic: Arabic
         croatian: Croatian
+        french: French
         porter: English
         german: German
         italian: Italian

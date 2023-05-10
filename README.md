@@ -194,7 +194,7 @@ tntsearch:
 
 With the new 3.0 version of TNTSearch, support has been added for multiple languages (Grav 1.6 required).  Internally, this means that rather that store the index as `user:://data/tntsearch/grav.index`, multiple indexes are created per language configured in Grav.  For example if you have set the supported languages to `['en', 'fr', 'de']`, then when you perform an index,  you will get three files: `en.index`, `fr.index`, and `de.index`.  When querying the appropriate **active language** determines which index is queried.  For example, performing the search on a page called `/fr/search` will result in the `fr.index` database to be used, and French results to be returned.
 
-You can set a disctinct Stemmer for each language
+Not from the admin front end, only in the yaml, You can set a disctinct Stemmer for each language :
 ```
 stemmer:
     de: german
