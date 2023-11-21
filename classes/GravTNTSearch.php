@@ -214,7 +214,13 @@ class GravTNTSearch
 
         $content = strip_tags($content);
         $content = preg_replace(['/[ \t]+/', '/\s*$^\s*/m'], [' ', "\n"], $content) ?? $content;
-
+        // 2023-11-21 MCH - Remove some in-word Unicode that regularly breaks searches
+        $problematic = [
+            '/&shy;/i', '/&#173;/', '/&#x00AD;/i', '/\x{00AD}/u', // soft hyphen
+            '/&zwj;/i', '/&#8205;/', '/&#x200D;/i', '/\x{200D}/u', // zero-width joiner
+            '/&zwnj;/i', '/&#8204;/', '/&#x200C;/i', '/\x{200C}/u', // zero-width non-joiner
+        ];
+        $content = preg_replace($problematic, '', $content) ?? $content;
         // Restore active page in Grav.
         unset($grav['page']);
         $grav['page'] = $activePage;
