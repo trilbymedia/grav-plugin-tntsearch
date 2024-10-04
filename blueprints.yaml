@@ -1,7 +1,7 @@
 name: TNT Search
 type: plugin
 slug: tntsearch
-version: 3.4.0
+version: 3.4.1
 testing: false
 description: Powerful indexed-based full text search engine powered by TNTSearch
 icon: binoculars
@@ -15,7 +15,7 @@ docs: https://github.com/trilbymedia/grav-plugin-tntsearch/blob/develop/README.m
 license: MIT
 
 dependencies:
-    - { name: grav, version: '>=1.6.21' }
+    - { name: grav, version: '>=1.7.0' }
 
 form:
   validation: strict
@@ -174,16 +174,16 @@ form:
         0: Disabled
       validate:
         type: bool
-        
+
     stemmer:
       type: select
       size: small
       classes: fancy
       label: Stemmer
       help: An automated process which produces a base string in an attempt to represent related words. If your content is not in the language listed, for best search results it is recommended to disable the stemmer.
-      default: no
+      default: 'no'
       options:
-        no: Disabled
+        'no': Disabled
         arabic: Arabic
         croatian: Croatian
         porter: English
@@ -238,17 +238,20 @@ form:
         type: bool
 
     limit:
-      type: text
+      type: number
+      size: x-small
       label: Results Limit
       default: 20
 
     min:
-      type: text
+      type: number
+      size: x-small
       label: Min Chars Before Search
       default: 3
 
     snippet:
-      type: text
+      type: number
+      size: x-small
       label: Results Text Limit
       default: 300
 

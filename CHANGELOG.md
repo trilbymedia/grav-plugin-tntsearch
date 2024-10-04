@@ -1,3 +1,9 @@
+# v3.4.1
+## 10/04/2024
+
+1. [](#improved)
+    * Various blueprint fixes and improvements [#125](https://github.com/trilbymedia/grav-plugin-tntsearch/pull/125) [#132](https://github.com/trilbymedia/grav-plugin-tntsearch/issues/132) 
+
 # v3.4.0
 ## 03/06/2023
 

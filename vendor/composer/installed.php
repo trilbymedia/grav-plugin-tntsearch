@@ -3,7 +3,7 @@
         'name' => 'trilbymedia/grav-plugin-tntsearch',
         'pretty_version' => 'dev-develop',
         'version' => 'dev-develop',
-        'reference' => '60562d62856c114f23c183f7873fe1c809f4c7b5',
+        'reference' => '1ea169868f99efb65282df3bc3183519422c3125',
         'type' => 'grav-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -22,7 +22,7 @@
         'trilbymedia/grav-plugin-tntsearch' => array(
             'pretty_version' => 'dev-develop',
             'version' => 'dev-develop',
-            'reference' => '60562d62856c114f23c183f7873fe1c809f4c7b5',
+            'reference' => '1ea169868f99efb65282df3bc3183519422c3125',
             'type' => 'grav-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
