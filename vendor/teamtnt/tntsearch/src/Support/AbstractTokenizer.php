@@ -1,6 +1,9 @@
 <?php
 namespace TeamTNT\TNTSearch\Support;
 
+/**
+ * @deprecated Please use 'TeamTNT\TNTSearch\Tokenizer\AbstractTokenizer'.
+ */
 abstract class AbstractTokenizer
 {
     static protected $pattern = '';

@@ -1,21 +1,28 @@
 <?php
 
+use TeamTNT\TNTSearch\Engines\RedisEngine;
+use TeamTNT\TNTSearch\Engines\SqliteEngine;
 use TeamTNT\TNTSearch\Indexer\TNTIndexer;
-use TeamTNT\TNTSearch\Support\AbstractTokenizer;
-use TeamTNT\TNTSearch\Support\TokenizerInterface;
+use TeamTNT\TNTSearch\Tokenizer\AbstractTokenizer;
+use TeamTNT\TNTSearch\Tokenizer\TokenizerInterface;
 use TeamTNT\TNTSearch\TNTSearch;
 
 class TNTIndexerTest extends PHPUnit\Framework\TestCase
 {
+    public $index = null;
+
     protected $indexName = "testIndex";
     protected $config    = [
-        'driver'    => 'sqlite',
-        'database'  => __DIR__.'/../_files/articles.sqlite',
-        'host'      => 'localhost',
-        'username'  => 'testUser',
-        'password'  => 'testPass',
-        'storage'   => __DIR__.'/../_files/',
-        'tokenizer' => TeamTNT\TNTSearch\Support\ProductTokenizer::class
+        'driver'     => 'sqlite',
+        'engine'     => 'TeamTNT\TNTSearch\Engines\RedisEngine',
+        'redis_host' => '127.0.0.1',
+        'redis_port' => '6379',
+        'database'   => __DIR__ . '/../_files/articles.sqlite',
+        'host'       => 'localhost',
+        'username'   => 'testUser',
+        'password'   => 'testPass',
+        'storage'    => __DIR__ . '/../_files/',
+        'tokenizer'  => TeamTNT\TNTSearch\Tokenizer\ProductTokenizer::class
 
     ];
 
@@ -31,8 +38,8 @@ class TNTIndexerTest extends PHPUnit\Framework\TestCase
         $indexer->run();
 
         $tnt->selectIndex($this->indexName);
-        $tnt->asYouType = true;
-        $res            = $tnt->search('Juliet');
+        $tnt->asYouType(true);
+        $res = $tnt->search('Juliet');
 
         //the most relevant doc has the id 9
         $this->assertEquals("9", $res['ids'][0]);
@@ -44,10 +51,13 @@ class TNTIndexerTest extends PHPUnit\Framework\TestCase
     public function testIndexFromFileSystem()
     {
         $config = [
-            'driver'    => 'filesystem',
-            'storage'   => __DIR__.'/../_files/',
-            'location'  => __DIR__.'/../_files/articles/',
-            'extension' => 'txt'
+            'driver'     => 'filesystem',
+            'engine'     => 'TeamTNT\TNTSearch\Engines\RedisEngine',
+            'redis_host' => '127.0.0.1',
+            'redis_port' => '6379',
+            'storage'    => __DIR__ . '/../_files/',
+            'location'   => __DIR__ . '/../_files/articles/',
+            'extension'  => 'txt'
         ];
 
         $tnt = new TNTSearch;
@@ -77,10 +87,7 @@ class TNTIndexerTest extends PHPUnit\Framework\TestCase
         $indexer->disableOutput = true;
         $indexer->run();
 
-        $this->index = new PDO('sqlite:'.$this->config['storage'].$this->indexName);
-        $query       = "SELECT * FROM info WHERE key = 'stemmer'";
-        $docs        = $this->index->query($query);
-        $value       = $docs->fetch(PDO::FETCH_ASSOC)['value'];
+        $value = $indexer->getValueFromInfoTable('stemmer');
         $this->assertEquals('TeamTNT\TNTSearch\Stemmer\CroatianStemmer', $value);
 
         $tnt->selectIndex($this->indexName);
@@ -99,10 +106,8 @@ class TNTIndexerTest extends PHPUnit\Framework\TestCase
         $indexer->disableOutput = true;
         $indexer->run();
 
-        $this->index = new PDO('sqlite:'.$this->config['storage'].$this->indexName);
-        $query       = "SELECT * FROM info WHERE key = 'stemmer'";
-        $docs        = $this->index->query($query);
-        $value       = $docs->fetch(PDO::FETCH_ASSOC)['value'];
+        $value = $indexer->getValueFromInfoTable('stemmer');
+
         $this->assertEquals('TeamTNT\TNTSearch\Stemmer\GermanStemmer', $value);
 
         $tnt->selectIndex($this->indexName);
@@ -111,7 +116,8 @@ class TNTIndexerTest extends PHPUnit\Framework\TestCase
 
     public function testBuildTrigrams()
     {
-        $indexer  = new TNTIndexer;
+        $engine   = new RedisEngine;
+        $indexer  = new TNTIndexer($engine);
         $trigrams = $indexer->buildTrigrams('created');
         $this->assertEquals('__c _cr cre rea eat ate ted ed_ d__', $trigrams);
 
@@ -134,8 +140,8 @@ class TNTIndexerTest extends PHPUnit\Framework\TestCase
 
     public function tearDown(): void
     {
-        if (file_exists(__DIR__.'/../_files/'.$this->indexName)) {
-            unlink(__DIR__.'/../_files/'.$this->indexName);
+        if (file_exists(__DIR__ . '/../_files/' . $this->indexName)) {
+            unlink(__DIR__ . '/../_files/' . $this->indexName);
         }
     }
 
@@ -181,7 +187,7 @@ class TNTIndexerTest extends PHPUnit\Framework\TestCase
 
 class SomeTokenizer extends AbstractTokenizer implements TokenizerInterface
 {
-    static protected $pattern = '/[\s,\.]+/';
+    protected static $pattern = '/[\s,\.]+/';
 
     public function tokenize($text, $stopwords = [])
     {

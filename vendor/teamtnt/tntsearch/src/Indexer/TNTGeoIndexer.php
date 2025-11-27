@@ -3,21 +3,24 @@
 namespace TeamTNT\TNTSearch\Indexer;
 
 use PDO;
+use PDOStatement;
+use TeamTNT\TNTSearch\Support\Collection;
 
 class TNTGeoIndexer extends TNTIndexer
 {
-    public function createIndex($indexName)
-    {
-        $this->indexName = $indexName;
 
-        if (file_exists($this->config['storage'].$indexName)) {
-            unlink($this->config['storage'].$indexName);
+    public ?PDOStatement $insertStmt = null;
+
+    public function createIndex(string $indexName)
+    {
+        if (file_exists($this->engine->config['storage'] . $indexName)) {
+            unlink($this->engine->config['storage'] . $indexName);
         }
 
-        $this->index = new PDO('sqlite:'.$this->config['storage'].$indexName);
-        $this->index->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $this->engine->index = new PDO('sqlite:' . $this->engine->config['storage'] . $indexName);
+        $this->engine->index->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        $this->index->exec("CREATE TABLE IF NOT EXISTS locations (
+        $this->engine->index->exec("CREATE TABLE IF NOT EXISTS locations (
             doc_id INTEGER,
             longitude REAL,
             latitude REAL,
@@ -27,18 +30,18 @@ class TNTGeoIndexer extends TNTIndexer
             sin_lng REAL
         )");
 
-        $this->index->exec("CREATE INDEX location_index ON locations ('longitude', 'latitude');");
+        $this->engine->index->exec("CREATE INDEX location_index ON locations ('longitude', 'latitude');");
 
-        $this->index->exec("CREATE TABLE IF NOT EXISTS info (key TEXT, value INTEGER)");
+        $this->engine->index->exec("CREATE TABLE IF NOT EXISTS info (key TEXT, value INTEGER)");
 
-        $connector = $this->createConnector($this->config);
-        if (!$this->dbh) {
-            $this->dbh = $connector->connect($this->config);
+        $connector = $this->engine->createConnector($this->engine->config);
+        if (!isset($this->engine->dbh)) {
+            $this->engine->dbh = $connector->connect($this->engine->config);
         }
         return $this;
     }
 
-    public function processDocument($row)
+    public function processDocument(Collection $row)
     {
         $this->prepareInsertStatement();
 
@@ -66,7 +69,19 @@ class TNTGeoIndexer extends TNTIndexer
             return $this->insertStmt;
         }
 
-        $this->insertStmt = $this->index->prepare("INSERT INTO locations (doc_id, longitude, latitude, cos_lat, sin_lat, cos_lng, sin_lng)
+        $this->insertStmt = $this->engine->index->prepare("INSERT INTO locations (doc_id, longitude, latitude, cos_lat, sin_lat, cos_lng, sin_lng)
             VALUES (:doc_id, :longitude, :latitude, :cos_lat, :sin_lat, :cos_lng, :sin_lng)");
+    }
+
+    public function insert($document)
+    {
+        $this->engine->processDocument(new Collection($document));
+    }
+
+    public function delete($documentId)
+    {
+        $this->engine->prepareAndExecuteStatement("DELETE FROM locations WHERE doc_id = :documentId;", [
+            ['key' => ':documentId', 'value' => $documentId]
+        ]);
     }
 }
