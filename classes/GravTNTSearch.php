@@ -1,4 +1,5 @@
 <?php
+
 namespace Grav\Plugin\TNTSearch;
 
 use Grav\Common\Config\Config;
@@ -11,6 +12,7 @@ use Grav\Common\Uri;
 use Grav\Common\Yaml;
 use Grav\Common\Page\Collection;
 use Grav\Common\Page\Page;
+use Grav\Plugin\TNTSearch\GravTNTEngine;
 use RocketTheme\Toolbox\Event\Event;
 use RocketTheme\Toolbox\ResourceLocator\UniformResourceLocator;
 use TeamTNT\TNTSearch\Exceptions\IndexNotFoundException;
@@ -80,8 +82,10 @@ class GravTNTSearch
         $this->tnt->loadConfig(
             [
                 'storage'   => $data_path,
+                'database'  => $data_path . '/' . $this->index,
                 'driver'    => 'sqlite',
-                'charset'   => 'utf8'
+                'charset'   => 'utf8',
+                'engine'    => GravTNTEngine::class
             ]
         );
     }
@@ -97,11 +101,11 @@ class GravTNTSearch
         $uri = Grav::instance()['uri'];
         $type = $uri->query('search_type');
         $this->tnt->selectIndex($this->index);
-        $this->tnt->asYouType = $this->options['as_you_type'];
+        $this->tnt->setAsYouType($this->options['as_you_type']);
 
         if (isset($this->options['fuzzy']) && $this->options['fuzzy']) {
-            $this->tnt->fuzziness = true;
-            $this->tnt->fuzzy_distance = $this->options['distance'];
+            $this->tnt->setFuzziness(true);
+            $this->tnt->setFuzzyDistance($this->options['distance']);
         }
 
         $limit = (int)$this->options['limit'];
@@ -159,7 +163,8 @@ class GravTNTSearch
         $pages = Grav::instance()['pages'];
 
         $counter = 0;
-        foreach ($res['ids'] as $path) {
+        $routes  = $this->tnt->engine->getGravRoutesByIds($res['ids']);
+        foreach ($routes as $path) {
             if ($counter++ > $this->options['limit']) {
                 break;
             }
@@ -227,7 +232,6 @@ class GravTNTSearch
      */
     public function createIndex()
     {
-        $this->tnt->setDatabaseHandle(new GravConnector);
         $indexer = $this->tnt->createIndex($this->index);
 
         // Disable stemmer for users with older configuration.
@@ -237,6 +241,7 @@ class GravTNTSearch
             $indexer->setLanguage($this->options['stemmer']);
         }
 
+        $indexer->query('');
         $indexer->run();
     }
 
@@ -259,7 +264,6 @@ class GravTNTSearch
             return;
         }
 
-        $this->tnt->setDatabaseHandle(new GravConnector);
         try {
             $this->tnt->selectIndex($this->index);
         } catch (IndexNotFoundException $e) {
@@ -268,8 +272,11 @@ class GravTNTSearch
 
         $indexer = $this->tnt->getIndex();
 
-        // Delete existing if it exists
-        $indexer->delete($object->route());
+        $docId = $this->tnt->engine->getGravRouteId($object->route());
+        if ($docId) {
+            // Delete existing if it exists
+            $indexer->delete($docId);
+        }
     }
 
     /**
@@ -282,8 +289,6 @@ class GravTNTSearch
             return;
         }
 
-        $this->tnt->setDatabaseHandle(new GravConnector);
-
         try {
             $this->tnt->selectIndex($this->index);
         } catch (IndexNotFoundException $e) {
@@ -292,12 +297,14 @@ class GravTNTSearch
 
         $indexer = $this->tnt->getIndex();
 
-        // Delete existing if it exists
-        $indexer->delete($object->route());
+        $docId = $this->tnt->engine->getGravRouteId($object->route());
+        if ($docId) {
+            // Delete existing if it exists
+            $indexer->delete($docId);
+        }
 
         $filter = Grav::instance()['config']->get('plugins.tntsearch.filter');
         if ($filter && array_key_exists('items', $filter)) {
-
             if (is_string($filter['items'])) {
                 $filter['items'] = Yaml::parse($filter['items']);
             }
@@ -336,10 +343,8 @@ class GravTNTSearch
             throw new \RuntimeException('redirect only...');
         }
 
-        $route = $page->route();
-
         $fields = new \stdClass();
-        $fields->id = $route;
+        $fields->route = $page->route();
         $fields->name = $page->title();
         $fields->content = static::getCleanContent($page);
 
