@@ -368,6 +368,9 @@ class TNTSearchPlugin extends Plugin
         if ($status === false) {
             $message = '<i class="fa fa-binoculars"></i> <a href="/'. trim($this->admin_route, '/') . '/plugins/tntsearch">TNTSearch must be indexed before it will function properly.</a>';
             $this->grav['admin']->addTempMessage($message, 'error');
+        } elseif ($gtnt->tnt->engine->gravTableExists() === false) {
+            $message = '<i class="fa fa-binoculars"></i> <a href="/' . trim($this->admin_route, '/') . '/plugins/tntsearch">TNTSearch must be reindexed before it will function properly.</a>';
+            $this->grav['admin']->addTempMessage($message, 'error');
         }
 
         $twig->twig_vars['tntsearch_index_status'] = ['status' => $status, 'msg' => $msg];

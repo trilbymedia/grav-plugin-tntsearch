@@ -57,6 +57,18 @@ class GravTNTEngine extends SqliteEngine
     }
 
     /**
+     * @return bool
+     */
+    public function gravTableExists(): bool
+    {
+        $query = "SELECT name FROM sqlite_master WHERE type='table' AND name='grav'";
+        $stmt = $this->index->prepare($query);
+        $stmt->execute();
+
+        return $stmt->fetchColumn() !== false;
+    }
+
+    /**
      * @param string $route
      * @return void
      */
@@ -90,7 +102,7 @@ class GravTNTEngine extends SqliteEngine
      */
     public function getGravRoutesByIds(array $ids): array
     {
-        if (empty($ids)) {
+        if (empty($ids) || $this->gravTableExists() === false) {
             return [];
         }
 
