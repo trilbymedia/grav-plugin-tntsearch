@@ -1,5 +1,5 @@
 <?php
-namespace TeamTNT\TNTSearch\Support;
+namespace TeamTNT\TNTSearch\Tokenizer;
 
 class EdgeNgramTokenizer extends AbstractTokenizer implements TokenizerInterface
 {
@@ -7,13 +7,17 @@ class EdgeNgramTokenizer extends AbstractTokenizer implements TokenizerInterface
 
     public function tokenize($text, $stopwords = [])
     {
-        $text = mb_strtolower($text);
+        if (!is_scalar($text)) {
+            return [];
+        }
+
+        $text = mb_strtolower((string)$text);
 
         $ngrams = [];
         $splits = preg_split($this->getPattern(), $text, -1, PREG_SPLIT_NO_EMPTY);
 
         foreach ($splits as $split) {
-            for ($i = 2; $i <= strlen($split); $i++) {
+            for ($i = 2; $i <= mb_strlen($split); $i++) {
                 $ngrams[] = mb_substr($split, 0, $i);
             }
         }

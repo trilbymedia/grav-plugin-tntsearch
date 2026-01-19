@@ -8,31 +8,29 @@ use TeamTNT\TNTSearch\Support\Collection;
 
 class TNTGeoSearch extends TNTSearch
 {
-    protected $earthRadius = 6371;
+    protected int $earthRadius = 6371;
+
     /**
      * Distance is in KM
      */
-    public function findNearest($currentLocation, $distance, $limit = 10)
+    public function findNearest(array $currentLocation, float $distance, int $limit = 10)
     {
         $startTimer = microtime(true);
 
         $res = $this->buildQuery($currentLocation, $distance, $limit);
-
         $stopTimer = microtime(true);
 
         return [
-            'ids'            => $res->pluck('doc_id'),
-            'distances'      => $res->pluck('distance'),
-            'hits'           => $res->count(),
-            'execution_time' => round($stopTimer - $startTimer, 7) * 1000 ." ms"
+            'ids' => $res->pluck('doc_id'),
+            'distances' => $res->pluck('distance'),
+            'hits' => $res->count(),
+            'execution_time' => round($stopTimer - $startTimer, 7) * 1000 . " ms",
         ];
     }
 
-    public function buildQuery($currentLocation, $distance, $limit)
+    public function buildQuery(array $currentLocation, float $distance, int $limit)
     {
-
-        $query = "
-            SELECT doc_id, longitude, latitude,
+        $query = "SELECT doc_id, longitude, latitude,
             :CUR_sin_lat * sin_lat + :CUR_cos_lat * cos_lat * (cos_lng * :CUR_cos_lng + sin_lng * :CUR_sin_lng) AS distance
             FROM locations AS l
             JOIN (
@@ -48,7 +46,7 @@ class TNTGeoSearch extends TNTSearch
             ORDER BY distance DESC
             LIMIT :limit";
 
-        $stmtDoc = $this->index->prepare($query);
+        $stmtDoc = $this->engine->index->prepare($query);
 
         $cur_lat = $currentLocation['latitude'];
         $cur_lng = $currentLocation['longitude'];
@@ -75,7 +73,6 @@ class TNTGeoSearch extends TNTSearch
             if ($location['distance'] <= $distance) {
                 return $location;
             }
-
         });
 
         return $locations;
@@ -83,7 +80,7 @@ class TNTGeoSearch extends TNTSearch
 
     public function getIndex()
     {
-        $indexer           = new TNTGeoIndexer;
+        $indexer = new TNTGeoIndexer($this->engine);
         $indexer->inMemory = false;
         $indexer->setIndex($this->index);
         return $indexer;

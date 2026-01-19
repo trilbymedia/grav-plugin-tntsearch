@@ -1,5 +1,7 @@
 <?php
 
+use TeamTNT\TNTSearch\Engines\RedisEngine;
+use TeamTNT\TNTSearch\Engines\SqliteEngine;
 use TeamTNT\TNTSearch\Exceptions\IndexNotFoundException;
 use TeamTNT\TNTSearch\TNTSearch;
 
@@ -8,13 +10,16 @@ class TNTSearchTest extends PHPUnit\Framework\TestCase
     protected $indexName = "testIndex";
 
     protected $config = [
-        'driver'   => 'sqlite',
-        'database' => __DIR__.'/_files/articles.sqlite',
-        'host'     => 'localhost',
-        'username' => 'testUser',
-        'password' => 'testPass',
-        'storage'  => __DIR__.'/_files/',
-        'stemmer'  => \TeamTNT\TNTSearch\Stemmer\PorterStemmer::class
+        'driver'     => 'sqlite',
+        'engine'     => 'TeamTNT\TNTSearch\Engines\RedisEngine',
+        'redis_host' => '127.0.0.1',
+        'redis_port' => '6379',
+        'database'   => __DIR__ . '/_files/articles.sqlite',
+        'host'       => 'localhost',
+        'username'   => 'testUser',
+        'password'   => 'testPass',
+        'storage'    => __DIR__ . '/_files/',
+        'stemmer'    => \TeamTNT\TNTSearch\Stemmer\PorterStemmer::class
     ];
 
     public function testLoadConfig()
@@ -35,9 +40,12 @@ class TNTSearchTest extends PHPUnit\Framework\TestCase
         $tnt = new TNTSearch();
         $tnt->loadConfig($this->config);
         $indexer = $tnt->createIndex($this->indexName);
+        $this->assertInstanceOf('TeamTNT\TNTSearch\Engines\EngineInterface', $indexer);
 
-        $this->assertInstanceOf('TeamTNT\TNTSearch\Indexer\TNTIndexer', $indexer);
-        $this->assertFileExists($indexer->getStoragePath().$this->indexName);
+        if ($this->config['engine'] == 'TeamTNT\TNTSearch\Engines\SqliteEngine') {
+            $this->assertFileExists($indexer->getStoragePath() . $this->indexName);
+        }
+
     }
 
     public function testSearchBoolean()
@@ -56,11 +64,21 @@ class TNTSearchTest extends PHPUnit\Framework\TestCase
         $this->assertEquals([7], $res['ids']);
 
         $res = $tnt->searchBoolean('Hamlet or Macbeth');
-        $this->assertEquals([3, 4, 1, 2], $res['ids']);
+
+        $this->assertContains(3, $res['ids']);
+        $this->assertContains(4, $res['ids']);
+        $this->assertContains(1, $res['ids']);
+        $this->assertContains(2, $res['ids']);
         $this->assertEquals(4, $res['hits']);
 
         $res = $tnt->searchBoolean('juliet ~well');
-        $this->assertEquals([5, 6, 7, 8, 10], $res['ids']);
+
+        $this->assertCount(5, $res['ids']);
+        $this->assertContains(5, $res['ids']);
+        $this->assertContains(6, $res['ids']);
+        $this->assertContains(7, $res['ids']);
+        $this->assertContains(8, $res['ids']);
+        $this->assertContains(10, $res['ids']);
 
         $res = $tnt->searchBoolean('juliet ~romeo');
         $this->assertEquals([10], $res['ids']);
@@ -93,8 +111,8 @@ class TNTSearchTest extends PHPUnit\Framework\TestCase
 
         $tnt->loadConfig($this->config);
 
-        $indexer                = $tnt->createIndex($this->indexName);
-        $indexer->disableOutput = true;
+        $indexer = $tnt->createIndex($this->indexName);
+        $indexer->disableOutput(true);
         $indexer->query('SELECT id, title, article FROM articles;');
         $indexer->run();
 
@@ -102,7 +120,6 @@ class TNTSearchTest extends PHPUnit\Framework\TestCase
         $this->assertEquals(12, $tnt->totalDocumentsInCollection());
 
         $index = $tnt->getIndex();
-
         //first we test if the total number of documents will decrease
         $index->delete(12);
         $this->assertEquals(11, $tnt->totalDocumentsInCollection());
@@ -137,8 +154,8 @@ class TNTSearchTest extends PHPUnit\Framework\TestCase
 
         $tnt->loadConfig($this->config);
 
-        $indexer                = $tnt->createIndex($this->indexName);
-        $indexer->disableOutput = true;
+        $indexer = $tnt->createIndex($this->indexName);
+        $indexer->disableOutput(true);
         $indexer->query('SELECT id, title, article FROM articles;');
         $indexer->run();
 
@@ -193,6 +210,7 @@ class TNTSearchTest extends PHPUnit\Framework\TestCase
 
         $count = $index->countWordInWordList('romeo');
         $this->assertEquals(7, $count, 'Word romeo should be 7');
+
     }
 
     public function testMultipleSearch()
@@ -201,8 +219,8 @@ class TNTSearchTest extends PHPUnit\Framework\TestCase
 
         $tnt->loadConfig($this->config);
 
-        $indexer                = $tnt->createIndex($this->indexName);
-        $indexer->disableOutput = true;
+        $indexer = $tnt->createIndex($this->indexName);
+        $indexer->disableOutput(true);
         $indexer->query('SELECT id, title, article FROM articles;');
         $indexer->run();
 
@@ -216,15 +234,16 @@ class TNTSearchTest extends PHPUnit\Framework\TestCase
 
         $count = $index->countWordInWordList('Othello');
         $this->assertTrue($count == 0, 'Word Othello should be 0');
-        $index->insert(['id' => '13', 'title' => 'Othello', 'article' => 'For she had eyes and chose me.']);
-
+        $index->insert(['id' => 13, 'title' => 'Othello', 'article' => 'For she had eyes and chose me.']);
         $count = $index->countWordInWordList('Othello');
+
         $this->assertEquals(1, $count, 'Word Othello should be 1');
         $this->assertEquals(13, $tnt->totalDocumentsInCollection());
 
+        $tnt->selectIndex($this->indexName);
+
         $res = $tnt->search('Othello');
         $this->assertEquals([13], $res['ids']);
-
     }
 
     public function testAsYouType()
@@ -233,14 +252,14 @@ class TNTSearchTest extends PHPUnit\Framework\TestCase
 
         $tnt->loadConfig($this->config);
 
-        $indexer                = $tnt->createIndex($this->indexName);
-        $indexer->disableOutput = true;
+        $indexer = $tnt->createIndex($this->indexName);
+        $indexer->disableOutput(true);
         $indexer->query('SELECT id, title, article FROM articles;');
         $indexer->run();
 
         $tnt->selectIndex($this->indexName);
-        $tnt->asYouType = true;
-        $res            = $tnt->search('k');
+        $tnt->asYouType(true);
+        $res = $tnt->search('k');
         $this->assertEquals([1], $res['ids']);
     }
 
@@ -273,8 +292,9 @@ class TNTSearchTest extends PHPUnit\Framework\TestCase
         $indexer->run();
 
         $tnt->selectIndex($this->indexName);
-        $tnt->fuzziness = true;
-        $res            = $tnt->search('juleit');
+        $tnt->fuzziness(true);
+
+        $res = $tnt->search('juleit');
         $this->assertEquals("9", $res['ids'][0]);
 
         $res = $tnt->search('quen');
@@ -298,19 +318,56 @@ class TNTSearchTest extends PHPUnit\Framework\TestCase
 
         $index->insert(['id' => '14', 'title' => '199x', 'article' => 'Nineties with the x...']);
         $index->insert(['id' => '15', 'title' => '199y', 'article' => 'Nineties with the y...']);
-        $tnt->fuzziness = true;
-        $res            = $tnt->search('199');
+        $tnt->fuzziness(true);
+        $res = $tnt->search('199');
         $this->assertContains(14, $res['ids']);
         $this->assertContains(15, $res['ids']);
     }
 
+    public function testFuzzySearchOnExactMatchWithNoLimit()
+    {
+        $tnt = new TNTSearch();
+        $tnt->loadConfig($this->config);
+        $indexer                = $tnt->createIndex($this->indexName);
+        $indexer->disableOutput = true;
+        $indexer->query('SELECT id, title, article FROM articles;');
+        $indexer->run();
+
+        $tnt->selectIndex($this->indexName);
+        $index = $tnt->getIndex();
+
+        $index->insert(['id' => '14', 'title' => '199x', 'article' => 'Nineties with the x...']);
+        $index->insert(['id' => '15', 'title' => '199y', 'article' => 'Nineties with the y...']);
+        $tnt->fuzziness(true);
+        $res = $tnt->search('199x');
+        $this->assertEquals([14], $res['ids']);
+
+        $tnt->fuzzyNoLimit(true);
+        $res = $tnt->search('199x');
+        $this->assertEquals([14, 15], $res['ids']);
+    }
+
     public function testIndexDoesNotExistException()
     {
-        $this->expectException(IndexNotFoundException::class);
-        $this->expectExceptionCode(1);
+        if ($this->config['engine'] == SqliteEngine::class) {
+            $this->expectException(IndexNotFoundException::class);
+            $this->expectExceptionCode(1);
+            $tnt = new TNTSearch;
+            $tnt->loadConfig($this->config);
+            $tnt->selectIndex('IndexThatDoesNotExist');
+        }
+        $this->assertTrue(true);
+    }
+
+    public function testUnsupportedDriverException()
+    {
+        $this->config['driver'] = 'NonExistentDriver';
+        $this->expectException(Exception::class);
+
         $tnt = new TNTSearch;
         $tnt->loadConfig($this->config);
-        $tnt->selectIndex('IndexThatDoesNotExist');
+
+        $res = $tnt->engine->createConnector($this->config);
     }
 
     public function testStemmerIsSetOnNewIndexesBasedOnConfig()
@@ -341,8 +398,8 @@ class TNTSearchTest extends PHPUnit\Framework\TestCase
 
     public function tearDown(): void
     {
-        if (file_exists(__DIR__."/".$this->indexName)) {
-            unlink(__DIR__."/".$this->indexName);
+        if (file_exists(__DIR__ . "/" . $this->indexName)) {
+            unlink(__DIR__ . "/" . $this->indexName);
         }
     }
 }
