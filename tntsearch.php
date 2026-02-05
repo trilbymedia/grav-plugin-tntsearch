@@ -451,7 +451,7 @@ class TNTSearchPlugin extends Plugin
      * @param string|null $langCode
      * @return array
      */
-    public static function indexJob(string $langCode = null)
+    public static function indexJob(?string $langCode = null)
     {
         $grav = Grav::instance();
         $grav['debugger']->enabled(false);
