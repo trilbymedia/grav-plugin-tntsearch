@@ -338,8 +338,11 @@ class GravTNTSearch
         if (!$page->routable()) {
             throw new \RuntimeException('not routable...');
         }
-        if ($redirect || (isset($header['tntsearch']['index']) && $header['tntsearch']['index'] === false )) {
+        if ($redirect && !(isset($header['tntsearch']['index']) && $header['tntsearch']['index'] === true)) {
             throw new \RuntimeException('redirect only...');
+        }
+        if (isset($header['tntsearch']['index']) && $header['tntsearch']['index'] === false) {
+            throw new \RuntimeException('skipped by user...');
         }
 
         $route = $page->route();
