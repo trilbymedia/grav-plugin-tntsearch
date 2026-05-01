@@ -1,7 +1,7 @@
 name: TNT Search
 type: plugin
 slug: tntsearch
-version: 3.4.1
+version: 3.4.2
 testing: false
 description: Powerful indexed-based full text search engine powered by TNTSearch
 icon: binoculars
@@ -13,6 +13,9 @@ keywords: grav, plugin, search, search-engine
 bugs: https://github.com/trilbymedia/grav-plugin-tntsearch/issues
 docs: https://github.com/trilbymedia/grav-plugin-tntsearch/blob/develop/README.md
 license: MIT
+
+compatibility:
+  grav: ['1.7', '2.0']
 
 dependencies:
     - { name: grav, version: '>=1.7.0' }

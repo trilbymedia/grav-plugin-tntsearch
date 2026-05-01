@@ -177,14 +177,14 @@ Alternatively you can navigate to the TNTSearch configuration section and click 
 
 #### Skipping Indexing
 
-> NOTE: That any page that uses a `redirect` page header attribute will be skipped during indexing.
-
 You can explicitly skip a page that is in the index filter by adding this YAML to the page header:
 
 ```
 tntsearch:
     index: false
 ```
+
+> NOTE: That any page that uses a `redirect` page header attribute and is not explicitly allowed will be skipped during indexing.
 
 #### Multi-Language Support
 

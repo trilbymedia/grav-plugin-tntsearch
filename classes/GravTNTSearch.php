@@ -11,6 +11,7 @@ use Grav\Common\Uri;
 use Grav\Common\Yaml;
 use Grav\Common\Page\Collection;
 use Grav\Common\Page\Page;
+use Grav\Common\Flex\Types\Pages\PageObject;
 use RocketTheme\Toolbox\Event\Event;
 use RocketTheme\Toolbox\ResourceLocator\UniformResourceLocator;
 use TeamTNT\TNTSearch\Exceptions\IndexNotFoundException;
@@ -255,7 +256,7 @@ class GravTNTSearch
      */
     public function deleteIndex($object)
     {
-        if (!$object instanceof Page) {
+        if (!($object instanceof Page || $object instanceof PageObject)) {
             return;
         }
 
@@ -278,7 +279,7 @@ class GravTNTSearch
      */
     public function updateIndex($object)
     {
-        if (!$object instanceof Page) {
+        if (!($object instanceof Page || $object instanceof PageObject)) {
             return;
         }
 
@@ -300,6 +301,11 @@ class GravTNTSearch
 
             if (is_string($filter['items'])) {
                 $filter['items'] = Yaml::parse($filter['items']);
+            }
+
+            $pages = Grav::instance()['pages'];
+            if (method_exists($pages, 'enablePages')) {
+                $pages->enablePages();
             }
 
             $apage = new Page;
@@ -332,8 +338,11 @@ class GravTNTSearch
         if (!$page->routable()) {
             throw new \RuntimeException('not routable...');
         }
-        if ($redirect || (isset($header['tntsearch']['index']) && $header['tntsearch']['index'] === false )) {
+        if ($redirect && !(isset($header['tntsearch']['index']) && $header['tntsearch']['index'] === true)) {
             throw new \RuntimeException('redirect only...');
+        }
+        if (isset($header['tntsearch']['index']) && $header['tntsearch']['index'] === false) {
+            throw new \RuntimeException('skipped by user...');
         }
 
         $route = $page->route();
