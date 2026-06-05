@@ -89,10 +89,15 @@ class TNTSearchPlugin extends Plugin
 
             if ($this->config->get('plugins.tntsearch.enable_admin_page_events', true)) {
                 $this->enable([
-                    'onAdminAfterSave'      => ['onObjectSave', 0],
-                    'onAdminAfterDelete'    => ['onObjectDelete', 0],
-                    'onFlexObjectSave'      => ['onObjectSave', 0],
-                    'onFlexObjectDelete'    => ['onObjectDelete', 0],
+                    // Page save/delete (admin-classic + Grav 2.0 Admin/API compat layer)
+                    'onAdminAfterSave'        => ['onObjectSave', 0],
+                    'onAdminAfterDelete'      => ['onObjectDelete', 0],
+                    // Page move/rename changes the route, leaving the old entry stale
+                    'onAdminAfterSaveAs'      => ['onObjectMove', 0],
+                    // Flex objects: Grav fires the *After* variants (see FlexObjectTrait),
+                    // not the bare onFlexObjectSave/onFlexObjectDelete names used previously.
+                    'onFlexObjectAfterSave'   => ['onObjectSave', 0],
+                    'onFlexObjectAfterDelete' => ['onObjectDelete', 0],
                 ]);
             }
 
@@ -351,6 +356,28 @@ class TNTSearchPlugin extends Plugin
         if ($obj) {
             $this->GravTNTSearch()->deleteIndex($obj);
         }
+
+        return true;
+    }
+
+    /**
+     * Handle a page move/rename (onAdminAfterSaveAs).
+     *
+     * The event only carries the new filesystem path, not the previous route,
+     * so an incremental update can't remove the now-stale old-route entry. A
+     * full reindex is the only reliable way to keep the index consistent after
+     * a move, and moves are infrequent compared to ordinary saves.
+     *
+     * @param Event $event
+     * @return bool
+     */
+    public function onObjectMove($event): bool
+    {
+        if (defined('CLI_DISABLE_TNTSEARCH')) {
+            return true;
+        }
+
+        static::indexJob();
 
         return true;
     }

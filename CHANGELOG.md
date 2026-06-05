@@ -1,3 +1,9 @@
+# v3.4.3
+## 06/05/2026
+
+1. [](#bugfix)
+    * Fixed admin index not updating on Grav 2.0: listen for the real Flex event names (`onFlexObjectAfterSave`/`onFlexObjectAfterDelete`) and reindex on page move/rename (`onAdminAfterSaveAs`) [#142](https://github.com/trilbymedia/grav-plugin-tntsearch/issues/142)
+
 # v3.4.2
 ## 05/01/2026
 
