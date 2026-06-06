@@ -1,5 +1,5 @@
 # v3.4.4
-## 06/05/2026
+## 06/06/2026
 
 1. [](#bugfix)
     * Register the index-update events regardless of `isAdmin()`, since admin2 saves run through the API plugin where `isAdmin()` is still false at init time, so the handlers were never being subscribed and create/update/delete from the new admin did not reindex [#142](https://github.com/trilbymedia/grav-plugin-tntsearch/issues/142)
