@@ -74,6 +74,28 @@ class TNTSearchPlugin extends Plugin
      */
     public function onPluginsInitialized(): void
     {
+        // Register the index-maintenance events unconditionally (gated only by the
+        // config toggle). These fire during admin AND API writes, but in Grav 2.0
+        // admin2 saves go through the API plugin, which only sets $grav['admin']
+        // later during request dispatch -- so isAdmin() is still false here at
+        // onPluginsInitialized time. Registering inside the isAdmin() block meant
+        // the handlers were never subscribed for admin2/API saves. The events
+        // themselves only fire during admin/API write operations, so subscribing
+        // on the frontend too is harmless.
+        if ($this->config->get('plugins.tntsearch.enable_admin_page_events', true)) {
+            $this->enable([
+                // Page save/delete (admin-classic + Grav 2.0 Admin/API compat layer)
+                'onAdminAfterSave'        => ['onObjectSave', 0],
+                'onAdminAfterDelete'      => ['onObjectDelete', 0],
+                // Page move/rename changes the route, leaving the old entry stale
+                'onAdminAfterSaveAs'      => ['onObjectMove', 0],
+                // Flex objects: Grav fires the *After* variants (see FlexObjectTrait),
+                // not the bare onFlexObjectSave/onFlexObjectDelete names used previously.
+                'onFlexObjectAfterSave'   => ['onObjectSave', 0],
+                'onFlexObjectAfterDelete' => ['onObjectDelete', 0],
+            ]);
+        }
+
         if ($this->isAdmin()) {
             $this->GravTNTSearch();
             $route = $this->config->get('plugins.admin.route');
@@ -86,20 +108,6 @@ class TNTSearchPlugin extends Plugin
                 'onTwigSiteVariables' => ['onTwigAdminVariables', 0],
                 'onTwigLoader' => ['addAdminTwigTemplates', 0],
             ]);
-
-            if ($this->config->get('plugins.tntsearch.enable_admin_page_events', true)) {
-                $this->enable([
-                    // Page save/delete (admin-classic + Grav 2.0 Admin/API compat layer)
-                    'onAdminAfterSave'        => ['onObjectSave', 0],
-                    'onAdminAfterDelete'      => ['onObjectDelete', 0],
-                    // Page move/rename changes the route, leaving the old entry stale
-                    'onAdminAfterSaveAs'      => ['onObjectMove', 0],
-                    // Flex objects: Grav fires the *After* variants (see FlexObjectTrait),
-                    // not the bare onFlexObjectSave/onFlexObjectDelete names used previously.
-                    'onFlexObjectAfterSave'   => ['onObjectSave', 0],
-                    'onFlexObjectAfterDelete' => ['onObjectDelete', 0],
-                ]);
-            }
 
             return;
         }
