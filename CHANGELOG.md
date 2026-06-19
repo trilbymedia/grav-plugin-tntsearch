@@ -1,3 +1,11 @@
+# v3.4.5
+## 06/19/2026
+
+1. [](#new)
+    * Added Dutch language stemmer support [#143](https://github.com/trilbymedia/grav-plugin-tntsearch/pull/143)
+1. [](#bugfix)
+    * Fixed PHP 8.4 deprecation warnings from implicitly nullable function parameters.
+
 # v3.4.4
 ## 06/06/2026
 
