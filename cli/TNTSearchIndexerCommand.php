@@ -87,7 +87,7 @@ class TNTSearchIndexerCommand extends ConsoleCommand
      * @param string|null $langCode
      * @return string
      */
-    private function doIndex(string $langCode = null): string
+    private function doIndex(?string $langCode = null): string
     {
         [,,$output] = TNTSearchPlugin::indexJob($langCode);
 
