@@ -203,6 +203,17 @@ class GravTNTSearch
 
         /** @var Twig $twig */
         $twig = $grav['twig'];
+
+        // Ensure the Twig environment is initialised before processing the page
+        // content below. When indexing runs outside the normal page-render
+        // lifecycle — e.g. saving a page through the Grav 2.0 API / Admin2, which
+        // never runs the Twig processor — `$twig->twig` is null and both
+        // `$twig->processTemplate()` and `$page->content()` fail with
+        // "__clone method called on non-object" in Twig::processPage().
+        // Twig::init() is idempotent (guards on `null === $this->twig`), so this
+        // is a no-op during a normal render.
+        $twig->init();
+
         $header = $page->header();
 
         // @phpstan-ignore-next-line
