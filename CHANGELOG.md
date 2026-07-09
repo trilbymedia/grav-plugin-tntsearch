@@ -1,3 +1,9 @@
+# v3.4.6
+## 07/09/2026
+
+1. [](#bugfix)
+    * Fixed a 500 error when saving a page through Admin2 / the API by initialising Twig before the on-save reindex [#145](https://github.com/trilbymedia/grav-plugin-tntsearch/issues/145)
+
 # v3.4.5
 ## 06/19/2026
 
