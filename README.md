@@ -54,7 +54,7 @@ Extract the downloaded ZIP file and run the `sqlite3.exe` executable.
 
 ## Configuration
 
-Before configuring this plugin, you should copy the `user/plugins/tntsearch/tntsearch.yaml` to `user/config/plugins/tntsearch.yaml` and only edit that copy.
+The easiest way to configure this plugin is in the admin, under Plugins > TNT Search. Your settings are saved to `user/config/plugins/tntsearch.yaml`, and that file only holds the settings you changed; anything left at its default is read from the plugin's own `tntsearch.yaml`, so a short file is normal. To configure it by hand, create `user/config/plugins/tntsearch.yaml` and add just the settings you want to change (or copy the plugin's `tntsearch.yaml` there as a starting point). Never edit the plugin's own copy, as updates overwrite it.
 
 Here is the default configuration and an explanation of available options:
 
@@ -166,6 +166,8 @@ Done.
 This indicates a successful indexing of your content.
 
 #### Admin Plugin Indexing
+
+In Admin2 (Grav 2.0), use the **Reindex TNT Search** button in the admin header, or the `Index Content` button under Plugins > TNT Search. The rest of this section describes the classic admin.
 
 If you are using the admin plugin you can index your content directly from the plugin.  TNTSearch adds a new **quick-tray** icon that lets you create a new index or re-index all your content quickly and conveniently with a single click.  
 

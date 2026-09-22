@@ -56,6 +56,10 @@ class TNTSearchPlugin extends Plugin
             'onTNTSearchReIndex'        => ['onTNTSearchReIndex', 0],
             'onTNTSearchIndex'          => ['onTNTSearchIndex', 0],
             'onTNTSearchQuery'          => ['onTNTSearchQuery', 0],
+            // Admin2. Subscribed here, not behind isAdmin(), which is false during API requests.
+            'onApiRegisterRoutes'       => ['onApiRegisterRoutes', 0],
+            'onApiMenubarItems'         => ['onApiMenubarItems', 0],
+            'onApiMenubarAction'        => ['onApiMenubarAction', 0],
         ];
     }
 
@@ -423,6 +427,63 @@ class TNTSearchPlugin extends Plugin
         ];
 
         $this->grav['twig']->plugins_quick_tray['TNT Search'] = $options;
+    }
+
+    /**
+     * Admin2: the status and reindex endpoints used by the index status field.
+     */
+    public function onApiRegisterRoutes(Event $event): void
+    {
+        $controller = \Grav\Plugin\TNTSearch\Api\TNTSearchApiController::class;
+
+        $event['routes']->group('/tntsearch', function ($group) use ($controller) {
+            $group->get('/status', [$controller, 'status']);
+            $group->post('/reindex', [$controller, 'reindex']);
+        });
+    }
+
+    /**
+     * Admin2: the reindex button in the header, the old quick tray button.
+     */
+    public function onApiMenubarItems(Event $event): void
+    {
+        $items = $event['items'] ?? [];
+        $items[] = [
+            'id'        => 'tntsearch-reindex',
+            'plugin'    => 'tntsearch',
+            'label'     => 'Reindex TNT Search',
+            'icon'      => 'fa-binoculars',
+            'action'    => 'reindex',
+            'authorize' => 'api.config.write',
+        ];
+        $event['items'] = $items;
+    }
+
+    public function onApiMenubarAction(Event $event): void
+    {
+        if ($event['plugin'] !== 'tntsearch' || $event['action'] !== 'reindex') {
+            return;
+        }
+
+        error_reporting(1);
+        set_time_limit(0);
+
+        [$status, $message] = static::indexJob();
+
+        $event['result'] = [
+            'status'  => $status ? 'success' : 'error',
+            'message' => $message,
+        ];
+    }
+
+    /**
+     * Whether the index exists, and a line describing it.
+     *
+     * @return array{0: bool, 1: string}
+     */
+    public static function indexStatus(): array
+    {
+        return static::getIndexCount(static::getSearchObjectType());
     }
 
     /**
