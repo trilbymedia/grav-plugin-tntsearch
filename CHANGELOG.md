@@ -1,3 +1,12 @@
+# v3.4.7
+## 09/22/2026
+
+1. [](#new)
+    * The Search Index Status field now works in Admin2, showing whether your content is indexed and how many documents it holds, with a button to build or rebuild the index [#147](https://github.com/trilbymedia/grav-plugin-tntsearch/issues/147)
+    * Added a **Reindex TNT Search** button to the Admin2 header, replacing the quick-tray button from the classic admin [#147](https://github.com/trilbymedia/grav-plugin-tntsearch/issues/147)
+2. [](#improved)
+    * The README now explains that the plugin is configured in the admin and that a short `user/config/plugins/tntsearch.yaml` holding only your changed settings is normal [#147](https://github.com/trilbymedia/grav-plugin-tntsearch/issues/147)
+
 # v3.4.6
 ## 07/09/2026
 
