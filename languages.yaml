@@ -1,20 +1,24 @@
 en:
   PLUGIN_TNTSEARCH:
+    SEARCH_PLACEHOLDER: "Search..."
     FOUND_RESULTS: "Found %s results"
     FOUND_IN: "in <span>%s</span>"
     POWERED_BY: "Powered by %s"
 de:
   PLUGIN_TNTSEARCH:
+    SEARCH_PLACEHOLDER: "Suchen..."
     FOUND_RESULTS: "Es wurden %s Resultate gefunden"
     FOUND_IN: "(<span>%s</span>)"
     POWERED_BY: "Powered by %s"
 ru:
   PLUGIN_TNTSEARCH:
+    SEARCH_PLACEHOLDER: "Найти..."
     FOUND_RESULTS: "Результатов: %s"
     FOUND_IN: "(<span>%s</span>)"
     POWERED_BY: "Работает на %s"
 fr:
   PLUGIN_TNTSEARCH:
+    SEARCH_PLACEHOLDER: "Rechercher..."
     FOUND_RESULTS: "Résultats trouvés: %s"
     FOUND_IN: "(<span>%s</span>)"
     POWERED_BY: "Par %s"

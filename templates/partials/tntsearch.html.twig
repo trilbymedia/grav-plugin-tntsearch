@@ -3,7 +3,7 @@
 {% set snippet = snippet|default(config.get('plugins.tntsearch.snippet', 300)) %}
 {% set min = min|default(config.get('plugins.tntsearch.min', 3)) %}
 {% set search_type = search_type|default(config.get('plugins.tntsearch.search_type', 'auto')) %}
-{% set placeholder = placeholder|default('Search...') %}
+{% set placeholder = placeholder|default("PLUGIN_TNTSEARCH.SEARCH_PLACEHOLDER"|t) %}
 {% set live_update = in_page ? live_update|default(config.get('plugins.tntsearch.live_uri_update', 1)) : 0 %}
 {% set nojs_action = config.get('plugins.tntsearch.search_route', '/search')|trim('/') %}
 
