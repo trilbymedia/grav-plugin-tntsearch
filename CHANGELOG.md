@@ -2,6 +2,7 @@
 ## 10/22/2026
 
 1. [](#bugfix)
+    * The search box no longer grabs the cursor when it sits in a sidebar or header; it only does that on the search page itself
     * Search result highlights and the dropdown search results are now readable when your theme is in dark mode [#148](https://github.com/trilbymedia/grav-plugin-tntsearch/issues/148)
 
 # v3.4.7
