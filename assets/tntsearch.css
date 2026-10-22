@@ -33,6 +33,7 @@
     right: 0;
     width: 400px;
     background: #fff;
+    color: #333;
     box-shadow: 0 2px 20px rgba(0,0,0, 0.1);
     padding: 10px;
     z-index: 2;
@@ -59,6 +60,15 @@
 .tntsearch-results em {
     font-style: normal;
     background-color: #ffff33;
+    color: #111;
+}
+
+/* Dark mode, flagged by a `dark` class or data-theme="dark" on <html> (Quark2, Typhoon, Helios) */
+.dark .tntsearch-dropdown ~ .tntsearch-results .row,
+[data-theme="dark"] .tntsearch-dropdown ~ .tntsearch-results .row {
+    background: #1f2023;
+    color: #e6e6e6;
+    box-shadow: 0 2px 20px rgba(0,0,0, 0.5);
 }
 
 .tntsearch-powered-by {
