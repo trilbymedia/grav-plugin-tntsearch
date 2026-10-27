@@ -22,7 +22,22 @@ const GravTNTSearch = () => {
         const results = form.querySelector('.tntsearch-results');
         if (!input || !results) { return false; }
 
-        form.addEventListener('submit', (event) => event.preventDefault());
+        let options = {};
+        try {
+            options = JSON.parse(input.dataset.tntsearch || '{}');
+        } catch (e) {
+            options = {};
+        }
+
+        form.addEventListener('submit', (event) => {
+            // with `submit_to_search_page`, Enter and the search button go to the full results page
+            if (options.submit && input.value.trim()) {
+                search.cancel();
+                return;
+            }
+
+            event.preventDefault();
+        });
         input.addEventListener('focus', () => search(input, results));
         input.addEventListener('input', () => {
             if (clear) {

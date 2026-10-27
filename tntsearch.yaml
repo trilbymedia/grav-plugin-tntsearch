@@ -14,6 +14,7 @@ display_route: true
 display_hits: true
 display_time: true
 live_uri_update: true
+submit_to_search_page: false
 limit: 20
 min: 3
 snippet: 300
