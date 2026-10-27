@@ -3,6 +3,9 @@ en:
     FOUND_RESULTS: "Found %s results"
     FOUND_IN: "in <span>%s</span>"
     POWERED_BY: "Powered by %s"
+    SEARCH_BUTTON: "Search"
+    SUBMIT_TO_SEARCH_PAGE: "Go to Search Page on Enter"
+    SUBMIT_TO_SEARCH_PAGE_HELP: "In search boxes outside the search page (such as a sidebar dropdown), pressing Enter or the search button opens the full results on the Search Page Route, and a search button is added to the box. Themes can also turn this on for a single box with `submit_to_search_page: true`."
 de:
   PLUGIN_TNTSEARCH:
     FOUND_RESULTS: "Es wurden %s Resultate gefunden"

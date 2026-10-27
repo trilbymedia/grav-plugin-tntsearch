@@ -1,3 +1,12 @@
+# v3.4.9
+## 10/26/2026
+
+1. [](#new)
+    * New Go to Search Page on Enter option: Enter and a new search button in the search box open the full results page, and a theme can turn it on for a single box [#149](https://github.com/trilbymedia/grav-plugin-tntsearch/issues/149)
+2. [](#bugfix)
+    * The dropdown results fit small screens and scroll inside a set height instead of making the page very long [#149](https://github.com/trilbymedia/grav-plugin-tntsearch/issues/149)
+    * Submitting the search box without JavaScript goes to the search page from any page, including on multi-language sites
+
 # v3.4.8
 ## 10/22/2026
 

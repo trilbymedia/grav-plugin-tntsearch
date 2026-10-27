@@ -75,6 +75,7 @@ display_route: true
 display_hits: true
 display_time: true
 live_uri_update: true
+submit_to_search_page: false
 limit: 20
 min: 3
 snippet: 300
@@ -120,6 +121,7 @@ The configuration options are as follows:
 * `display_hits` - display the number of hits in the search results
 * `display_time` - display the execution time in the search results
 * `live_uri_update` - when `built_in_js` is enabled, live updates the URI bar in the `search_route` page
+* `submit_to_search_page` - in search boxes outside the search page (such as a sidebar dropdown), pressing Enter or the added search button opens the full results on the `search_route` page
 * `limit` - maximum amount of results to be shown
 * `min` - mininum amount of characters typed before performing search
 * `snippet` - amount of characters for previewing a result item
@@ -369,6 +371,12 @@ TNTSearch plugin can also be used to render the search as a drop-down rather tha
 ```
 
 Here we embed the default partial, but override the `options` by passing them in the `with` statement. It is important to notice that the `dropdown: true` is required to be set in order to be interpreted as dropdown.
+
+To have Enter and a search button take the visitor to the full results on the `search_route` page for this box only, add `submit_to_search_page: true` (or `false` to turn it off for this box when the plugin option is on):
+
+```twig
+{% include 'partials/tntsearch.html.twig' with { dropdown: true, submit_to_search_page: true } %}
+```
 
 ## Credits
 

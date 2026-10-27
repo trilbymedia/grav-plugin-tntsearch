@@ -219,6 +219,18 @@ form:
       validate:
         type: bool
 
+    submit_to_search_page:
+      type: toggle
+      label: PLUGIN_TNTSEARCH.SUBMIT_TO_SEARCH_PAGE
+      help: PLUGIN_TNTSEARCH.SUBMIT_TO_SEARCH_PAGE_HELP
+      highlight: 1
+      default: 0
+      options:
+        1: PLUGIN_ADMIN.ENABLED
+        0: PLUGIN_ADMIN.DISABLED
+      validate:
+        type: bool
+
     display_hits:
       type: toggle
       label: Display Hits

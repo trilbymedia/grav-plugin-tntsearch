@@ -1,6 +1,6 @@
 .tntsearch-form .form-input {
     height: 2.4rem;
-    padding-left: 1rem;
+    padding-inline-start: 1rem;
 }
 
 #tntsearch-wrapper {
@@ -12,10 +12,57 @@
     padding: 0 1rem;
     line-height: 1;
     position: absolute;
-    right: 0;
+    inset-inline-end: 0;
     font-size: 2rem;
     top: 0;
     cursor: pointer;
+}
+
+/* Search button (submit_to_search_page), the clear button sits just before it */
+.tntsearch-has-button .form-input {
+    padding-inline-end: 5rem;
+}
+
+.tntsearch-has-button .tntsearch-clear {
+    inset-inline-end: 2.4rem;
+    padding: 0 0.5rem;
+}
+
+.tntsearch-form .tntsearch-button {
+    position: absolute;
+    top: 0;
+    inset-inline-end: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.4rem;
+    height: 2.4rem;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    background: transparent;
+    color: inherit;
+    opacity: 0.7;
+    cursor: pointer;
+}
+
+.tntsearch-form .tntsearch-button:hover,
+.tntsearch-form .tntsearch-button:focus-visible {
+    background: transparent;
+    opacity: 1;
+}
+
+.tntsearch-form .tntsearch-button:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: -4px;
+}
+
+.tntsearch-form .tntsearch-button svg {
+    display: block;
+    pointer-events: none;
 }
 
 .tntsearch-field-inpage {
@@ -30,13 +77,29 @@
 .tntsearch-dropdown ~ .tntsearch-results .row {
     position: absolute;
     top: 0;
-    right: 0;
+    inset-inline-end: 0;
     width: 400px;
+    /* never wider than the screen, and scroll inside instead of stretching the page */
+    max-width: calc(100vw - 2rem);
+    max-height: 70vh;
+    max-height: min(32rem, 70dvh);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    box-sizing: border-box;
     background: #fff;
     color: #333;
     box-shadow: 0 2px 20px rgba(0,0,0, 0.1);
     padding: 10px;
     z-index: 2;
+}
+
+/* On small screens the dropdown takes the width of the search box */
+@media (max-width: 600px) {
+    .tntsearch-dropdown ~ .tntsearch-results .row {
+        inset-inline-start: 0;
+        width: auto;
+        max-width: none;
+    }
 }
 
 .tntsearch-results .info {

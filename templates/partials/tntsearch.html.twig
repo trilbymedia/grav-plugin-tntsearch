@@ -5,15 +5,24 @@
 {% set search_type = search_type|default(config.get('plugins.tntsearch.search_type', 'auto')) %}
 {% set placeholder = placeholder|default('Search...') %}
 {% set live_update = in_page ? live_update|default(config.get('plugins.tntsearch.live_uri_update', 1)) : 0 %}
-{% set nojs_action = config.get('plugins.tntsearch.search_route', '/search')|trim('/') %}
+{% set search_route = config.get('plugins.tntsearch.search_route', '/search')|trim('/') %}
+{% set nojs_action = base_url|rtrim('/') ~ '/' ~ search_route %}
+{# Outside the search page, Enter and the search button can take the visitor to the full results page #}
+{% set submit_to_search_page = not in_page and search_route and (submit_to_search_page ?? config.get('plugins.tntsearch.submit_to_search_page', false)) %}
 
-{% set options = { uri: url, limit: limit, snippet: snippet, min: min, in_page: in_page, live_update: live_update, search_type: search_type } %}
+{% set options = { uri: url, limit: limit, snippet: snippet, min: min, in_page: in_page, live_update: live_update, search_type: search_type, submit: submit_to_search_page ? true : false } %}
 
 <form role="form" class="tntsearch-form" action="{{ nojs_action }}" method="get">
     {% block tntsearch_input %}
-    <div id="tntsearch-wrapper" class="form-group{{ dropdown ? ' tntsearch-dropdown' : '' }}">
+    <div id="tntsearch-wrapper" class="form-group{{ dropdown ? ' tntsearch-dropdown' : '' }}{{ submit_to_search_page ? ' tntsearch-has-button' : '' }}">
         <input type="text" name="q" class="form-control form-input tntsearch-field{{ in_page ? ' tntsearch-field-inpage' : '' }}" data-tntsearch="{{ options|json_encode|e('html_attr') }}" placeholder="{{ placeholder }}" value="{{ not dropdown ? query|e : '' }}"{{ in_page ? ' autofocus' : '' }}>
         <span class="tntsearch-clear"{{ not query or dropdown ? ' style="display: none;"' : '' }}>&times;</span>
+        {% if submit_to_search_page %}
+        {% set button_label = 'PLUGIN_TNTSEARCH.SEARCH_BUTTON'|t %}
+        <button type="submit" class="tntsearch-button" aria-label="{{ button_label|e('html_attr') }}" title="{{ button_label|e('html_attr') }}">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.9-4.9"/></svg>
+        </button>
+        {% endif %}
     </div>
     {% endblock %}
     <div class="tntsearch-results{{ in_page ? ' tntsearch-results-inpage' : '' }}">
